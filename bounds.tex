@@ -1,0 +1,58 @@
+\chapter{Bounds on Chebyshev flow number} % chapter* je necislovana kapitola
+
+% TODO introducing paragraph
+
+\section{Upper bound on generalised Blanuša snarks}
+
+\section{General lower bound}
+
+% TODO introduction and citation to Gloria's thesis and to similar bound for one-dimensional flow number
+\begin{proposition}
+	% TODO rewrite the proof
+	Let $\Gamma$ denote a snark of order $n$. Then $\Phi_2^{\infty}(\Gamma) \geq 2+1 / \xi$, where $\xi=\left\lfloor\frac{n-2}{4}\right\rfloor$.
+\end{proposition}
+
+\begin{proof}
+    Assume by contradiction that there exists a $2$-dimensional flow $\varphi$ of $\Gamma$ such that $\varphi = (\varphi_1(e), \varphi_2(e))$ for each edge $e \in E(\Gamma)$, with $\|\varphi(e)\|_\infty\geq 1$ and $\varphi_i(e) \in (-1-1/\xi, 1+1/\xi)$ for $i = 1, 2$.
+
+    We say an edge $e \in E(\Gamma)$ to be \emph{good} with respect to $\varphi_i$ if $|\varphi_i(e)| \in [1, 1+1/\xi)$, \emph{bad} otherwise. Observe that an edge $e$ can be good with respect to both $\varphi_1$ and $\varphi_2$, but it cannot be bad with respect to both $\varphi_1$ and $\varphi_2$, for otherwise $\|\varphi(e)\|_\infty<1$.
+
+    Denote by $B_i$ the subgraph of $\Gamma$ induced by the bad edges with respect to $\varphi_i$ and by $G_i$ the one induced by the good edges with respect to $\varphi_i$, $i = 1, 2$. By previous observation at least one between $B_1$ and $B_2$ has at most $\lfloor|E(\Gamma)|/2\rfloor=\left\lfloor\frac{3n}4\right\rfloor$ edges, say $B_1$.
+
+    \begin{claim}
+        $B_i$ is a spanning subgraph of $\Gamma$ and $\Delta(B_i) \leq 2$, for $i = 1, 2$.
+    \end{claim}
+    \begin{proof}
+        Observe that $\Delta(G_i) \leq 2$, because the sum of three real numbers all with absolute value in the interval $[1, 1+1/\xi)$ cannot give $0$ as a result, making the Kirkoff's law impossible to be satisfied by $\varphi$ around a vertex of $\Gamma$. Hence $B_i$ is spanning, for otherwise $\Delta(G_i) = 3$ and $\Delta(B_i) \leq 2$, for otherwise $\Delta(G_{3-i}) = 3$.
+    \end{proof}
+
+    \begin{claim}
+        If $C\subseteq E(G_i)$ is an odd edge-cut of $\Gamma$ for $i=1, 2$, then $|C|\geq 2\xi+3$.
+    \end{claim}
+    \begin{proof}
+        Consider an odd edge-cut $C$ of $\Gamma$ containing $2k+1$ good edges, separating components $\Gamma_1, \Gamma_2$. WLOG assume $\varphi_i(e)\geq0$ for every edge $e$ of $C$ and more edges are directed towards $\Gamma_2$. Then, there are at least $k+1$ edges towards $\Gamma_2$, resulting in total inflow at least $(k+1)\cdot1$. Analogously, the total outflow is strictly less than $k\cdot(1+1/\xi)$. Together with the Kirkoff's law, this leads to $k+1<k\cdot(1+1/\xi)$, which is equivalent to $k>\xi$.
+    \end{proof}
+
+    \begin{claim}
+        A path of length $2k$ cannot be a connected component of $B_i$, for $k=1,2,\dots, \xi-1$ and $i = 1, 2$.
+    \end{claim}
+    \begin{proof}
+        For the sake of contradiction assume there is a path of a length $2k$, $k<\xi$ in $B_i$. Then the edges adjacent to this path are in $G_i$ and they form an odd edge-cut of $\Gamma$, containing at most $2k+3<2\xi+3$ edges, which is in contradiction with the Claim 2.
+    \end{proof}
+
+    \begin{claim}
+        A cycle of length $2k+1$ cannot be a connected component of $B_i$, for $k=1,2,\dots, \xi$ and $i = 1, 2$.
+    \end{claim}
+    \begin{proof}
+        For the sake of contradiction assume there is a cycle of a length $2k+1$, $k<\xi+1$ in $B_i$. Then the edges adjacent to this cycle are in $G_i$ and they form an odd edge-cut of $\Gamma$, containing at most $2k+1<2\xi+3$ edges, which is in contradiction with the Claim 2.
+    \end{proof}
+
+    \begin{claim}
+        $E(B_i)$ cannot contain a perfect matching of $\Gamma$, for $i = 1, 2$.
+    \end{claim}
+    \begin{proof}
+        For the sake of contradiction assume that $E(B_i)$ contains a perfect matching $M$ of $\Gamma$. Then also $E(G_{3-i})$ contains a perfect matching $M$ of $\Gamma$. Next, $F=E(\Gamma)\setminus M$ is a $2$-factor of $\Gamma$. Note that $F$ must contain an odd cycle of length $2k+1\leq\frac n2$. This is equivalent with $k\leq\xi$. Then the edges adjacent to this cycle are in $G_{3-i}$ and they form an odd edge-cut of $\Gamma$, containing at most $2k+1\leq 2\xi+1$ edges, which is in contradiction with the Claim 2.
+    \end{proof}
+
+    Note that by the Claim 3, each even path in $B_1$ contains at least $2\xi$ edges. Similarly by the Claim 4, each odd cycle in $B_1$ contains at least $2\xi+3$ edges. Let \emph{odd components} denote odd cycles and even paths. Since $4\xi=4\lfloor\frac{n-2}{4}\rfloor>\lfloor\frac{3n}{4}\rfloor\geq E(B_1)$ obviously holds for any $n\geq 10$, $B_1$ may contain at most one odd component. On the other hand, $B_1$ contains even number of odd componentss. As a result, $B_1$ contains only odd paths and even cycles, but then also a perfect matching of $\Gamma$, which is in contradiction with the Claim 5.
+\end{proof}
