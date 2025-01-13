@@ -7,12 +7,18 @@
 \section{General lower bound}
 
 % TODO introduction and citation to Gloria's thesis and to similar bound for one-dimensional flow number
+In one-dimensional flows, there has been proved a lower bound on the flow number of a snark 
+\begin{equation*}
+	\Phi_1(\Gamma) \geq 4 + \left.2\middle/\left\lfloor\frac{n-2}{4}\right\rfloor\right.
+\end{equation*}
+depending on the number $n$ of its vertices \cite[p. 14]{cyle_rank}. Moreover, there is also a meaningful lower bound on the two-dimensional Chebyshev flow number of the Petersen graph $P$ \cite[p. 99]{gloria_phd}. It states that $\Phi_2^\infty(P)\geq 5/2$. We provide generalisation of this bound for any snark. Moreover, the bounding number is roughly a half of the bounding number in one dimension.
+
 \begin{proposition}
-	% TODO rewrite the proof
 	Let $\Gamma$ denote a snark of order $n$. Then $\Phi_2^{\infty}(\Gamma) \geq 2+1 / \xi$, where $\xi=\left\lfloor\frac{n-2}{4}\right\rfloor$.
 \end{proposition}
 
 \begin{proof}
+    % TODO rewrite the proof
     Assume by contradiction that there exists a $2$-dimensional flow $\varphi$ of $\Gamma$ such that $\varphi = (\varphi_1(e), \varphi_2(e))$ for each edge $e \in E(\Gamma)$, with $\|\varphi(e)\|_\infty\geq 1$ and $\varphi_i(e) \in (-1-1/\xi, 1+1/\xi)$ for $i = 1, 2$.
 
     We say an edge $e \in E(\Gamma)$ to be \emph{good} with respect to $\varphi_i$ if $|\varphi_i(e)| \in [1, 1+1/\xi)$, \emph{bad} otherwise. Observe that an edge $e$ can be good with respect to both $\varphi_1$ and $\varphi_2$, but it cannot be bad with respect to both $\varphi_1$ and $\varphi_2$, for otherwise $\|\varphi(e)\|_\infty<1$.
