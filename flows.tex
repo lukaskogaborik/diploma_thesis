@@ -1,6 +1,142 @@
 \chapter{Flows} % chapter* je necislovana kapitola
 
-In this chapter, we aim to introduce all concepts and current knowledge about flows and related graph theory terms. Mainly, we tend to explain Chebyshev nowhere-zero flows, which
-have arisen in the bachelor thesis of the author \cite{TODO}.
+In this chapter, we aim to introduce all concepts and current knowledge about flows and related graph theory terms. Mainly, we explain Chebyshev nowhere-zero flows, which
+have arisen in the Student Science Conference paper of the author \cite{svk}. Moreover, we present a concept of two smaller flows as a sufficient condition for a graph to have
+a larger nowhere-zero flow and some Chebyshev flow, also stated in that paper. Then we connect this idea to the theory of group connectivity of a graph established by Jaeger
+et al. \cite{group_connectivity} and $k$-closures and $k$-bases introduced by Seymour \cite{seymour} in the paper, where he proved the $6$-flow theorem.
 
 % TODO definition of generalised Blanuša snarks
+
+% TODO rewrite G -> \Gamma
+\section{Integral nowhere-zero flows}
+
+% TODO rewrite to only definition of k-flows, use darts
+\begin{definition}
+    Let $G=(V, E)$ be a graph and $\mathcal A$ be an abelian group. An \emph{$\mathcal A$-circulation} on $G$ is a pair of functions -- orientation $o\colon E\to V\times V$ and flow $\varphi\colon E\to\mathcal A$ -- satisfying the equality
+		\begin{equation}
+			\sum_{u\in N^+_o(v)} \mkern-14mu\varphi\left(uv\right) =
+			\mkern-14mu\sum_{u \in N^-_o(v)}\mkern-14mu\varphi\left(uv\right) \label{eq:conservation}
+		\end{equation}
+    for each vertex $v$ of $G$.	This equality \eqref{eq:conservation} is often referred to as the \textit{flow conservation constraint}.
+\end{definition}
+\begin{definition}
+    Given a graph $G$ and a positive integer $k\geq2$, a \emph{$k$-circulation} on $G$ is a $\mathbb Z$-circulation $(o,\varphi)$ with an additional constraint that the inequality $1-k\leq\varphi(e)\leq k-1$ holds for each edge $e$ of the graph. Analogously, a \emph{$k$-NZF} $(o,\varphi)$ is a $k$-circulation satisfying $\varphi(e)\neq0$ for all edges.
+\end{definition}
+
+% TODO check
+\begin{claim}
+    If $e\in E$ is a bridge in $\Gamma$, then $\varphi(e)=0$. Moreover, $\Gamma$ allows a $k$-NZF for no natural $k$.
+\end{claim}
+
+% TODO check
+\begin{definition}
+	Let $\Gamma$ be a bridgeless graph. A \emph{flow number of $\Gamma$} is
+	\begin{equation*}
+		\Phi(\Gamma) := \min\{k\mid\exists k\text{-NZF on }\Gamma\}.\label{eq:flow_number}
+	\end{equation*}
+\end{definition}
+
+% TODO check
+\begin{lemma} \emph{\cite[p. 132]{seymour}}
+    For any bridgeless graph, there exist a $2$-flow and a $3$-flow such that for each edge $e$, at least one value from $\varphi_2(e), \varphi_3(e)$ is non-zero.\label{lem:2_flow_3_flow_seymour}
+\end{lemma}
+
+% TODO check
+\begin{theorem}[$6$-flow theorem] \emph{\cite[p. 133]{seymour}}
+    There exists a $6$-NZF on any bridgeless graph.\label{th:6_flow}
+\end{theorem}
+
+% TODO check
+\begin{conjecture} \emph{\cite[p. 83]{tutte}}
+    There exists a $5$-NZF on any bridgeless graph.\label{conj:5_flow}
+\end{conjecture}
+
+% TODO check, remove bipartite
+\begin{proposition} \emph{\cite[pp. 160, 161]{diestel}}
+    A cubic graph has a $4$-NZF if and only if it is $3$-edge-colourable. Moreover, it has a $3$-NZF if and only if it is bipartite.
+\end{proposition}
+
+% TODO check
+\begin{definition}
+    A \emph{snark} is a bridgeless cubic graph, which has no cycles of lengths $3$ and $4$, is cyclically $4$-edge connected (at least $4$ edges must be removed from the graph to get two components containing a cycle) and is not $3$-edge-colourable.
+\end{definition}
+
+\section{Chebyshev nowhere-zero flows and sufficient flow-pairs}
+
+% TODO rewrite with darts, minimum, erase Manhattan norm
+\begin{definition}
+	Let $G$ be a bridgeless graph and $d$ be a positive integer. A \emph{$d$-dimensional Manhattan flow number} of $G$ and a \emph{$d$-dimensional Chebyshev flow number} of $G$ are
+	\begin{equation*}
+		\Phi_d^\text{M}(G) := \inf\{r\mid\exists(r, d)\text{-MNZF on }G\}\text{ and } \Phi_d^\text{Ch}(G) := \inf\{r\mid\exists(r, d)\text{-ChNZF on }G\},
+	\end{equation*}
+ respectively.
+\end{definition}
+
+% TODO check
+\begin{proposition}
+    Each bridgeless graph has a $(3, 2)$-ChNZF.\label{prop:manhattan_upper_seymour}
+\end{proposition}
+
+% TODO rewrite to Chebyshev
+\begin{theorem}
+    A cubic graph has a $(2, 2)$-MNZF if and only if it is $3$-edge-colourable.\label{th:2_mnzf_iff_3_col}
+\end{theorem}
+
+% TODO rewrite with darts, sufficient flow-pair, value between, add reasoning
+\begin{definition}
+        Let $p\leq q$ be the positive integers. A \emph{$(p,q)$-circulation decomposition} of a graph $G$ is a $2$-circulation $(o_2,\varphi_2)$ and a $(p+q+1)$-circulation $(o_{p+q+1}, \varphi_{p+q+1})$ such that whenever $\varphi_2(e)$ is zero, the value $|\varphi_{p+q+1}(e)|$ is either $q$ or $p+q$.
+\end{definition}
+
+% TODO check
+\begin{lemma}
+A bridgeless graph $G$ with a $(dp,dq)$-circulation decomposition also has a $(p,q)$-circulation decomposition.\label{lem:circ_rel_prime}
+\end{lemma}
+
+% TODO check
+\begin{proposition}
+    Consider a bridgeless graph $G$ with a $(p,q)$-circulation decomposition. Then, there are $\left(2+\frac pq,2\right)$-ChNZF and $\left(4+\frac {2p}q, 1\right)$-NZF on $G$.\label{prop:nzf_from_two_circulations_generalised}
+\end{proposition}
+
+% TODO check
+\begin{conjecture}
+    For each bridgeless graph there exists a $(1, 2)$-circulation decomposition.
+\end{conjecture}
+
+% TODO is it necessary?
+\begin{lemma}
+	Let $p<q$ be positive integers. Consider a snark $G$ with a $(p,q)$-circulation decomposition. Then the set of edges $e$ with a property $\varphi_2(e)\neq 0$ is a $2$-factor of $G$.\label{lem:2_circ_snark_2_factor}
+\end{lemma}
+
+\section{Closures and bases}
+
+\begin{definition} \cite[p. 132]{seymour}
+	Let $\Gamma=(V,E)$ be a graph and $S\subseteq E$ its edge subset. A \emph{$k$-closure} $\langle S\rangle_{k}$ of $S$ is a mimimal $T$ such that $S\subseteq T\subseteq E$ and for any circuit $\mathcal C\not\subseteq T$ of $G$, the size of $\mathcal C\cap T^c$ is strictly greater than $k$.
+\end{definition}
+
+\begin{definition} \cite[p. 7]{group_connectivity_enumeration}
+	Let $\Gamma=(V,E)$ be a graph. Then $S\subseteq E$ is a \emph{$k$-base} of $\Gamma$ if $\langle S\rangle_k = E$.
+\end{definition}
+
+\begin{claim}
+	Any spanning tree of a graph is its inclusion-minimal $1$-base.
+\end{claim}
+
+\begin{lemma} \cite[p. 133]{seymour}
+	For any $3$-connected graph $\Gamma$ there exists its even-factor which is also its $2$-base.
+\end{lemma}
+% TODO add connection to Seymour's proof
+
+\begin{lemma} \cite[p. 134]{seymour}
+	For any $3$-connected cubic graph $\Gamma=(V,E)$ there exists a vertex partition $E=E_1\cup E_2$ such that $E_1,E_2$ are its $1$- and $2$-bases, respectively.
+\end{lemma}
+% TODO add connection to Seymour's proof
+
+\section{Group connectivity}
+
+% TODO introduction, connection with choosability and list properties
+
+% TODO definition
+
+% TODO generalised first Seymour's lemma
+
+% TODO discuss generalisation of the second Seymour's lemma
