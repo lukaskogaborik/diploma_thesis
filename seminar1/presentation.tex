@@ -1,0 +1,81 @@
+\documentclass{beamer}
+\usepackage{comment}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{cmap}
+\usepackage[T1]{fontenc}
+\usepackage{array}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{blindtext}
+\usepackage{subcaption}
+\usepackage{bibentry}
+\usepackage{wasysym}
+\usepackage{makecell}
+\usepackage{marvosym}
+%\usepackage{enumitem}
+%\definecolor{UBCblue}{rgb}{0.09412, 0.27450, 0.53334}
+\definecolor{FMFI}{rgb}{1, 0.5098, 0}
+\usetheme{default}
+\useinnertheme{circles}
+\usecolortheme[named=FMFI]{structure}
+\setbeamercolor{block body}{bg=FMFI!10}
+\setbeamercolor{block title}{bg=FMFI!30}
+\setbeamertemplate{blocks}[rounded][shadow]
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize item}[default]
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric}
+\usefonttheme[onlymath]{serif}
+% \usetikzlibrary{external}
+% \tikzexternalize[prefix=images/]
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{proposition}{Proposition}
+\setbeamertemplate{footline}[frame number]
+\usepackage{cite}
+\renewcommand*{\citeleft}{\!\!}
+\renewcommand*{\citeright}{}
+\input{../constants.tex}
+
+\title{\mfnazov}
+
+\subtitle{Master thesis}
+
+\author
+{Lukáš Gáborik}
+
+\institute[]
+{
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.15\linewidth]{../logo_FMFI.png}
+  \end{figure}
+}
+
+\date{21$^\text{st}$ January 2025}
+
+\AtBeginSection[]
+
+\begin{document}
+
+\begin{frame}\titlepage\end{frame}
+
+\begin{frame}{Nowhere-zero $k$-flows}
+	\begin{figure}
+		\centering
+		\input{flow_K4.tex}
+		\caption{\only<1>{$43$-flow}\only<2>{$1$-flow}\only<3>{NZ $4$-flow, $\Phi(K_4)=4$}}
+	\end{figure}
+	\begin{itemize}
+		\item<1-> assignment of values $0, 1, 2, \dots, k-1$ to edges
+		\item<1-> Kirchoff's law in vertices
+		\item<2-> this allowing trivial cases
+		\item<2-> restrict zero flow values
+		\item<3> graph with NZ $k$-flow has also a NZ $(k+1)$-flow
+		\item<3> rate of graph complexity
+		\item<3> flow number $\Phi(\Gamma)$ -- minimum
+	\end{itemize}
+\end{frame}
+
+\end{document}

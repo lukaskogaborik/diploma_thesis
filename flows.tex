@@ -10,41 +10,47 @@ et al. \cite{group_connectivity} and $k$-closures and $k$-bases introduced by Se
 % TODO rewrite G -> \Gamma
 \section{Integral nowhere-zero flows}
 
-% TODO rewrite to only definition of k-flows, use darts
+In this thesis, we consider only unoriented unweighted simple graphs $\Gamma=(V,E)$. By a \emph{dart} we represent an edge with an additional orientation. This means, for any edge $e=uv\in E$ we have two darts $\vv{uv}$, $\vv{vu}$ belonging to that edge. By a \emph{dart-set} of $S\subseteq V$ we mean the set of darts with initial vertex in the set $S$.
+
 \begin{definition}
-    Let $G=(V, E)$ be a graph and $\mathcal A$ be an abelian group. An \emph{$\mathcal A$-circulation} on $G$ is a pair of functions -- orientation $o\colon E\to V\times V$ and flow $\varphi\colon E\to\mathcal A$ -- satisfying the equality
-		\begin{equation}
-			\sum_{u\in N^+_o(v)} \mkern-14mu\varphi\left(uv\right) =
-			\mkern-14mu\sum_{u \in N^-_o(v)}\mkern-14mu\varphi\left(uv\right) \label{eq:conservation}
-		\end{equation}
-    for each vertex $v$ of $G$.	This equality \eqref{eq:conservation} is often referred to as the \textit{flow conservation constraint}.
-\end{definition}
-\begin{definition}
-    Given a graph $G$ and a positive integer $k\geq2$, a \emph{$k$-circulation} on $G$ is a $\mathbb Z$-circulation $(o,\varphi)$ with an additional constraint that the inequality $1-k\leq\varphi(e)\leq k-1$ holds for each edge $e$ of the graph. Analogously, a \emph{$k$-NZF} $(o,\varphi)$ is a $k$-circulation satisfying $\varphi(e)\neq0$ for all edges.
+    Let $\Gamma=(V, E)$ be a graph and $k\geq 2$ be an integer. A \emph{$k$-flow} on $\Gamma$ is an assignment $\varphi\colon D(V)\to \{-(k-1), -(k-2),\dots, k-2, k-1\}$ of flow values to the darts satisfying
+    $\varphi(\vv{uv})=-\varphi(\vv{vu})$ for any dart $\vv{uv}\in D(V)$ and
+	\begin{equation}
+		\sum_{\vv d\in D(v)} \mkern-10mu\varphi\left(\vv d\right) = 0 \label{eq:conservation}
+	\end{equation}
+    for each vertex $v$ of $G$. The equality \eqref{eq:conservation} is often referred to as the \textit{flow conservation constraint}. Moreover, a \emph{nowhere-zero $k$-flow} (or NZ $k$-flow) is a $k$-flow such that no flow value is zero, i.e. $\varphi\left(\vv d\right)\neq 0$ for any $\vv d\in D(V)$.
 \end{definition}
 
-% TODO check
+We also establish a notation $\varphi(e)$ for $e=uv\in E$, where $\varphi(e)=\max\{\varphi(\vv uv), \varphi(\vv vu)\}$.
+
+The flow conservation constraint \eqref{eq:conservation} is generalisable to any subset of vertices. Hence, having a graph $\Gamma$ with a bridge $e$, the interpretation of the flow conservation constraint for one of the components of $\Gamma - e$ results in the following observation.
+
 \begin{claim}
-    If $e\in E$ is a bridge in $\Gamma$, then $\varphi(e)=0$. Moreover, $\Gamma$ allows a $k$-NZF for no natural $k$.
+    If $e\in E$ is a bridge in $\Gamma$, then $\varphi(e)=0$. Moreover, $\Gamma$ allows a NZ $k$-flow for no natural $k$.
 \end{claim}
 
-% TODO check
+Therefore, NZ flows are examined only on bridgeless graphs.
+
+We can clearly see that graph with an NZ $k$-flow also admits an NZ $(k+1)$-flow. That means, graphs with an NZ $2$-flow are somehow the ``simplest'' ones and the existence of NZ flows relates with some complexity of a graph. So we define a flow number, which is a rate of this complexity. 
+
 \begin{definition}
 	Let $\Gamma$ be a bridgeless graph. A \emph{flow number of $\Gamma$} is
 	\begin{equation*}
-		\Phi(\Gamma) := \min\{k\mid\exists k\text{-NZF on }\Gamma\}.\label{eq:flow_number}
+		\Phi(\Gamma) := \min\{k\mid\exists\text{NZ } k\text{-flow on }\Gamma\}.\label{eq:flow_number}
 	\end{equation*}
 \end{definition}
 
-% TODO check
-\begin{lemma} \emph{\cite[p. 132]{seymour}}
-    For any bridgeless graph, there exist a $2$-flow and a $3$-flow such that for each edge $e$, at least one value from $\varphi_2(e), \varphi_3(e)$ is non-zero.\label{lem:2_flow_3_flow_seymour}
-\end{lemma}
+However, it turns out that this rate of complexity achieves only few values.
 
-% TODO check
 \begin{theorem}[$6$-flow theorem] \emph{\cite[p. 133]{seymour}}
-    There exists a $6$-NZF on any bridgeless graph.\label{th:6_flow}
+    There exists an NZ $6$-flow on any bridgeless graph.\label{th:6_flow}
 \end{theorem}
+
+Seymour constructed this NZ $6$-flow from two simpler flows.
+
+\begin{lemma} \emph{\cite[p. 132]{seymour}}
+    For any bridgeless graph, there exist a $2$-flow $\varphi_2$ and a $3$-flow $\varphi_3$ such that for each edge $e$, at least one value from $\varphi_2(e), \varphi_3(e)$ is non-zero.\label{lem:2_flow_3_flow_seymour}
+\end{lemma}
 
 % TODO check
 \begin{conjecture} \emph{\cite[p. 83]{tutte}}
