@@ -1,0 +1,72 @@
+\begin{tikzpicture}[auto,scale=0.5]
+
+	\node (c0) [circle, draw, fill=black] at (0, 0) {};
+	\node (c1) [circle, draw, fill=black] at (2, 0) {};
+	\node (c2) [circle, draw, fill=black] at (2, 2) {};
+	\node (c3) [circle, draw, fill=black] at (0, 2) {};
+	\node (c4) [circle, draw, fill=black] at (-1, -1) {};
+	\node (c5) [circle, draw, fill=black] at (3, -1) {};
+	\node (c6) [circle, draw, fill=black] at (3, 3) {};
+	\node (c7) [circle, draw, fill=black] at (-1, 3) {};
+
+	\path[thick]
+	(c0) edge (c1)
+	(c1) edge[dotted] (c2)
+	(c2) edge[dotted] (c3)
+	(c3) edge[dotted] (c0)
+	(c4) edge (c5)
+	(c5) edge (c6)
+	(c6) edge[dotted] (c7)
+	(c7) edge (c4)
+	(c0) edge (c4)
+	(c1) edge[dotted] (c5)
+	(c2) edge[dotted] (c6)
+	(c3) edge[dotted] (c7);
+	
+	\node (d0) [circle, draw, fill=black] at (5, 0) {};
+	\node (d1) [circle, draw, fill=black] at (7, 0) {};
+	\node (d2) [circle, draw, fill=black] at (7, 2) {};
+	\node (d3) [circle, draw, fill=black] at (5, 2) {};
+	\node (d4) [circle, draw, fill=black] at (4, -1) {};
+	\node (d5) [circle, draw, fill=black] at (8, -1) {};
+	\node (d6) [circle, draw, fill=black] at (8, 3) {};
+	\node (d7) [circle, draw, fill=black] at (4, 3) {};
+
+	\path[thick]
+	(d0) edge (d1)
+	(d1) edge[dotted] (d2)
+	(d2) edge[dotted] (d3)
+	(d3) edge[dotted] (d0)
+	(d4) edge (d5)
+	(d5) edge (d6)
+	(d6) edge (d7)
+	(d7) edge (d4)
+	(d0) edge (d4)
+	(d1) edge (d5)
+	(d2) edge[dotted] (d6)
+	(d3) edge[dotted] (d7);
+	
+	\node (e0) [circle, draw, fill=black] at (10, 0) {};
+	\node (e1) [circle, draw, fill=black] at (12, 0) {};
+	\node (e2) [circle, draw, fill=black] at (12, 2) {};
+	\node (e3) [circle, draw, fill=black] at (10, 2) {};
+	\node (e4) [circle, draw, fill=black] at (9, -1) {};
+	\node (e5) [circle, draw, fill=black] at (13, -1) {};
+	\node (e6) [circle, draw, fill=black] at (13, 3) {};
+	\node (e7) [circle, draw, fill=black] at (9, 3) {};
+
+	\path[thick]
+	(e0) edge (e1)
+	(e1) edge (e2)
+	(e2) edge (e3)
+	(e3) edge (e0)
+	(e4) edge (e5)
+	(e5) edge (e6)
+	(e6) edge (e7)
+	(e7) edge (e4)
+	(e0) edge (e4)
+	(e1) edge (e5)
+	(e2) edge (e6)
+	(e3) edge (e7);
+
+\end{tikzpicture}

@@ -64,7 +64,7 @@
 \begin{frame}{Nowhere-zero $k$-flows}
 	\begin{figure}
 		\centering
-		\input{flow_K4.tex}
+		\input{K4_flow.tex}
 		\caption{\only<1>{$43$-flow}\only<2>{$1$-flow}\only<3>{NZ $4$-flow, $\Phi(K_4)=4$}}
 	\end{figure}
 	\begin{itemize}
@@ -76,6 +76,127 @@
 		\item<3> rate of graph complexity
 		\item<3> flow number $\Phi(\Gamma)$ -- minimum
 	\end{itemize}
+\end{frame}
+
+\begin{frame}{Chebyshev NZ $r$-flows}
+	\begin{figure}
+		\centering
+		\input{K4_cheb_flow.tex}
+		\caption{2D ChNZ $2$-flow, $\Phi_2^\infty(\Gamma)=2$}
+	\end{figure}
+	\begin{itemize}
+		\item generalisation of one-dimensional flows
+		\item $\left\|(x_1,x_2)^T\right\|_\infty=\max\{|x_1|, |x_2|\}\in[1, r-1]$
+		\item flow number $\Phi_2^\infty(\Gamma)$		
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Known bounds}
+	\begin{itemize}
+		\item generally proved $\Phi(\Gamma)\leq 6$
+		\item generally conjectured $\Phi(\Gamma)\leq 5$
+		\item for cubic graphs, $3$-colourable iff $\Phi(\Gamma)\leq 4$
+		\item generally proved $\Phi_2^\infty(\Gamma)\leq 3$
+		\item generally conjectured $\Phi_2^\infty(\Gamma)\leq 5/2$
+		\item for cubic graphs, $3$-colourable iff $\Phi_2^\infty(\Gamma)=2$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Sufficient flow-pairs}
+	\begin{itemize}
+		\item NZ $6$-flow constructed by Seymour from $2$-flow and $3$-flow
+		\begin{center}\begin{tabular}{c|c}
+			value of $2$-flow & admitted values of $3$-flow\\ \hline
+			0 & 1, 2\\
+			1 & 0, 1, 2
+		\end{tabular}\end{center}
+		\item using same flow pair we can construct 2D ChNZ $3$-flow
+		\item conjectured $2$-flow and $4$-flow, implying NZ $5$-flow and 2D ChNZ $5/2$-flow
+		\begin{center}\begin{tabular}{c|c}
+			value of $2$-flow & admitted values of $4$-flow\\ \hline
+			0 & 2, 3\\
+			1 & 0, 1, 2, 3
+		\end{tabular}\end{center}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Seymour's $k$-closures and $k$-bases}
+	\begin{figure}
+		\centering
+		\input{dice_bases.tex}
+		\caption{$2$-base of $Y_4$, its $1$-closure and $2$-closure}
+	\end{figure}
+	\begin{itemize}
+		\item $k$-closure -- add a circuit, which has at most $k$ missing edges
+		\item $k$-base -- its $k$-closure is the original graph
+		\item spanning tree is a $1$-base
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Flows and $k$-bases}
+	\begin{itemize}
+		\item for a $k$-base $X\subseteq E$, there exists a $(k+1)$-flow that is non-zero on $E\setminus X$
+		\item ``each'' graph has a $2$-base, that is a ``cycle''
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Group connectivity}
+	\begin{itemize}
+		\item analogue of list colourings
+		\item we can deny any flow value for each of the edges
+	\end{itemize}
+	Forbidding more values
+	\begin{itemize}
+		\item $k$-base $X\subseteq E$, $n$-flow $\to$ we can forbid \textbf{strictly less than} $n/k$ values for edges from $E\setminus X$
+		\item inequality not strict $\Rightarrow$ $2$-flow and $4$-flow with $0,1$ forbidden on $0$ edges of the $2$-flow $\Rightarrow$ conjectures on NZ $5$-flow and ChNZ $2.5$-flow proved
+		\item prove for at least some classes of graphs
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Lower bound on $\Phi_2^\infty$ for snarks}
+	\begin{itemize}
+		\item we proved
+		\begin{equation*}
+			\Phi_2^\infty\geq 2+\left.1\middle/\left\lfloor\frac{n-2}4\right\rfloor\right.
+		\end{equation*}
+		\item tight for Petersen snarks, Blanuša snarks, but no other equality cases known
+		\item can we do better?
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Generation of snarks with given girth $g$}
+	\begin{itemize}
+		\item naive algorithm -- adding $K_2$
+		\begin{figure}
+			\centering
+			\input{generation_K2.tex}
+		\end{figure}
+		\item last level of generation lasts the most -- try adding tripod instead of last two levels
+		\begin{figure}
+			\centering
+			\input{generation_tripod.tex}
+		\end{figure}
+		\item even better with $6$-vertex subgraph $\mathcal H$
+		\begin{figure}
+			\centering
+			\input{generation_H.tex}
+		\end{figure}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Properties of generation}
+	\begin{itemize}
+		\item each graph with $g\geq 5$ has a reducible tripod, after reduction, $g'\geq g-1$
+		\item each graph with $g\geq 5$ has a reducible $\mathcal H$, after reduction, $g'\geq g-2$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Thank you for your attention!}{Any questions?}
+	\begin{figure}
+		\centering
+		\includegraphics[width=60mm]{2FA_meme.jpg}
+	\end{figure}
+		
 \end{frame}
 
 \end{document}

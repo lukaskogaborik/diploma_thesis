@@ -7,7 +7,6 @@ et al. \cite{group_connectivity} and $k$-closures and $k$-bases introduced by Se
 
 % TODO definition of generalised Blanuša snarks
 
-% TODO rewrite G -> \Gamma
 \section{Integral nowhere-zero flows}
 
 In this thesis, we consider only unoriented unweighted simple graphs $\Gamma=(V,E)$. By a \emph{dart} we represent an edge with an additional orientation. This means, for any edge $e=uv\in E$ we have two darts $\vv{uv}$, $\vv{vu}$ belonging to that edge. By a \emph{dart-set} of $S\subseteq V$ we mean the set of darts with initial vertex in the set $S$.
@@ -21,7 +20,7 @@ In this thesis, we consider only unoriented unweighted simple graphs $\Gamma=(V,
     for each vertex $v$ of $G$. The equality \eqref{eq:conservation} is often referred to as the \textit{flow conservation constraint}. Moreover, a \emph{nowhere-zero $k$-flow} (or NZ $k$-flow) is a $k$-flow such that no flow value is zero, i.e. $\varphi\left(\vv d\right)\neq 0$ for any $\vv d\in D(V)$.
 \end{definition}
 
-We also establish a notation $\varphi(e)$ for $e=uv\in E$, where $\varphi(e)=\max\{\varphi(\vv uv), \varphi(\vv vu)\}$.
+We also establish a notation $\varphi(e)$ for $e=uv\in E$, where $\varphi(e)=\max\{\varphi(\vv{uv}), \varphi(\vv{vu})\}$.
 
 The flow conservation constraint \eqref{eq:conservation} is generalisable to any subset of vertices. Hence, having a graph $\Gamma$ with a bridge $e$, the interpretation of the flow conservation constraint for one of the components of $\Gamma - e$ results in the following observation.
 
@@ -46,72 +45,97 @@ However, it turns out that this rate of complexity achieves only few values.
     There exists an NZ $6$-flow on any bridgeless graph.\label{th:6_flow}
 \end{theorem}
 
-Seymour constructed this NZ $6$-flow from two simpler flows.
+Seymour constructed this NZ $6$-flow from two simpler flows from the fact, that if $a\in\{0,\pm 1\}$, $b\in\{0,\pm 1,\pm 2\}$ and not both $a, b$ are zero, then $3a+b\in\{\pm 1, \pm 2, \pm 3, \pm 4, \pm 5\}$.
 
 \begin{lemma} \emph{\cite[p. 132]{seymour}}
     For any bridgeless graph, there exist a $2$-flow $\varphi_2$ and a $3$-flow $\varphi_3$ such that for each edge $e$, at least one value from $\varphi_2(e), \varphi_3(e)$ is non-zero.\label{lem:2_flow_3_flow_seymour}
 \end{lemma}
 
-% TODO check
-\begin{conjecture} \emph{\cite[p. 83]{tutte}}
-    There exists a $5$-NZF on any bridgeless graph.\label{conj:5_flow}
+On the other hand, there is no known graph with $\Phi(\Gamma)=6$, all known graphs have $\Phi(\Gamma)\leq 5$. Therefore, the conjecture about the NZ $5$-flow by Tutte still holds unresolved.
+
+\begin{conjecture}[$5$-flow conjecture] \emph{\cite[p. 83]{tutte}}
+    There exists an NZ $5$-flow on any bridgeless graph.\label{conj:5_flow}
 \end{conjecture}
 
-% TODO check, remove bipartite
-\begin{proposition} \emph{\cite[pp. 160, 161]{diestel}}
-    A cubic graph has a $4$-NZF if and only if it is $3$-edge-colourable. Moreover, it has a $3$-NZF if and only if it is bipartite.
+As for many problems in the graph theory, it is sufficient to explore the problem only on the smaller subset of graphs. There exists a folklore reduction of nowhere-zero flows to $3$-regular (or cubic) graphs.
+\begin{proposition}
+    There exists an NZ $k$-flow on any bridgeless graph if and only if there exists an NZ $k$-flow on any cubic bridgeless graph.\label{prop:reduction}
 \end{proposition}
 
-% TODO check
+Hence, by considering only cubic graphs, we still solve the universal problem. Moreover, in terms of finding a counterexample to Tutte's $5$-flow conjecture, we can also avoid $3$-edge-colourable ones and limit research to the cubic graphs, that are not $3$-edge-colourable, as a corollary of the next proposition.
+
+\begin{proposition} \emph{\cite[pp. 160, 161]{diestel}}
+    A cubic graph has an NZ $4$-flow if and only if it is $3$-edge-colourable.
+\end{proposition}
+
+The class of type II cubic graphs is widely used, so its members have special name.
 \begin{definition}
     A \emph{snark} is a bridgeless cubic graph, which has no cycles of lengths $3$ and $4$, is cyclically $4$-edge connected (at least $4$ edges must be removed from the graph to get two components containing a cycle) and is not $3$-edge-colourable.
 \end{definition}
 
-\section{Chebyshev nowhere-zero flows and sufficient flow-pairs}
+\section{Chebyshev flows and sufficient flow-pairs}
 
-% TODO rewrite with darts, minimum, erase Manhattan norm
+There were some attempts to generalise nowhere-zero flows to real numbers and more dimensions. By generalising integer nowhere-zero flows to real numbers, researchers found out, that restricting only zero flow value is not sufficient, since any flow consisting of non-zero flow values can be made ``smaller'' and then, the notion of flow number disappears. Therefore, we need to determine a larger interval of real values forbidden as flow values, and hence, one-dimensional real nowhere-zero flows are allowed to use flow values from the interval $[1,r-1]$. Then the first attempts of generalisation real flows to more dimensions \cite{TODO} tried to pick only vectors with the Euclidean norm from the mentioned interval $[1,r-1]$. It worked, but it did not have such nice properties, as we would expect. However, changing a norm turned out to be a good idea \cite{svk}, so we will consider only Chebyshev multidimensional nowhere-zero flows. 
+
 \begin{definition}
-	Let $G$ be a bridgeless graph and $d$ be a positive integer. A \emph{$d$-dimensional Manhattan flow number} of $G$ and a \emph{$d$-dimensional Chebyshev flow number} of $G$ are
-	\begin{equation*}
-		\Phi_d^\text{M}(G) := \inf\{r\mid\exists(r, d)\text{-MNZF on }G\}\text{ and } \Phi_d^\text{Ch}(G) := \inf\{r\mid\exists(r, d)\text{-ChNZF on }G\},
-	\end{equation*}
- respectively.
+    Let $\Gamma=(V, E)$ be a bridgeless graph, $d$ be a positive integer and $r\geq 2$ be a real constant. A \emph{$d$-dimensional Chebyshev nowhere-zero $r$-flow} (or $d$D ChNZ $r$-flow) satisfies the conservation constraint \eqref{eq:conservation} and the condition $1\leq\|\varphi(e)\|_\infty\leq r-1$ for each edge $e\in E$.
 \end{definition}
 
-% TODO check
-\begin{proposition}
-    Each bridgeless graph has a $(3, 2)$-ChNZF.\label{prop:manhattan_upper_seymour}
+The flow number can be defined in a similar way to integral nowhere-zero flows. The only problem is, that the set of real numbers does not need to contain a minimal element, so formally correct definition would use infimum instead of minimum. However, the infimum of the flow number candidates is always feasible \cite{TODO}, so we can define the flow number straightforward with minimum.
+
+\begin{definition}
+	Let $\Gamma$ be a bridgeless graph and $d$ be a positive integer. A \emph{$d$-dimensional Chebyshev flow number} of $\Gamma$ is
+	\begin{equation*}
+		\Phi_d^\infty(\Gamma) := \min\{r\mid\exists d\text{D ChNZ }\text{-flow on }\Gamma\}.
+	\end{equation*}
+\end{definition}
+
+Now we recall the Seymour's flows from Lemma \ref{lem:seymour_2_flow_3_flow} -- a $2$-flow and a $3$-flow with a property, that no edge has both flow values equal to zero. By simply using the value of the $2$-flow as the first coordinate and the value of the $3$-flow as the second coordinate, we get a Chebyshev nowhere-zero flow. Moreover, this flow gives us a nice bound on the Chebyshev flow number.
+
+\begin{proposition} \emph{\cite[p. 343]{svk}}
+    Each bridgeless graph has a 2D ChNZ $3$-flow and hence, $\Phi_2^\infty(\Gamma)\leq 3$.\label{prop:chebyshev_upper_seymour}
 \end{proposition}
 
-% TODO rewrite to Chebyshev
-\begin{theorem}
-    A cubic graph has a $(2, 2)$-MNZF if and only if it is $3$-edge-colourable.\label{th:2_mnzf_iff_3_col}
+Again, no graph with $\Phi_2^\infty(\Gamma)=3$ is known. Futhermore, there is no known graph with $\Phi_2^\infty(\Gamma)>5/2$. Therefore, the next conjecture is interesting to examine.
+
+\begin{conjecture} \emph{\cite[p. 344]{svk}}
+    Each bridgeless graph has a 2D ChNZ $5/2$-flow and hence, $\Phi_2^\infty(\Gamma)\leq 5/2$.\label{conj:chebyshev_upper_seymour}
+\end{conjecture}
+
+And similarly as for integral flows, the problem can be reduced to cubic graphs and then to snarks, since $3$-edge-colourable cubic graphs have small flow number.
+
+\begin{theorem} \emph{\cite[p. 343]{svk}}
+    A cubic graph has a 2D ChNZ $2$-flow if and only if it is $3$-edge-colourable.\label{th:2_chnzf_iff_3_col}
 \end{theorem}
 
-% TODO rewrite with darts, sufficient flow-pair, value between, add reasoning
+As an NZ $6$-flow and a 2D ChNZ $3$-flow can be constructed from two simpler flows, something similar can be made for smaller flow numbers. However, the existence of two simpler flows is only a sufficient condition to the existence of the original flow, the condition is not necessary. Hence we will use a term \emph{$p/q$-sufficient flow-pair} instead of a former \emph{$(p,q)$-circulation decomposition}.
+
 \begin{definition}
-        Let $p\leq q$ be the positive integers. A \emph{$(p,q)$-circulation decomposition} of a graph $G$ is a $2$-circulation $(o_2,\varphi_2)$ and a $(p+q+1)$-circulation $(o_{p+q+1}, \varphi_{p+q+1})$ such that whenever $\varphi_2(e)$ is zero, the value $|\varphi_{p+q+1}(e)|$ is either $q$ or $p+q$.
+        Let $p\leq q$ be the positive integers. A \emph{$p/q$-sufficient flow-pair} of a graph $\Gamma$ is a $2$-flow $\varphi_2$ and a $(p+q+1)$-flow $\varphi_{p+q+1}$ such that whenever $\varphi_2(e)$ is zero, the value $\varphi_{p+q+1}(e)$ is at least $q$.
 \end{definition}
 
-% TODO check
+One possible ambiguity of this definition is, that since $p/q$ is written as a fraction, the $2/6$-sufficient flow-pair can be mixed up with the $1/3$-sufficient flow-pair. However, this is not a bug, this is a feature, since we can WLOG assume $p,q$ relatively prime.
+
 \begin{lemma}
-A bridgeless graph $G$ with a $(dp,dq)$-circulation decomposition also has a $(p,q)$-circulation decomposition.\label{lem:circ_rel_prime}
+A bridgeless graph $\Gamma$ with a $dp/dq$-sufficient flow-pair also has a $p/q$-sufficient flow-pair and vice versa.
 \end{lemma}
 
-% TODO check
-\begin{proposition}
-    Consider a bridgeless graph $G$ with a $(p,q)$-circulation decomposition. Then, there are $\left(2+\frac pq,2\right)$-ChNZF and $\left(4+\frac {2p}q, 1\right)$-NZF on $G$.\label{prop:nzf_from_two_circulations_generalised}
+We mentioned, that the $p/q$-sufficient flow-pair is a sufficient condition to the existence of some nowhere-zero flows. Those flows are somehow related with the value $p/q$ and that is the reason to write it as a fraction in the definition of the sufficient flow-pair,
+
+\begin{proposition} \emph{\cite[p. 344]{svk}}
+    Consider a bridgeless graph $\Gamma$ with a $p/q$-sufficient flow-pair. Then, there are a 2D ChNZ $(2+p/q)$-flow and an NZ $(4+2p/q)$-flow on $\Gamma$.\label{prop:nzf_from_sufficient_flow_pair}
 \end{proposition}
 
-% TODO check
-\begin{conjecture}
-    For each bridgeless graph there exists a $(1, 2)$-circulation decomposition.
+Note that if there is a graph, which is a counterexample to Tutte's 5-flow conjecture, it should not have the $1/2$-sufficient flow-pair. Hence it would be interesting to classify graphs with $1/2$-sufficient flow-pair. By a computer, it was checked that this flow-pair exists for snarks up to roughly $30$ vertices, so it looks like the $1/2$-sufficient flow-pair exists always.
+
+\begin{conjecture} \emph{\cite[p. 346]{svk}}
+    Each bridgeless graph has a $1/2$-sufficient flow-pair.
 \end{conjecture}
 
 % TODO is it necessary?
-\begin{lemma}
-	Let $p<q$ be positive integers. Consider a snark $G$ with a $(p,q)$-circulation decomposition. Then the set of edges $e$ with a property $\varphi_2(e)\neq 0$ is a $2$-factor of $G$.\label{lem:2_circ_snark_2_factor}
-\end{lemma}
+% \begin{lemma}
+%	Let $p<q$ be positive integers. Consider a snark $G$ with a $(p,q)$-circulation decomposition. Then the set of edges $e$ with a property $\varphi_2(e)\neq 0$ is a $2$-factor of $G$.\label{lem:2_circ_snark_2_factor}
+%\end{lemma}
 
 \section{Closures and bases}
 
