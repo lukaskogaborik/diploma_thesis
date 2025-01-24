@@ -75,22 +75,24 @@ The class of type II cubic graphs is widely used, so its members have special na
 
 \section{Chebyshev flows and sufficient flow-pairs}
 
-There were some attempts to generalise nowhere-zero flows to real numbers and more dimensions. By generalising integer nowhere-zero flows to real numbers, researchers found out, that restricting only zero flow value is not sufficient, since any flow consisting of non-zero flow values can be made ``smaller'' and then, the notion of flow number disappears. Therefore, we need to determine a larger interval of real values forbidden as flow values, and hence, one-dimensional real nowhere-zero flows are allowed to use flow values from the interval $[1,r-1]$. Then the first attempts of generalisation real flows to more dimensions \cite{TODO} tried to pick only vectors with the Euclidean norm from the mentioned interval $[1,r-1]$. It worked, but it did not have such nice properties, as we would expect. However, changing a norm turned out to be a good idea \cite{svk}, so we will consider only Chebyshev multidimensional nowhere-zero flows. 
+% TODO citation of Euclidean flows article
+There were some attempts to generalise nowhere-zero flows to real numbers and more dimensions. By generalising integer nowhere-zero flows to real numbers, researchers found out, that restricting only zero flow value is not sufficient, since any flow consisting of non-zero flow values can be made ``smaller'' and then, the notion of flow number disappears. Therefore, we need to determine a larger interval of real values forbidden as flow values, and hence, one-dimensional real nowhere-zero flows are allowed to use flow values from the interval $[1,r-1]$. Then the first attempts of generalisation real flows to more dimensions tried to pick only vectors with the Euclidean norm from the mentioned interval $[1,r-1]$. It worked, but it did not have such nice properties, as we would expect. However, changing a norm turned out to be a good idea \cite{svk}, so we will consider only Chebyshev multidimensional nowhere-zero flows. 
 
 \begin{definition}
     Let $\Gamma=(V, E)$ be a bridgeless graph, $d$ be a positive integer and $r\geq 2$ be a real constant. A \emph{$d$-dimensional Chebyshev nowhere-zero $r$-flow} (or $d$D ChNZ $r$-flow) satisfies the conservation constraint \eqref{eq:conservation} and the condition $1\leq\|\varphi(e)\|_\infty\leq r-1$ for each edge $e\in E$.
 \end{definition}
 
-The flow number can be defined in a similar way to integral nowhere-zero flows. The only problem is, that the set of real numbers does not need to contain a minimal element, so formally correct definition would use infimum instead of minimum. However, the infimum of the flow number candidates is always feasible \cite{TODO}, so we can define the flow number straightforward with minimum.
+% TODO citation of inf -> min
+The flow number can be defined in a similar way to integral nowhere-zero flows. The only problem is, that the set of real numbers does not need to contain a minimal element, so formally correct definition would use infimum instead of minimum. However, the infimum of the flow number candidates is always feasible, so we can define the flow number straightforward with minimum.
 
 \begin{definition}
 	Let $\Gamma$ be a bridgeless graph and $d$ be a positive integer. A \emph{$d$-dimensional Chebyshev flow number} of $\Gamma$ is
 	\begin{equation*}
-		\Phi_d^\infty(\Gamma) := \min\{r\mid\exists d\text{D ChNZ }\text{-flow on }\Gamma\}.
+		\Phi_d^\infty(\Gamma) := \min\{r\mid\exists d\text{D ChNZ }r\text{-flow on }\Gamma\}.
 	\end{equation*}
 \end{definition}
 
-Now we recall the Seymour's flows from Lemma \ref{lem:seymour_2_flow_3_flow} -- a $2$-flow and a $3$-flow with a property, that no edge has both flow values equal to zero. By simply using the value of the $2$-flow as the first coordinate and the value of the $3$-flow as the second coordinate, we get a Chebyshev nowhere-zero flow. Moreover, this flow gives us a nice bound on the Chebyshev flow number.
+Now we recall the Seymour's flows from Lemma \ref{lem:2_flow_3_flow_seymour} -- a $2$-flow and a $3$-flow with a property, that no edge has both flow values equal to zero. By simply using the value of the $2$-flow as the first coordinate and the value of the $3$-flow as the second coordinate, we get a Chebyshev nowhere-zero flow. Moreover, this flow gives us a nice bound on the Chebyshev flow number.
 
 \begin{proposition} \emph{\cite[p. 343]{svk}}
     Each bridgeless graph has a 2D ChNZ $3$-flow and hence, $\Phi_2^\infty(\Gamma)\leq 3$.\label{prop:chebyshev_upper_seymour}
@@ -113,6 +115,10 @@ As an NZ $6$-flow and a 2D ChNZ $3$-flow can be constructed from two simpler flo
 \begin{definition}
         Let $p\leq q$ be the positive integers. A \emph{$p/q$-sufficient flow-pair} of a graph $\Gamma$ is a $2$-flow $\varphi_2$ and a $(p+q+1)$-flow $\varphi_{p+q+1}$ such that whenever $\varphi_2(e)$ is zero, the value $\varphi_{p+q+1}(e)$ is at least $q$.
 \end{definition}
+
+\begin{remark}
+	The structure in the Lemma \ref{lem:2_flow_3_flow_seymour} is a $1/1$-sufficient flow-pair.
+\end{remark}
 
 One possible ambiguity of this definition is, that since $p/q$ is written as a fraction, the $2/6$-sufficient flow-pair can be mixed up with the $1/3$-sufficient flow-pair. However, this is not a bug, this is a feature, since we can WLOG assume $p,q$ relatively prime.
 
@@ -139,34 +145,60 @@ Note that if there is a graph, which is a counterexample to Tutte's 5-flow conje
 
 \section{Closures and bases}
 
+As mentioned in the previous chapter, we would like to prove the existence of a $1/2$-sufficient flow-pair for some classes of graphs. To achieve this, we need to delve deeper into the Seymour's paper. There he introduced a closure of a subgraph, which add circuits, that are almost completely in it.
+
 \begin{definition} \cite[p. 132]{seymour}
 	Let $\Gamma=(V,E)$ be a graph and $S\subseteq E$ its edge subset. A \emph{$k$-closure} $\langle S\rangle_{k}$ of $S$ is a mimimal $T$ such that $S\subseteq T\subseteq E$ and for any circuit $\mathcal C\not\subseteq T$ of $G$, the size of $\mathcal C\cap T^c$ is strictly greater than $k$.
 \end{definition}
 
+Moreover, interesting are subgraphs, which are sufficient to generate the original graph using this closure operator.
+
 \begin{definition} \cite[p. 7]{group_connectivity_enumeration}
-	Let $\Gamma=(V,E)$ be a graph. Then $S\subseteq E$ is a \emph{$k$-base} of $\Gamma$ if $\langle S\rangle_k = E$.
+	Let $\Gamma=(V,E)$ be a graph. Then $B\subseteq E$ is a \emph{$k$-base} of $\Gamma$ if $\langle B\rangle_k = E$.
 \end{definition}
 
+Note that if we have a spanning forest $S$ and an edge $e=uv\not\in S$, then there is a $uv$-path $P\subseteq S$ and hence, $P\cup\{e\}$ is a circuit with only one missing edge in $S$. This shows that the classification of $1$-bases is relatively easy. 
+
 \begin{claim}
-	Any spanning tree of a graph is its inclusion-minimal $1$-base.
+	Any spanning forest of a graph is its inclusion-minimal $1$-base.
 \end{claim}
 
-\begin{lemma} \cite[p. 133]{seymour}
-	For any $3$-connected graph $\Gamma$ there exists its even-factor which is also its $2$-base.
-\end{lemma}
-% TODO add connection to Seymour's proof
+The reason, why Seymour defined this terminology, is that outside a $k$-base, we can forbid zero flow values.
 
-\begin{lemma} \cite[p. 134]{seymour}
-	For any $3$-connected cubic graph $\Gamma=(V,E)$ there exists a vertex partition $E=E_1\cup E_2$ such that $E_1,E_2$ are its $1$- and $2$-bases, respectively.
+\begin{theorem} \emph{\cite[p. 132]{seymour}}
+	Let $B\subseteq E$ be a $k$-base of $\Gamma=(V,E)$. Then $\Gamma$ has a $(k+1)$-flow, which is non-zero on all edges of $E\setminus B$.\label{th:non_zero_outside_base}
+\end{theorem}
+
+Considering $2$-closures, Seymour proved we can find a generalised cycle (i.e. a union of disjoint circuits), which is a $2$-base.
+
+\begin{lemma} \emph{\cite[p. 133]{seymour}}
+	For any $3$-connected graph $\Gamma$ there exists its even-factor which is also its $2$-base.\label{lem:cycle_2_base}
 \end{lemma}
-% TODO add connection to Seymour's proof
+
+Now we could explain, how is this Lemma relevant in the finding a $1/1$-sufficient flow-pair. Denote by $\mathcal C$ the generalised cycle of $\Gamma$, which is its $2$-base. From Theorem \ref{th:non_zero_outside_base}, we have a $3$-flow, which is non-zero on $E\setminus\mathcal C$. On the other hand, we can easily construct a $2$-flow, that has flow values equal to $1$ exactly on the edges of $\mathcal C$. Together, these flows form a $1/1$-sufficient flow-pair.
+
+There is also another approach to construct a $1/1$-sufficient flow-pair, which is based on the next lemma. 
+
+\begin{lemma} \emph{\cite[p. 134]{seymour}}
+	For any $3$-connected cubic graph $\Gamma=(V,E)$ there exists a vertex partition $E=B_1\cupdot B_2$ such that $B_1,B_2$ are its $1$- and $2$-bases, respectively.
+\end{lemma}
+
+Now, by Theorem \label{th:non_zero_outside_base} we have a $2$-flow, which is non-zero on $E\setminus B_1 = B_2$ and a $3$-flow, which is non-zero on $E\setminus B_2=B_1$. Again, this is obviously a $1/1$-sufficient flow-pair on $\Gamma$.
 
 \section{Group connectivity}
 
-% TODO introduction, connection with choosability and list properties
+In the graph colourings theory, there is a concept called \emph{list colouring} or \emph{choosability}, where each vertex has a list of $k$ permitted colours and we ask, whether we can choose one of them for each vertex such that the colouring is proper, independently on the choice of lists. A similar idea was explored in the field of nowhere-zero flows, known as a \emph{group connectivity}. Although the original definition does not state straightforward analogue to the choosability in nowhere-zero flows, it is proved to be one of its equivalent definitions. So for comfortability, we use that one as a definition.
 
-% TODO definition
+\begin{definition} \cite[p. 167]{group_connectivity}
+	Let $\Gamma$ be a graph and $\mathcal A$ be an Abelian group. We say that $\Gamma$ is \emph{$\mathcal A$-connected}, if for any function of forbidden values $F\colon D(V)\to \mathcal A$ assigning additive inverses to inverse darts, there exists an $\mathcal A$-flow $\varphi$ satisfying $\varphi\left(\vv d\right)\neq F\left(\vv d\right)$ for any dart $\vv d\in D(V)$.
+\end{definition}
 
-% TODO generalised first Seymour's lemma
+As an interesting consequence, the Theorem \ref{th:non_zero_outside_base} about the $(k+1)$-flow, which is non-zero out of a $k$-base, can be generalised in the choosability manner.
+
+\begin{theorem} \emph{\cite[p. 168]{group_connectivity}}
+	Let $n$ be a positive integer, $B\subset E$ be a $k$-base of $\Gamma=(V,E)$ and $F\colon D(V)\to \mathcal P(\mathcal A)$ be a function of forbidden values assigning sets of additive inverses to inverse darts with a property that $\left|F\left(\vv d\right)\right| < n/k$ for each dart $\vv d\in D(V)$. Then there exists an $n$-flow $\varphi$ satisfying $\varphi\left(\vv d\right)\notin F\left(\vv d\right)$.
+\end{theorem}
+
+Note that if we would like to directly derive $1/2$-sufficient flow-pair from this Theorem, we can take a $2$-base of $\Gamma$, which is a cycle (guaranteed by Lemma \ref{lem:cycle_2_base}). Then, this cycle obviously forms a $2$-flow and considering a $4$-flow, we are able to forbid strictly less than $4/2 = 2$ flow values on any edge outside this cycle. Hence this approach is not straightforwardly applicable, since we would need a non-strict inequality instead of the strict one.
 
 % TODO discuss generalisation of the second Seymour's lemma
