@@ -175,9 +175,9 @@ void replace_neighbour(unsigned char vertex, unsigned char v1, unsigned char v2)
 
 void init_generate_irreducible_graphs() {									// TODO Polehunter TODO K2
     //Startgraph is the K4
-    int i, j;
+    int i, j;    
     for(i = 0; i < 4; i++) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             current_graph[i][j] = (i + j + 1) % 4;
         }
         edge_diamonds[0][i] = i;
@@ -453,7 +453,7 @@ void calculate_vertex_neighbourhood() {
     unsigned char i, j;
     for(i = 0; i < current_number_of_vertices; i++) {
         vertex_neighbourhood[i] = (setword) 0;
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             vertex_neighbourhood[i] |= BIT(current_graph[i][j]);
         }
     }
@@ -870,7 +870,7 @@ void remove_lollipop_edge(EDGE edge) {
 
 unsigned char determine_external_diamond_neighbour(IRRED_TRIANGLE diamond) {
     int i;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[diamond[0]]; i++) {
         if(current_graph[diamond[0]][i] != diamond[1] && current_graph[diamond[0]][i] != diamond[2])
             return current_graph[diamond[0]][i];
     }
@@ -881,7 +881,7 @@ unsigned char determine_external_diamond_neighbour(IRRED_TRIANGLE diamond) {
 unsigned char determine_external_diamond_neighbour_index(IRRED_TRIANGLE diamond, int index) {
     DEBUGASSERT(index == 0 || index == 3);
     int i;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[diamond[index]]; i++) {
         if(current_graph[diamond[index]][i] != diamond[1] && current_graph[diamond[index]][i] != diamond[2])
             return current_graph[diamond[index]][i];
     }
@@ -894,7 +894,7 @@ unsigned char determine_external_diamond_neighbour_index(IRRED_TRIANGLE diamond,
  */
 unsigned char determine_nondiamond_neighbour(IRRED_TRIANGLE diamond, unsigned char vertex) {
     int i;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[vertex]; i++) {
         if(current_graph[vertex][i] != diamond[0] && current_graph[vertex][i] != diamond[3])
             return current_graph[vertex][i];
     }
@@ -1187,7 +1187,7 @@ void update_edge_diamonds() {
                     break;
                 }
                 external_neighbours[j] = BIT(external_vertices[j]);
-                for(k = 0; k < REG; k++) {
+                for(k = 0; k < degrees[external_vertices[j]]; k++) {
                     external_neighbours[j] |= BIT(current_graph[external_vertices[j]][k]);
                 }
             }
@@ -1418,13 +1418,13 @@ void generate_all_nonadj_diamond_edge_pairs(EDGEPAIR edge_pairs_list[], int *edg
     int diamond;
     int i, j, next, k, l, next0;
     for(i = 0; i < current_number_of_vertices - 3; i++) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             next = current_graph[i][j];
             if(i < next) {
                 if(!(is_part_of_irreducible_triangle_diamond(i, &diamond) && is_part_of_same_irreducible_triangle(next, diamond))) {
                     for(k = i + 1; k < current_number_of_vertices - 1; k++) {
                         if(k != next) { // k != i is automatically implied because k >= i+1
-                            for(l = 0; l < REG; l++) {
+                            for(l = 0; l < degrees[k]; l++) {
                                 next0 = current_graph[k][l];
                                 if(k < next0 && next0 != next) {
                                     if(!(is_part_of_irreducible_triangle_diamond(k, &diamond) && is_part_of_same_irreducible_triangle(next0, diamond))) {
@@ -1550,7 +1550,7 @@ void determine_vertex_partitions() {
     for(i = 0; i < current_number_of_vertices; i++) {
         vertex_colours_local[i] = 0;
         if(!ISMARKED(i)) {
-            for(j = 0; j < REG; j++) {
+            for(j = 0; j < degrees[i]; j++) {
                 if(i < current_graph[i][j]) {
                     vertex_colours_local[i] += colours_one[i][current_graph[i][j]];
                 } else {
@@ -1564,7 +1564,7 @@ void determine_vertex_partitions() {
 
             number_not_marked++;
         } else {
-            for(j = 0; j < REG; j++) {
+            for(j = 0; j < degrees[i]; j++) {
                 /**
                  * Remark: if current_graph[i][j] is not marked,
                  * colours_two[i][current_graph[i][j]] will always be 0.
@@ -1758,7 +1758,7 @@ void determine_major_edge_partitions() {
     int colour_list[current_number_of_vertices];
     for(i = 0; i < current_number_of_vertices; i++) {
         colour_list[i] = 0;
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             neighbour = current_graph[i][j];
             if(i < neighbour) //Is slightly faster than UNION
                 colour_list[i] += colours_one[i][neighbour];
@@ -1932,7 +1932,7 @@ int inserted_edge_will_be_part_of_pentagon_forbidden_edges(EDGEPAIR edgepair) {
     for(i = 0; i < 2; i++)
         for(j = 2; j < 4; j++) {
             //Test if edgepair[i] and edgepair[j] have a common neighbour
-            for(k = 0; k < REG; k++) {
+            for(k = 0; k < degrees[edgepair[i]]; k++) {
                 unsigned char nbr = current_graph[edgepair[i]][k];
                 if(is_neighbour(nbr, edgepair[j])) {
                     part_of_pentagon = 1;
@@ -2611,7 +2611,7 @@ int can_abort_candidate_edges_tuples_last_edge(unsigned long long int edges_bitv
         //Is no bottleneck!
         int j;
         for(i = 0; i < current_number_of_vertices; i++)
-            for(j = 0; j < REG; j++) {
+            for(j = 0; j < degrees[i]; j++) {
                 int neighbour = current_graph[i][j];
                 if(i < neighbour) {
                     int edge_label = edge_labels[i][neighbour];
@@ -2649,7 +2649,7 @@ void generate_edge_4_tuples_girth_at_least_5_all_part(EDGE4TUPLE current_4_tuple
     //for(i = smallest_element + 1; i < current_number_of_vertices - 3 - 2 * (2 - part); i++)
     for(i = smallest_element + 1; i < current_number_of_vertices - 3; i++)
         if((BIT(i) & current_tuple_bitvector) == 0) //Is necessary for part 1!
-            for(j = 0; j < REG; j++) {
+            for(j = 0; j < degrees[i]; j++) {
                 next = current_graph[i][j];
                 if(i < next && (BIT(next) & current_tuple_bitvector) == 0) {
                     //TODO: test of nog niet kan bounden...
@@ -2688,7 +2688,7 @@ void generate_edge_4_tuples_girth_at_least_5_all_part(EDGE4TUPLE current_4_tuple
                         if(num_cand_edges == 0) {
                             for(k = i + 1; k < current_number_of_vertices - 1; k++)
                                 if((BIT(k) & forbidden_vertices) == 0)
-                                    for(l = 0; l < REG; l++) {
+                                    for(l = 0; l < degrees[k]; l++) {
                                         next1 = current_graph[k][l];
                                         if(k < next1 && (BIT(next1) & forbidden_vertices) == 0) {
                                             int stop_recursion1 = 0;
@@ -2891,7 +2891,7 @@ void generate_edge_4_tuples_girth_at_least_4_all_one_square(int *edge_4_tuple_li
         int k, l, next;
         for(k = 0; k < current_number_of_vertices - 1; k++)
             if((BIT(k) & forbidden_vertices_edge0) == 0)
-                for(l = 0; l < REG; l++) {
+                for(l = 0; l < degrees[k]; l++) {
                     next = current_graph[k][l];
                     if(k < next && (BIT(next) & forbidden_vertices_edge0) == 0) {
                         //Edge k next found for part 0
@@ -2906,7 +2906,7 @@ void generate_edge_4_tuples_girth_at_least_4_all_one_square(int *edge_4_tuple_li
                         int m, n, next2;
                         for(m = 0; m < current_number_of_vertices - 1; m++)
                             if((BIT(m) & forbidden_vertices_edge1) == 0)
-                                for(n = 0; n < REG; n++) {
+                                for(n = 0; n < degrees[m]; n++) {
                                     next2 = current_graph[m][n];
                                     if(m < next2 && (BIT(next2) & forbidden_vertices_edge1) == 0) {
                                         //m next2 is a valid edge!
@@ -2971,7 +2971,7 @@ void generate_edge_4_tuples_girth_at_least_5_all_one_pentagon(int *edge_4_tuple_
 
         for(k = 0; k < current_number_of_vertices - 1; k++)
             if((BIT(k) & forbidden_vertices_edge0) == 0)
-                for(l = 0; l < REG; l++) {
+                for(l = 0; l < degrees[k]; l++) {
                     next = current_graph[k][l];
                     if(k < next && (BIT(next) & forbidden_vertices_edge0) == 0) {
                         //Edge k next found for part 0
@@ -3154,7 +3154,7 @@ void generate_edge_4_tuples_girth_at_least_5_all_three_disjoint_pentagons_combin
                             if(num_cand_edges == 0) {
                                 for(l = 0; l < current_number_of_vertices - 1; l++)
                                     if((BIT(l) & forbidden_vertices_edge2) == 0)
-                                        for(m = 0; m < REG; m++) {
+                                        for(m = 0; m < degrees[l]; m++) {
                                             next = current_graph[l][m];
                                             if(l < next && (BIT(next) & forbidden_vertices_edge2) == 0) {
 
@@ -3345,7 +3345,7 @@ void generate_edge_4_tuples_girth_at_least_5_all_two_disjoint_pentagons(int *edg
             setword forbidden_vertices_edge0_other = forbidden_vertices_edge0 | BIT(ep2) | BIT(ep3);
             for(k = 0; k < current_number_of_vertices - 1; k++)
                 if((BIT(k) & forbidden_vertices_edge0_other) == 0)
-                    for(l = 0; l < REG; l++) {
+                    for(l = 0; l < degrees[k]; l++) {
                         next = current_graph[k][l];
                         if(k < next && (BIT(next) & forbidden_vertices_edge0_other) == 0) {
                             //Edge k next found for part 0
@@ -3375,7 +3375,7 @@ void generate_edge_4_tuples_girth_at_least_5_all_two_disjoint_pentagons(int *edg
                                 if(num_cand_edges == 0) {
                                     for(m = 0; m < current_number_of_vertices - 1; m++)
                                         if((BIT(m) & forbidden_vertices_edge1_other) == 0)
-                                            for(n = 0; n < REG; n++) {
+                                            for(n = 0; n < degrees[m]; n++) {
                                                 next2 = current_graph[m][n];
                                                 if(m < next2 && (BIT(next2) & forbidden_vertices_edge1_other) == 0) {
                                                     //Edge m next2 found for part 1
@@ -4100,7 +4100,7 @@ void generate_edge_4_tuples_girth_at_least_6_all_part(EDGE4TUPLE current_4_tuple
     //for(i = smallest_element + 1; i < current_number_of_vertices - 3 - 2 * (2 - part); i++)
     for(i = smallest_element + 1; i < current_number_of_vertices - 3; i++)
         if((BIT(i) & forbidden_vertices_global) == 0) //Is necessary for part 1!
-            for(j = 0; j < REG; j++) {
+            for(j = 0; j < degrees[i]; j++) {
                 next = current_graph[i][j];
                 if(i < next && (BIT(next) & forbidden_vertices_global) == 0) {
                     int stop_recursion0 = 0;
@@ -4124,7 +4124,7 @@ void generate_edge_4_tuples_girth_at_least_6_all_part(EDGE4TUPLE current_4_tuple
                                 vertex_colours_long_two[i] | vertex_colours_long_two[next];
                         for(k = i + 1; k < current_number_of_vertices - 1; k++)
                             if((BIT(k) & forbidden_vertices) == 0)
-                                for(l = 0; l < REG; l++) {
+                                for(l = 0; l < degrees[k]; l++) {
                                     next1 = current_graph[k][l];
                                     if(k < next1 && (BIT(next1) & forbidden_vertices) == 0) {
                                         int stop_recursion1 = 0;
@@ -4393,7 +4393,7 @@ void generate_edge_4_tuples_girth_at_least_6_all_three_disjoint_hexagons_combina
                                 if(num_cand_edges == 0) {
                                     for(l = 0; l < current_number_of_vertices - 1; l++)
                                         if((BIT(l) & forbidden_vertices_edge2) == 0)
-                                            for(m = 0; m < REG; m++) {
+                                            for(m = 0; m < degrees[l]; m++) {
                                                 next = current_graph[l][m];
                                                 if(l < next && (BIT(next) & forbidden_vertices_edge2) == 0) {
 
@@ -4583,7 +4583,7 @@ void generate_edge_4_tuples_girth_at_least_6_all_two_disjoint_hexagons(int *edge
                         | vertex_neighbourhood[ep2] | vertex_neighbourhood[ep3];
                 for(k = 0; k < current_number_of_vertices - 1; k++)
                     if((BIT(k) & forbidden_vertices_edge0_other) == 0)
-                        for(l = 0; l < REG; l++) {
+                        for(l = 0; l < degrees[k]; l++) {
                             next = current_graph[k][l];
                             if(k < next && (BIT(next) & forbidden_vertices_edge0_other) == 0) {
                                 //Edge k next found for part 0
@@ -4612,7 +4612,7 @@ void generate_edge_4_tuples_girth_at_least_6_all_two_disjoint_hexagons(int *edge
                                         if(num_cand_edges == 0) {
                                             for(m = 0; m < current_number_of_vertices - 1; m++)
                                                 if((BIT(m) & forbidden_vertices_edge1_other) == 0)
-                                                    for(n = 0; n < REG; n++) {
+                                                    for(n = 0; n < degrees[m]; n++) {
                                                         next2 = current_graph[m][n];
                                                         if(m < next2 && (BIT(next2) & forbidden_vertices_edge1_other) == 0) {
                                                             //Edge m next2 found for part 1
@@ -4726,7 +4726,7 @@ determine_heptagons_girth4(int forbiddencyclesize) {
 
     int previous_vertex = current_path[current_pathsize-1];
     int i;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[previous_vertex]; i++) {
         int next_vertex = current_graph[previous_vertex][i];
         if(!ISMARKED(next_vertex)
                 && (current_pathsize != 1 || contains_neighbour_with_larger_label(current_path[0], next_vertex))) { //marks seem to be faster than bv here
@@ -5575,7 +5575,7 @@ void determine_last_edge(sparsegraph sparse_graph_canon, int lab[], EDGE lastedg
 
     for(i = current_number_of_vertices - 1; i >= 1; i--) {
         if(!is_part_of_irreducible_triangle_bitvector(lab[i])) {
-            for(j = 0; j < REG; j++) {
+            for(j = 0; j < degrees[i]; j++) {
                 neighbours[j] = sparse_graph_canon.e[i * REG + j];
             }
 
@@ -5590,7 +5590,7 @@ void determine_last_edge(sparsegraph sparse_graph_canon, int lab[], EDGE lastedg
             //Is needed, otherwise the "last" edge might not always be the same (the order of the edges doesnt matter in the e-list)
             transform_triangle_into_canonical_form_full(neighbours);
 
-            for(j = REG - 1; j >= 0; j--) {
+            for(j = degrees[i] - 1; j >= 0; j--) {
                 neighbour = neighbours[j];
 
                 if(!is_part_of_irreducible_triangle_bitvector(lab[neighbour])) {
@@ -5636,7 +5636,7 @@ void determine_last_edge_h_operation(sparsegraph sparse_graph_canon, int lab[], 
     TRIANGLE neighbours;
 
     for(i = current_number_of_vertices - 1; i >= 1; i--) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             neighbours[j] = sparse_graph_canon.e[i * REG + j];
         }
 
@@ -5651,7 +5651,7 @@ void determine_last_edge_h_operation(sparsegraph sparse_graph_canon, int lab[], 
         //Is needed, otherwise the "last" edge might not always be the same (the order of the edges doesnt matter in the e-list)
         transform_triangle_into_canonical_form_full(neighbours);
 
-        for(j = REG - 1; j >= 0; j--) {
+        for(j = degrees[i] - 1; j >= 0; j--) {
             neighbour = neighbours[j];
 
             /**
@@ -6038,7 +6038,7 @@ vertex_has_edge_which_is_no_bridge(unsigned char vertex) {
         return 1;
     
     int i;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[vertex]; i++) {
         unsigned char nbr = current_graph[vertex][i];
         if(vertex < nbr) {
             if(!is_bridge[vertex][nbr])
@@ -6073,7 +6073,7 @@ compute_distance_from_vertex(unsigned char vertex, int max_dist) {
     //i points to the current element in the queue
     i = 0;
     while(i < queue_size) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[queue[i]]; j++) {
             next = current_graph[queue[i]][j];
             if(!ISMARKED(next)) {
                 MARK(next);
@@ -6644,7 +6644,7 @@ void search_cycles() {
     }
 
     for(i = 0; i < current_number_of_vertices - 1; i++) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             neighbour = current_graph[i][j];
             if(i < neighbour) {
                 start_edge[0] = i;
@@ -7676,7 +7676,7 @@ int is_a_bridge(unsigned char from, unsigned char to) {
     //i points to the current element in the queue
     i = 0;
     while(i < queue_size) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[queue[i]]; j++) {
             next = current_graph[queue[i]][j];
             if(!ISMARKED(next)) {
                 if(next != to) {
@@ -7846,7 +7846,7 @@ setword determine_vertex_neighbours_distance_two(unsigned char vertex) {
     //Don't forget, otherwise incomplete!!! (But doesn't make much difference!)
     setword neighbours = vertex_neighbourhood[vertex];
     unsigned char i;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[vertex]; i++) {
         neighbours |= vertex_neighbourhood[current_graph[vertex][i]];
     }
 
@@ -7886,7 +7886,7 @@ int determine_edge_colour(EDGE edge) {
 int edge_is_part_of_square(EDGE edge) {
     //setword neighbours = (setword) 0;
     unsigned char i, neighbour;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[edge[0]]; i++) {
         neighbour = current_graph[edge[0]][i];
         if(neighbour != edge[1] 
                 && (vertex_neighbourhood[neighbour] & vertex_neighbourhood[edge[1]]) != BIT(edge[0])) {
@@ -7914,7 +7914,7 @@ int edge_is_part_of_how_much_squares(EDGE edge) {
     setword neighbours[2];
     unsigned char neighbour, current_neighbour_index = 0;
     int i;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[edge[0]]; i++) {
         neighbour = current_graph[edge[0]][i];
         if(neighbour != edge[1]) {
             neighbours[current_neighbour_index] = vertex_neighbourhood[neighbour];
@@ -8032,7 +8032,7 @@ int has_min_colour_tripod_girth6_distance_four(int *edge_inserted, unsigned char
 setword determine_neighbours_distance_two_forbidden_vertex(unsigned char vertex, unsigned char forbidden_vertex) {
     setword neighbours = 0;
     int i;
-    for(i = 0; i < REG; i++)
+    for(i = 0; i < degrees[vertex]; i++)
         if(current_graph[vertex][i] != forbidden_vertex)
             neighbours |= vertex_colours_long_two[current_graph[vertex][i]];
     
@@ -8051,7 +8051,7 @@ setword determine_neighbours_distance_two_forbidden_vertex(unsigned char vertex,
 int determine_number_of_neighbours_which_are_part_of_hexagon(unsigned char vertex) {
     int i;
     int total_hexagon_neighbours = 0;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[vertex]; i++) {
         if(POPC(determine_neighbours_distance_two_forbidden_vertex(current_graph[vertex][i], vertex)) < MAX_COL_DIST_TWO_FORBIDDEN)
             total_hexagon_neighbours++;
     }
@@ -8062,13 +8062,13 @@ int determine_number_of_neighbours_which_are_part_of_hexagon(unsigned char verte
 int determine_number_of_neighbours_which_are_part_of_hexagon_edge(EDGE edge) {
     int i;
     int total_hexagon_neighbours = 0;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[edge[0]]; i++) {
         if(current_graph[edge[0]][i] != edge[1] 
                 && POPC(determine_neighbours_distance_two_forbidden_vertex(current_graph[edge[0]][i], edge[0])) < MAX_COL_DIST_TWO_FORBIDDEN)
             total_hexagon_neighbours++;
     }
     
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[edge[1]]; i++) {
         if(current_graph[edge[1]][i] != edge[0] 
                 && POPC(determine_neighbours_distance_two_forbidden_vertex(current_graph[edge[1]][i], edge[1])) < MAX_COL_DIST_TWO_FORBIDDEN)
             total_hexagon_neighbours++;
@@ -8082,7 +8082,7 @@ int vertex_is_part_of_pentagon(unsigned char vertex, unsigned char forbidden_ver
     EDGE valid_neighbours;
     int num_valid_neighbours = 0;
     int i;
-    for(i = 0; i < REG; i++)
+    for(i = 0; i < degrees[vertex]; i++)
         if(current_graph[vertex][i] != forbidden_vertex)
             valid_neighbours[num_valid_neighbours++] = current_graph[vertex][i];
     
@@ -8099,7 +8099,7 @@ int vertex_is_part_of_pentagon(unsigned char vertex, unsigned char forbidden_ver
 int determine_number_of_neighbours_which_are_part_of_pentagon(unsigned char vertex) {
     int i;
     int total_pentagon_neighbours = 0;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[vertex]; i++) {
         if(vertex_is_part_of_pentagon(current_graph[vertex][i], vertex))
             total_pentagon_neighbours++;
     }
@@ -8120,7 +8120,7 @@ void determine_and_store_non_hex_neighbours(unsigned char vertex, int min_num_no
     
     RESETMARKS; //Mark vertices which were already tested
     RESETMARKS2; //Mark2 nonhex vertices
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[vertex]; i++) {
         int is_nonhex_neighbour = 0;
         if(ISMARKED(current_graph[vertex][i]))
             is_nonhex_neighbour = ISMARKED2(current_graph[vertex][i]);
@@ -8166,7 +8166,7 @@ void determine_and_store_non_pent_neighbours(unsigned char vertex, int min_num_n
     
     RESETMARKS; //Mark vertices which were already tested
     RESETMARKS2; //Mark2 nonpent vertices
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[vertex]; i++) {
         int is_nonpent_neighbour = 0;
         if(ISMARKED(current_graph[vertex][i]))
             is_nonpent_neighbour = ISMARKED2(current_graph[vertex][i]);
@@ -8293,7 +8293,7 @@ int has_min_colour_H_operation_girth6_distance_four(EDGE inserted_edge, int *edg
 int edge_is_part_of_hexagon(EDGE edge) {
     setword neighbours_edge0 = 0;
     int i;
-    for(i = 0; i < REG; i++)
+    for(i = 0; i < degrees[edge[0]]; i++)
         if(current_graph[edge[0]][i] != edge[1]) {
             neighbours_edge0 |= vertex_colours_long_two[current_graph[edge[0]][i]];
         }
@@ -8316,7 +8316,7 @@ int edge_is_part_of_hexagon(EDGE edge) {
 int edge_is_part_of_num_hexagons(EDGE edge) {
     int edge_is_part_of_num_hex = 0;
     int i;
-    for(i = 0; i < REG; i++)
+    for(i = 0; i < degrees[edge[0]]; i++)
         if(current_graph[edge[0]][i] != edge[1]) {
             //Is ok, since edge of 4-tuple cannot both have a same neighbour, otherwise there would be a triangle!
             edge_is_part_of_num_hex += POPC(vertex_colours_long_two[current_graph[edge[0]][i]] & vertex_colours_long_two[edge[1]]) - 4;
@@ -8376,7 +8376,7 @@ int has_min_colour_H_operation_girth6(EDGE inserted_edge, int *edge_inserted) {
     int j;
     unsigned char neighbour;
     for(i = 0; i < current_number_of_vertices - 1; i++) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             //TODO: can avoid testing this if needed by giving last edge largest labels...
             if(i < current_graph[i][j] 
                     && !(i == inserted_edge[0] && current_graph[i][j] == inserted_edge[1])) {
@@ -8469,11 +8469,11 @@ int edge_is_part_of_num_heptagons(EDGE edge) {
     int edge_is_part_of_num_hept = 0;
     setword neigbhourhood_part1 = 0;
     int i;
-    for(i = 0; i < REG; i++)
+    for(i = 0; i < degrees[edge[1]]; i++)
         if(current_graph[edge[1]][i] != edge[0])
             neigbhourhood_part1 |= vertex_colours_long_two[current_graph[edge[1]][i]];
 
-    for(i = 0; i < REG; i++)
+    for(i = 0; i < degrees[edge[0]]; i++)
         if(current_graph[edge[0]][i] != edge[1]) {
             //Is ok, since edge of 4-tuple cannot both have a same neighbour, otherwise there would be a triangle!
             edge_is_part_of_num_hept += POPC(vertex_colours_long_two[current_graph[edge[0]][i]] & neigbhourhood_part1) - 2;
@@ -8522,7 +8522,7 @@ int has_min_colour_H_operation_girth7(EDGE inserted_edge, int *edge_inserted) {
     int j;
     unsigned char neighbour;
     for(i = 0; i < current_number_of_vertices - 1; i++) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             //TODO: can avoid testing this if needed by giving last edge largest labels...
             if(i < current_graph[i][j]
                     && !(i == inserted_edge[0] && current_graph[i][j] == inserted_edge[1])) {
@@ -8678,7 +8678,7 @@ int has_min_colour_girth6_last_level(EDGE inserted_edge, int *edge_inserted, EDG
     
     //current_number_of_vertices - 2 to make sure inserted edge won't be put twice in the list
     for(i = 0; i < current_number_of_vertices - 2; i++) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             if(i < current_graph[i][j]) {
                 neighbour = current_graph[i][j];
                 edge[0] = i;
@@ -8831,7 +8831,7 @@ int has_min_colour(EDGE inserted_edge, int *edge_inserted, EDGE neighbours[4]) {
     unsigned char neighbour;
     //current_number_of_vertices - 2 to make sure inserted edge won't be put twice in the list
     for(i = 0; i < current_number_of_vertices - 2; i++) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             if(i < current_graph[i][j]) {
                 neighbour = current_graph[i][j];
                 edge[0] = i;
@@ -9042,7 +9042,7 @@ int has_min_colour_cycle(EDGE inserted_edge, int *edge_inserted) {
         int part_of_num_squares, colour;
         //current_number_of_vertices - 2 to make sure inserted edge won't be put twice in the list
         for(i = 0; i < current_number_of_vertices - 2; i++) {
-            for(j = 0; j < REG; j++) {
+            for(j = 0; j < degrees[i]; j++) {
                 if(i < current_graph[i][j]) {
                     //if(i < neighbour && !(i == inserted_edge[0] && neighbour == inserted_edge[1])) {
                     neighbour = current_graph[i][j];
@@ -9160,7 +9160,7 @@ int has_min_colour_cycle_girth_5(EDGE inserted_edge, int *edge_inserted) {
     unsigned char neighbour;
     //current_number_of_vertices - 2 to make sure inserted edge won't be put twice in the list
     for(i = 0; i < current_number_of_vertices - 2; i++) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             if(i < current_graph[i][j]) {
                 //if(i < neighbour && !(i == inserted_edge[0] && neighbour == inserted_edge[1])) {
                 neighbour = current_graph[i][j];
@@ -9247,7 +9247,7 @@ setword determine_vertex_neighbours_distance_three(unsigned char vertex) {
     unsigned char i;
 
     setword neighbours = vertex_colours_long_two[vertex];
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[vertex]; i++) {
         neighbours |= vertex_colours_long_two[current_graph[vertex][i]];
     }
 
@@ -9269,7 +9269,7 @@ setword determine_vertex_neighbours_distance_four(unsigned char vertex) {
     unsigned char i;
 
     setword neighbours = vertex_colours_long_three[vertex];
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[vertex]; i++) {
         neighbours |= vertex_colours_long_three[current_graph[vertex][i]];
     }
 
@@ -9486,7 +9486,7 @@ int determine_edge_colour_combination(EDGE edge) {
     EDGE temp_edge;
     int i, j;
     for(i = 0; i < 2; i++) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[edge[i]]; j++) {
             if(current_graph[edge[i]][j] != edge[(i + 1) % 2]) {
                 temp_edge[0] = edge[i];
                 temp_edge[1] = current_graph[edge[i]][j];
@@ -10517,7 +10517,7 @@ static void mark_dfs(unsigned char current_vertex) {
     number_of_vertices_marked_cutvertex++;
     
     int i;
-    for(i = 0; i < REG; i++)
+    for(i = 0; i < degrees[current_vertex]; i++)
         if(!ISMARKED3(current_graph[current_vertex][i]))
             mark_dfs(current_graph[current_vertex][i]);
 }
@@ -10539,12 +10539,12 @@ int are_two_cutvertices_method(unsigned char v1, unsigned char v2) {
     number_of_vertices_marked_cutvertex = 2;
     
     int i;
-    for(i = 0; i < REG; i++)
+    for(i = 0; i < degrees[v1]; i++)
         if(current_graph[v1][i] != v2)
             break;
     
     //TODO: temp!
-    if(i == REG) {
+    if(i == degrees[v1]) {								// TODO there might be a problem with REG -> degrees[v1]
         fprintf(stderr, "Error: i should be < REG\n");
         exit(1);
     }
@@ -11045,7 +11045,7 @@ void generate_edgepairs_one_triangle(EDGEPAIR edge_pairs_list[], int *edge_pair_
 
         third_vertex = reducible_triangles[0][(i + 2) % 3];
         edge_pairs_list[*edge_pair_list_size][2] = third_vertex;
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[third_vertex]; j++) {
             if(current_graph[third_vertex][j] != reducible_triangles[0][i] && current_graph[third_vertex][j] != reducible_triangles[0][(i + 1) % 3])
             //if(!is_part_of_same_reducible_triangle(current_graph[third_vertex][j], 0))
                 break;
@@ -11146,11 +11146,11 @@ void generate_edgepairs_two_triangles(EDGEPAIR edge_pairs_list[], int *edge_pair
 
     int i, j;
     EDGEPAIR edgepair;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < 3; i++) {										// TODO there might be a problem with change REG -> 3
         edgepair[0] = reducible_triangles[0][i];
         edgepair[1] = reducible_triangles[0][(i + 1) % 3];
 
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < 3; j++) {									// TODO here too
             edgepair[2] = reducible_triangles[1][j];
             edgepair[3] = reducible_triangles[1][(j + 1) % 3];
             //If edgepair is not part of square or pentagon, there will be an edge
@@ -11182,7 +11182,7 @@ int contains_squares() {
     unsigned char i, j;
     unsigned char neighbour;
     for(i = 0; i < current_number_of_vertices - 1; i++) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             if(i < current_graph[i][j]) {
                 neighbour = current_graph[i][j];
                 edge[0] = i;
@@ -11363,7 +11363,7 @@ cycle_was_already_stored_hexagons(setword cycle_bitvector) {
 static int
 contains_neighbour_with_larger_label(unsigned char vertex, unsigned char candidate_neighbour) {
     int i;
-    for(i = 0; i < REG; i++)
+    for(i = 0; i < degrees[vertex]; i++)
         if(!ISMARKED(current_graph[vertex][i]) && current_graph[vertex][i] > candidate_neighbour)
             return 1;
     
@@ -11381,7 +11381,7 @@ determine_pentagons_girth4_max_4_disjoint(int forbiddencyclesize) {
     
     int previous_vertex = current_path[current_pathsize-1];
     int i;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[previous_vertex]; i++) {
         int next_vertex = current_graph[previous_vertex][i];
         if(!ISMARKED(next_vertex) 
                 && (current_pathsize != 1 || contains_neighbour_with_larger_label(current_path[0], next_vertex))) { //marks seem to be faster than bv here
@@ -11466,7 +11466,7 @@ determine_pentagons_girth4_max_3_disjoint(int forbiddencyclesize) {
     
     int previous_vertex = current_path[current_pathsize-1];
     int i;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[previous_vertex]; i++) {
         int next_vertex = current_graph[previous_vertex][i];
         if(!ISMARKED(next_vertex) 
                 && (current_pathsize != 1 || contains_neighbour_with_larger_label(current_path[0], next_vertex))) { //marks seem to be faster than bv here
@@ -11552,7 +11552,7 @@ determine_squares_girth4_max_2_disjoint(int forbiddencyclesize) {
     
     int previous_vertex = current_path[current_pathsize-1];
     int i;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[previous_vertex]; i++) {
         int next_vertex = current_graph[previous_vertex][i];
         if(!ISMARKED(next_vertex) 
                 && (current_pathsize != 1 || contains_neighbour_with_larger_label(current_path[0], next_vertex))) { //marks seem to be faster than bv here
@@ -11639,7 +11639,7 @@ determine_hexagons_girth4(int forbiddencyclesize) {
     
     int previous_vertex = current_path[current_pathsize-1];
     int i;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[previous_vertex]; i++) {
         int next_vertex = current_graph[previous_vertex][i];
         if(!ISMARKED(next_vertex)) { //marks seem to be faster than bv here
         //if((BIT(next_vertex) & current_path_bitvector) == 0) {
@@ -11933,7 +11933,7 @@ determine_pentagons_girth4(int forbiddencyclesize) {
     
     int previous_vertex = current_path[current_pathsize-1];
     int i;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[previous_vertex]; i++) {
         int next_vertex = current_graph[previous_vertex][i];
         if(!ISMARKED(next_vertex)) { //marks seem to be faster than bv here
         //if((BIT(next_vertex) & current_path_bitvector) == 0) {
@@ -12112,13 +12112,13 @@ int find_squares(SQUARE squares[], setword squares_bitvectors[], int *squares_si
     *squares_size = 0;
     *adjacent_squares_sizes = 0;
     for(i = 0; i < current_number_of_vertices - 1; i++) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             neighbour = current_graph[i][j];
             if(i < neighbour) {
-               for(k = 0; k < REG; k++) {
+               for(k = 0; k < degrees[neighbour]; k++) {
                    neighbour2 = current_graph[neighbour][k];
                    if(neighbour2 > i) {
-                       for(l = 0; l < REG; l++) {
+                       for(l = 0; l < degrees[neighbour2]; l++) {
                            neighbour3 = current_graph[neighbour2][l];
                             if(neighbour3 > neighbour) { //Which implies neighbour3 > i
                                 if(is_neighbour(neighbour3, i)) {
@@ -12156,13 +12156,13 @@ int find_squares_contains_diamonds(SQUARE squares[], setword squares_bitvectors[
     *squares_size = 0;
     for(i = 0; i < current_number_of_vertices - 1; i++) {
         if((BIT(i) & irreducible_triangles_bitvector) == 0) {
-            for(j = 0; j < REG; j++) {
+            for(j = 0; j < degrees[i]; j++) {
                 neighbour = current_graph[i][j];
                 if(i < neighbour && (BIT(neighbour) & irreducible_triangles_bitvector) == 0) {
-                    for(k = 0; k < REG; k++) {
+                    for(k = 0; k < degrees[neighbour]; k++) {
                         neighbour2 = current_graph[neighbour][k];
                         if(neighbour2 > i && (BIT(neighbour2) & irreducible_triangles_bitvector) == 0) {
-                            for(l = 0; l < REG; l++) {
+                            for(l = 0; l < degrees[neighbour2]; l++) {
                                 neighbour3 = current_graph[neighbour2][l];
                                 if(neighbour3 > neighbour && (BIT(neighbour3) & irreducible_triangles_bitvector) == 0) { //Which implies neighbour3 > i
                                     if(is_neighbour(neighbour3, i)) {
@@ -12261,7 +12261,7 @@ void generate_non_adjacent_edge_pairs_one_square(EDGEPAIR edge_pairs_list[], int
         ep1 = square[(i + 1) % 4];
         for(j = 0; j < current_number_of_vertices - 1; j++) {
             if(j != ep0 && j != ep1) {
-                for(k = 0; k < REG; k++) {
+                for(k = 0; k < degrees[j]; k++) {
                     ep3 = current_graph[j][k];
                     if(j < ep3 && ep3 != ep0 && ep3 != ep1) {
                         edge_pairs_list[*edge_pair_list_size][0] = ep0;
@@ -12302,7 +12302,7 @@ void generate_non_adjacent_edge_pairs_one_square_contains_diamonds(EDGEPAIR edge
         ep1 = square[(i + 1) % 4];
         for(j = 0; j < current_number_of_vertices - 1; j++) {
             if(j != ep0 && j != ep1) {
-                for(k = 0; k < REG; k++) {
+                for(k = 0; k < degrees[j]; k++) {
                     ep3 = current_graph[j][k];
                     if(j < ep3 && ep3 != ep0 && ep3 != ep1
                             && !(is_part_of_irreducible_triangle_diamond(j, &diamond) && is_part_of_same_irreducible_triangle(ep3, diamond))) {
@@ -12468,12 +12468,12 @@ void generate_non_adjacent_edge_pairs_four_squares(EDGEPAIR edge_pairs_list[], i
     *edge_pair_list_size = 0;
     int i, j, k, l, next, next0;
     for(i = 0; i < current_number_of_vertices - 1; i++) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             next = current_graph[i][j];
             if(i < next) {
                 for(k = i + 1; k < current_number_of_vertices - 1; k++) {
                     if(k != next) { // k != i is automatically implied because k >= i+1
-                        for(l = 0; l < REG; l++) {
+                        for(l = 0; l < degrees[k]; l++) {
                             next0 = current_graph[k][l];
                             if(k < next0 && next0 != next) {
                                 //Add edgepair i next j next0
@@ -12530,12 +12530,12 @@ void generate_non_adjacent_edge_pairs_square_free(EDGEPAIR edge_pairs_list[], in
     *edge_pair_list_size = 0;
     int i, j, k, l, next, next0, index0, index1;
     for(i = 0; i < current_number_of_vertices - 1; i++) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             next = current_graph[i][j];
             if(i < next) {
                 for(k = i + 1; k < current_number_of_vertices - 1; k++) {
                     if(k != next) { // k != i is automatically implied because k >= i+1
-                        for(l = 0; l < REG; l++) {
+                        for(l = 0; l < degrees[k]; l++) {
                             next0 = current_graph[k][l];
                             if(k < next0 && next0 != next) {
                                 //Add edgepair i next j next0
@@ -12690,7 +12690,7 @@ void generate_non_adjacent_edge_pairs_square_free_girth6_at_least_one_pentagon(E
 
         for(j = 0; j < current_number_of_vertices - 1; j++) {
             if(j != ep0 && j != ep1) {
-                for(k = 0; k < REG; k++) {
+                for(k = 0; k < degrees[j]; k++) {
                     ep3 = current_graph[j][k];
                     if(j < ep3 && ep3 != ep0 && ep3 != ep1) {
                         edge_pairs_list[*edge_pair_list_size][0] = ep0;
@@ -12800,19 +12800,19 @@ void generate_non_adjacent_edge_pairs_square_free_girth6(EDGEPAIR edge_pairs_lis
     int i, j, k, l, next, next0, index0, index1;
     //for(i = 0; i < current_number_of_vertices - 1; i++) {
     for(i = 0; i < current_number_of_vertices - 2; i++) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             next = current_graph[i][j];
             if(i < next) {
                 //Forbid vertices which will lead to the creation of a square or pentagon!
                 setword forbidden_vertices = vertex_neighbourhood[i] | vertex_neighbourhood[next];
-                for(k = 0; k < REG; k++)
+                for(k = 0; k < degrees[i]; k++)
                     forbidden_vertices |= vertex_neighbourhood[current_graph[i][k]];
-                for(k = 0; k < REG; k++)
+                for(k = 0; k < degrees[next]; k++)
                     forbidden_vertices |= vertex_neighbourhood[current_graph[next][k]];
                 
                 for(k = i + 1; k < current_number_of_vertices - 1; k++) {
                     if(k != next && (BIT(k) & forbidden_vertices) == 0) { // k != i is automatically implied because k >= i+1
-                        for(l = 0; l < REG; l++) {
+                        for(l = 0; l < degrees[k]; l++) {
                             next0 = current_graph[k][l];
                             if(k < next0 && next0 != next && (BIT(next0) & forbidden_vertices) == 0) {
                                 //Add edgepair i next j next0
@@ -12874,13 +12874,13 @@ void generate_non_adjacent_edge_pairs_square_free_contains_diamonds(EDGEPAIR edg
     int i, j, k, l, next, next0;
     int diamond;
     for(i = 0; i < current_number_of_vertices - 3; i++) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             next = current_graph[i][j];
             if(i < next) {
                 if(!(is_part_of_irreducible_triangle_diamond(i, &diamond) && is_part_of_same_irreducible_triangle(next, diamond))) {
                     for(k = i + 1; k < current_number_of_vertices - 1; k++) {
                         if(k != next) { // k != i is automatically implied because k >= i+1
-                            for(l = 0; l < REG; l++) {
+                            for(l = 0; l < degrees[k]; l++) {
                                 next0 = current_graph[k][l];
                                 if(k < next0 && next0 != next) {
                                     if(!(is_part_of_irreducible_triangle_diamond(k, &diamond) && is_part_of_same_irreducible_triangle(next0, diamond))) {
@@ -12960,13 +12960,13 @@ void generate_edgepairs_no_triangles(EDGEPAIR edge_pairs_list[], int *edge_pair_
     //Generate the edgepairs that contain no edge which is fully in a diamond
     int diamond;
     for(i = 0; i < current_number_of_vertices - 3; i++) {
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             next = current_graph[i][j];
             if(i < next) {
                 if(!(is_part_of_irreducible_triangle_diamond(i, &diamond) && is_part_of_same_irreducible_triangle(next, diamond))) {
                     for(k = i + 1; k < current_number_of_vertices - 1; k++) {
                         if(k != next) { // k != i is automatically implied because k >= i+1
-                            for(l = 0; l < REG; l++) {
+                            for(l = 0; l < degrees[k]; l++) {
                                 next0 = current_graph[k][l];
                                 if(k < next0 && next0 != next) {
                                     if(!(is_part_of_irreducible_triangle_diamond(k, &diamond) && is_part_of_same_irreducible_triangle(next0, diamond))) {
@@ -13104,7 +13104,7 @@ void init_is_colourable(unsigned char number_of_colours[]) {
     int i, j;
     for (i = 0; i < current_number_of_vertices; i++) {
         number_of_colours[i] = 0;
-        for(j = 0; j < REG; j++) {
+        for(j = 0; j < degrees[i]; j++) {
             neighbour_index[i][current_graph[i][j]] = j;
         }
     }
@@ -13127,7 +13127,7 @@ int is_colourable() {
 
     int current_vertex = 0;
     int i, neighbour, current_index;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[current_vertex]; i++) {
         colours_snarks[current_vertex][i] = i + 1;
         neighbour = current_graph[current_vertex][i];
         current_index = neighbour_index[neighbour][current_vertex];
@@ -13237,7 +13237,7 @@ int is_colourable_other_colouring() {
 
     int current_vertex = 0;
     int i, neighbour, current_index;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[current_vertex]; i++) {
         colours_snarks[current_vertex][i] = i + 1;
         neighbour = current_graph[current_vertex][i];
         current_index = neighbour_index[neighbour][current_vertex];
@@ -13258,7 +13258,7 @@ int is_colourable_other_colouring() {
     }
 
     int used_colour;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[current_vertex]; i++) {
         if(ISMARKED_SNARKS(current_vertex, i)) {
             used_colour = colours_snarks[current_vertex][i];
             break;
@@ -13314,7 +13314,7 @@ int is_colourable_other_colouring_startvertex(int startvertex) {
 
     //int current_vertex = 0;
     int i, neighbour, current_index;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[startvertex]; i++) {
         colours_snarks[startvertex][i] = i + 1;
         neighbour = current_graph[startvertex][i];
         current_index = neighbour_index[neighbour][startvertex];
@@ -13336,7 +13336,7 @@ int is_colourable_other_colouring_startvertex(int startvertex) {
  */
 int is_conflicting_colouring(unsigned char colours[][REG], int current_vertex, int colour) {
     int i;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[current_vertex]; i++) {
         if(ISMARKED_SNARKS(current_vertex, i) && colours[current_vertex][i] == colour)
             return 1;
     }
@@ -13376,7 +13376,7 @@ void determine_uncoloured_vertex(int vertex, int *uncoloured_vertex, int *missin
 
     int i;
     int sum_colours = 0;
-    for(i = 0; i < REG; i++) {
+    for(i = 0; i < degrees[vertex]; i++) {
         if(!ISMARKED_SNARKS(vertex, i)) {
             *uncoloured_vertex = current_graph[vertex][i];
         } else {
@@ -13471,13 +13471,13 @@ int colour_next_free_choice(int number_of_coloured_edges) {
 
         int used_colour;
         int i;
-        for(i = 0; i < REG; i++) {
+        for(i = 0; i < degrees[current_vertex]; i++) {
             if(ISMARKED_SNARKS(current_vertex, i)) {
                 used_colour = colours_snarks[current_vertex][i];
                 break;
             }
         }
-        DEBUGASSERT(i < REG);
+        DEBUGASSERT(i < degrees[current_vertex]);								// TODO this change REG -> degrees[current_vertex] might not work
 
         EDGE available_vertices;
         int index_available_vertex0 = (i + 1) % 3;
@@ -13569,13 +13569,13 @@ int colour_next_free_choice_from_zero(int number_of_coloured_edges) {
 
         int used_colour;
         int i;
-        for(i = 0; i < REG; i++) {
+        for(i = 0; i < degrees[current_vertex]; i++) {
             if(ISMARKED_SNARKS(current_vertex, i)) {
                 used_colour = colours_snarks[current_vertex][i];
                 break;
             }
         }
-        DEBUGASSERT(i < REG);
+        DEBUGASSERT(i < degrees[current_vertex]);									// TODO here too
 
         EDGE available_vertices;
         int index_available_vertex0 = (i + 1) % 3;
@@ -14136,7 +14136,7 @@ void printgraph() {
     fprintf(stderr, "Printing graph:\n");
     for(i = 0; i < current_number_of_vertices; i++) {
         fprintf(stderr, "%d :", i);
-        for(j = 0; j < REG; j++)
+        for(j = 0; j < degrees[i]; j++)
             fprintf(stderr, " %d", current_graph[i][j]);
         fprintf(stderr, "\n");
     }
@@ -14153,7 +14153,7 @@ void printgraph_irred() {
     fprintf(stderr, "Printing graph:\n");
     for(i = 0; i < current_number_of_vertices; i++) {
         fprintf(stderr, "%d :", i);
-        for(j = 0; j < REG; j++)
+        for(j = 0; j < degrees[i]; j++)
             fprintf(stderr, " %d", current_graph[i][j]);
         fprintf(stderr, "\n");
     }
@@ -14185,7 +14185,7 @@ void init_nauty_options() {
     int i;
     for(i = 0; i < number_of_vertices; i++) {
         sg.v[i] = i * REG;
-        sg.d[i] = 3;
+        sg.d[i] = degrees[i];									// TODO this is maybe something we want to initialise before run and so 3 -> degrees[i] does not work
     }
 
     SG_INIT(sg_canon);
@@ -14220,8 +14220,8 @@ void copy_sparse_graph() {
     for(i = 0; i < current_number_of_vertices;i++) {
         //These values were already set in init_nauty_options()
         //sg.v[i] = i * REG;
-        //sg.d[i] = 3;
-        for(j = 0; j < REG; j++) {
+        //sg.d[i] = 3;											// TODO maybe we can set it here
+        for(j = 0; j < degrees[i]; j++) {
             sg.e[i * REG + j] = current_graph[i][j];
         }
     }
@@ -14250,7 +14250,13 @@ void print_help(char * argv0) {
 int SNARKHUNTERMAIN(int argc, char *argv[]) {
     int i;
     char strbuffer[50];
-
+    
+    // TODO degree initialisation should be moved, where vertices are added to the graph
+    for(i = 0; i < MAXN; i++) {
+    	degrees[i] = REG;
+    }
+    // END TODO
+    
     /* Checks to test if the WORDSIZE and sizeof setwords is valid */
     if(WORDSIZE != 32 && WORDSIZE != 64) {
         fprintf(stderr, "Error: invalid value for wordsize: %d\n", WORDSIZE);

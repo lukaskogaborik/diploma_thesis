@@ -164,6 +164,7 @@ int min_order = 0; /* The min order of a graph with the specified girth */
 GRAPH current_graph;
 int current_number_of_vertices;
 int current_number_of_edges;
+unsigned char degrees[MAXN];
 
 EDGE edgelist[(3 * MAXN) / 2];
 int edgelist_size = 0;
@@ -406,7 +407,7 @@ unsigned char neighbour_index[MAXN][MAXN];
 static int markvalue_snarks = MAXVAL;
 unsigned int marks_snarks[MAXN][REG];
 #define RESETMARKS_SNARKS {int mki, mkj; if ((markvalue_snarks += 1) > MAXVAL) \
-      { markvalue_snarks = 1; for(mki=0;mki<MAXN;++mki) for(mkj=0;mkj<REG;++mkj) marks_snarks[mki][mkj]=0;}}
+      { markvalue_snarks = 1; for(mki=0;mki<MAXN;++mki) for(mkj=0;mkj<degrees[mki];++mkj) marks_snarks[mki][mkj]=0;}}
 #define MARK_SNARKS(v, w) marks_snarks[v][w] = markvalue_snarks
 #define UNMARK_SNARKS(v, w) marks_snarks[v][w] = markvalue_snarks - 1
 #define ISMARKED_SNARKS(v, w) (marks_snarks[v][w] == markvalue_snarks)
@@ -416,21 +417,21 @@ unsigned int marks_snarks[MAXN][REG];
 static int markvalue_cycle_colour1 = MAXVAL;
 unsigned int marks_cycle_colour1[MAXN][REG];
 #define RESETMARKS_CYCLE_COLOUR1 {int mki, mkj; if ((markvalue_cycle_colour1 += 1) > MAXVAL) \
-      { markvalue_cycle_colour1 = 1; for(mki=0;mki<MAXN;++mki) for(mkj=0;mkj<REG;++mkj) marks_cycle_colour1[mki][mkj]=0;}}
+      { markvalue_cycle_colour1 = 1; for(mki=0;mki<MAXN;++mki) for(mkj=0;mkj<degrees[mki];++mkj) marks_cycle_colour1[mki][mkj]=0;}}
 #define MARK_CYCLE_COLOUR1(v, w) marks_cycle_colour1[v][w] = markvalue_cycle_colour1
 #define ISMARKED_CYCLE_COLOUR1(v, w) (marks_cycle_colour1[v][w] == markvalue_cycle_colour1)
 
 static int markvalue_cycle_colour2 = MAXVAL;
 unsigned int marks_cycle_colour2[MAXN][REG];
 #define RESETMARKS_CYCLE_COLOUR2 {int mki, mkj; if ((markvalue_cycle_colour2 += 1) > MAXVAL) \
-      { markvalue_cycle_colour2 = 1; for(mki=0;mki<MAXN;++mki) for(mkj=0;mkj<REG;++mkj) marks_cycle_colour2[mki][mkj]=0;}}
+      { markvalue_cycle_colour2 = 1; for(mki=0;mki<MAXN;++mki) for(mkj=0;mkj<degrees[mki];++mkj) marks_cycle_colour2[mki][mkj]=0;}}
 #define MARK_CYCLE_COLOUR2(v, w) marks_cycle_colour2[v][w] = markvalue_cycle_colour2
 #define ISMARKED_CYCLE_COLOUR2(v, w) (marks_cycle_colour2[v][w] == markvalue_cycle_colour2)
 
 static int markvalue_cycle_colour3 = MAXVAL;
 unsigned int marks_cycle_colour3[MAXN][REG];
 #define RESETMARKS_CYCLE_COLOUR3 {int mki, mkj; if ((markvalue_cycle_colour3 += 1) > MAXVAL) \
-      { markvalue_cycle_colour3 = 1; for(mki=0;mki<MAXN;++mki) for(mkj=0;mkj<REG;++mkj) marks_cycle_colour3[mki][mkj]=0;}}
+      { markvalue_cycle_colour3 = 1; for(mki=0;mki<MAXN;++mki) for(mkj=0;mkj<degrees[mki];++mkj) marks_cycle_colour3[mki][mkj]=0;}}
 #define MARK_CYCLE_COLOUR3(v, w) marks_cycle_colour3[v][w] = markvalue_cycle_colour3
 #define ISMARKED_CYCLE_COLOUR3(v, w) (marks_cycle_colour3[v][w] == markvalue_cycle_colour3)
 
