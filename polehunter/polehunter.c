@@ -177,6 +177,7 @@ void init_generate_irreducible_graphs() {									// TODO Polehunter TODO K2
     //Startgraph is the K4
     int i, j;    
     for(i = 0; i < 4; i++) {
+    	degrees[i] = REG;
         for(j = 0; j < degrees[i]; j++) {
             current_graph[i][j] = (i + j + 1) % 4;
         }
@@ -650,18 +651,23 @@ void replace_eligible_edge(int old_from, int old_to, int from, int to) {
  * should be destroyed.
  */
 void add_edge_diamond(EDGE edge) {
+    
+    degrees[current_number_of_vertices] = REG;
     current_graph[current_number_of_vertices][0] = edge[0];
     current_graph[current_number_of_vertices][1] = current_number_of_vertices + 1;
     current_graph[current_number_of_vertices][2] = current_number_of_vertices + 2;
 
+    degrees[current_number_of_vertices + 1] = REG;
     current_graph[current_number_of_vertices + 1][0] = current_number_of_vertices;
     current_graph[current_number_of_vertices + 1][1] = current_number_of_vertices + 2;
     current_graph[current_number_of_vertices + 1][2] = current_number_of_vertices + 3;
 
+    degrees[current_number_of_vertices + 2] = REG;
     current_graph[current_number_of_vertices + 2][0] = current_number_of_vertices;
     current_graph[current_number_of_vertices + 2][1] = current_number_of_vertices + 1;
     current_graph[current_number_of_vertices + 2][2] = current_number_of_vertices + 3;
 
+    degrees[current_number_of_vertices + 3] = REG;
     current_graph[current_number_of_vertices + 3][0] = edge[1];
     current_graph[current_number_of_vertices + 3][1] = current_number_of_vertices + 1;
     current_graph[current_number_of_vertices + 3][2] = current_number_of_vertices + 2;
@@ -778,26 +784,32 @@ void add_lollipop_edge(EDGE edge) {
     replace_neighbour(edge[0], edge[1], current_number_of_vertices);
     replace_neighbour(edge[1], edge[0], current_number_of_vertices);
 
+    degrees[current_number_of_vertices] = REG;
     current_graph[current_number_of_vertices][0] = edge[0];
     current_graph[current_number_of_vertices][1] = edge[1];
     current_graph[current_number_of_vertices][2] = current_number_of_vertices + 1;
 
+    degrees[current_number_of_vertices + 1] = REG;
     current_graph[current_number_of_vertices + 1][0] = current_number_of_vertices;
     current_graph[current_number_of_vertices + 1][1] = current_number_of_vertices + 2;
     current_graph[current_number_of_vertices + 1][2] = current_number_of_vertices + 5;
 
+    degrees[current_number_of_vertices + 2] = REG;
     current_graph[current_number_of_vertices + 2][0] = current_number_of_vertices + 1;
     current_graph[current_number_of_vertices + 2][1] = current_number_of_vertices + 3;
     current_graph[current_number_of_vertices + 2][2] = current_number_of_vertices + 4;
 
+    degrees[current_number_of_vertices + 3] = REG;
     current_graph[current_number_of_vertices + 3][0] = current_number_of_vertices + 2;
     current_graph[current_number_of_vertices + 3][1] = current_number_of_vertices + 4;
     current_graph[current_number_of_vertices + 3][2] = current_number_of_vertices + 5;
 
+    degrees[current_number_of_vertices + 4] = REG;
     current_graph[current_number_of_vertices + 4][0] = current_number_of_vertices + 2;
     current_graph[current_number_of_vertices + 4][1] = current_number_of_vertices + 3;
     current_graph[current_number_of_vertices + 4][2] = current_number_of_vertices + 5;
 
+    degrees[current_number_of_vertices + 5] = REG;
     current_graph[current_number_of_vertices + 5][0] = current_number_of_vertices + 1;
     current_graph[current_number_of_vertices + 5][1] = current_number_of_vertices + 3;
     current_graph[current_number_of_vertices + 5][2] = current_number_of_vertices + 4;
@@ -1238,26 +1250,32 @@ void add_nonadj_edge_diamond_to_list(unsigned char v0, unsigned char v1, unsigne
 int add_nonadj_diamond_edge(EDGEPAIR edge_pair) {
     DEBUGASSERT(edge_pair[2] < current_number_of_vertices && edge_pair[3] < current_number_of_vertices);
 
+    degrees[current_number_of_vertices] = REG;
     current_graph[current_number_of_vertices][0] = edge_pair[0];
     current_graph[current_number_of_vertices][1] = edge_pair[1];
     current_graph[current_number_of_vertices][2] = current_number_of_vertices + 1;
 
+    degrees[current_number_of_vertices + 1] = REG;
     current_graph[current_number_of_vertices + 1][0] = current_number_of_vertices;
     current_graph[current_number_of_vertices + 1][1] = current_number_of_vertices + 2;
     current_graph[current_number_of_vertices + 1][2] = current_number_of_vertices + 3;
 
+    degrees[current_number_of_vertices + 2] = REG;
     current_graph[current_number_of_vertices + 2][0] = current_number_of_vertices + 1;
     current_graph[current_number_of_vertices + 2][1] = current_number_of_vertices + 3;
     current_graph[current_number_of_vertices + 2][2] = current_number_of_vertices + 4;
 
+    degrees[current_number_of_vertices + 3] = REG;
     current_graph[current_number_of_vertices + 3][0] = current_number_of_vertices + 1;
     current_graph[current_number_of_vertices + 3][1] = current_number_of_vertices + 2;
     current_graph[current_number_of_vertices + 3][2] = current_number_of_vertices + 4;
 
+    degrees[current_number_of_vertices + 4] = REG;
     current_graph[current_number_of_vertices + 4][0] = current_number_of_vertices + 2;
     current_graph[current_number_of_vertices + 4][1] = current_number_of_vertices + 3;
     current_graph[current_number_of_vertices + 4][2] = current_number_of_vertices + 5;
 
+    degrees[current_number_of_vertices + 5] = REG;
     current_graph[current_number_of_vertices + 5][0] = edge_pair[2];
     current_graph[current_number_of_vertices + 5][1] = edge_pair[3];
     current_graph[current_number_of_vertices + 5][2] = current_number_of_vertices + 4;
@@ -10322,9 +10340,11 @@ void transform_vertexset_into_triangles(unsigned char vertexset[], int vertexset
     if(current_number_of_vertices + (2 * vertexset_size) < number_of_vertices) {
 
         for(j = 0; j < vertexset_size; j++) {
+            degrees[current_number_of_vertices] = REG;
             current_graph[current_number_of_vertices][0] = vertexset[j];
             current_graph[current_number_of_vertices][1] = current_number_of_vertices + 1;
 
+            degrees[current_number_of_vertices + 1] = REG;
             current_graph[current_number_of_vertices + 1][0] = vertexset[j];
             current_graph[current_number_of_vertices + 1][1] = current_number_of_vertices;
 
@@ -10413,9 +10433,11 @@ void transform_vertexset_into_triangles(unsigned char vertexset[], int vertexset
         DEBUGASSERT(girth == 3);
 
         for(j = 0; j < vertexset_size; j++) {
+            degrees[current_number_of_vertices] = REG;
             current_graph[current_number_of_vertices][0] = vertexset[j];
             current_graph[current_number_of_vertices][1] = current_number_of_vertices + 1;
 
+            degrees[current_number_of_vertices + 1] = REG;
             current_graph[current_number_of_vertices + 1][0] = vertexset[j];
             current_graph[current_number_of_vertices + 1][1] = current_number_of_vertices;
 
@@ -10579,6 +10601,7 @@ void find_cutvertices() {
 void add_4_tuple(EDGETRIPLE edge_4tuple) {
     //Warning: not setting edge labels!
 
+    degrees[current_number_of_vertices] = REG;
     current_graph[current_number_of_vertices][0] = edge_4tuple[0];
     current_graph[current_number_of_vertices][1] = edge_4tuple[1];
     current_graph[current_number_of_vertices][2] = current_number_of_vertices + 2;
@@ -10596,6 +10619,7 @@ void add_4_tuple(EDGETRIPLE edge_4tuple) {
     replace_neighbour(edge_4tuple[0], edge_4tuple[1], current_number_of_vertices);
     replace_neighbour(edge_4tuple[1], edge_4tuple[0], current_number_of_vertices);
 
+    degrees[current_number_of_vertices + 1] = REG;
     current_graph[current_number_of_vertices + 1][0] = edge_4tuple[2];
     current_graph[current_number_of_vertices + 1][1] = edge_4tuple[3];
     current_graph[current_number_of_vertices + 1][2] = current_number_of_vertices + 2;
@@ -10612,15 +10636,17 @@ void add_4_tuple(EDGETRIPLE edge_4tuple) {
     replace_neighbour(edge_4tuple[2], edge_4tuple[3], current_number_of_vertices + 1);
     replace_neighbour(edge_4tuple[3], edge_4tuple[2], current_number_of_vertices + 1);
     
+    degrees[current_number_of_vertices + 2] = REG;
     current_graph[current_number_of_vertices + 2][0] = current_number_of_vertices;
     current_graph[current_number_of_vertices + 2][1] = current_number_of_vertices + 1;
     current_graph[current_number_of_vertices + 2][2] = current_number_of_vertices + 3;    
 
+    degrees[current_number_of_vertices + 3] = REG;
     current_graph[current_number_of_vertices + 3][0] = current_number_of_vertices + 2;
     current_graph[current_number_of_vertices + 3][1] = current_number_of_vertices + 4;
     current_graph[current_number_of_vertices + 3][2] = current_number_of_vertices + 5;
     
-    
+    degrees[current_number_of_vertices + 4] = REG;
     current_graph[current_number_of_vertices + 4][0] = edge_4tuple[4];
     current_graph[current_number_of_vertices + 4][1] = edge_4tuple[5];
     current_graph[current_number_of_vertices + 4][2] = current_number_of_vertices + 3;
@@ -10637,7 +10663,7 @@ void add_4_tuple(EDGETRIPLE edge_4tuple) {
     replace_neighbour(edge_4tuple[4], edge_4tuple[5], current_number_of_vertices + 4);
     replace_neighbour(edge_4tuple[5], edge_4tuple[4], current_number_of_vertices + 4);    
     
-
+    degrees[current_number_of_vertices + 5] = REG;
     current_graph[current_number_of_vertices + 5][0] = edge_4tuple[6];
     current_graph[current_number_of_vertices + 5][1] = edge_4tuple[7];
     current_graph[current_number_of_vertices + 5][2] = current_number_of_vertices + 3;
@@ -10800,6 +10826,7 @@ void add_edge(EDGEPAIR edge_pair) {
     }
 */
 
+    degrees[current_number_of_vertices] = REG;
     current_graph[current_number_of_vertices][0] = edge_pair[0];
     current_graph[current_number_of_vertices][1] = edge_pair[1];
     current_graph[current_number_of_vertices][2] = current_number_of_vertices + 1;
@@ -10815,7 +10842,7 @@ void add_edge(EDGEPAIR edge_pair) {
     replace_neighbour(edge_pair[0], edge_pair[1], current_number_of_vertices);
     replace_neighbour(edge_pair[1], edge_pair[0], current_number_of_vertices);
 
-
+    degrees[current_number_of_vertices + 1] = REG;
     current_graph[current_number_of_vertices + 1][0] = edge_pair[2];
     current_graph[current_number_of_vertices + 1][1] = edge_pair[3];
     current_graph[current_number_of_vertices + 1][2] = current_number_of_vertices;
@@ -14185,7 +14212,7 @@ void init_nauty_options() {
     int i;
     for(i = 0; i < number_of_vertices; i++) {
         sg.v[i] = i * REG;
-        sg.d[i] = degrees[i];									// TODO this is maybe something we want to initialise before run and so 3 -> degrees[i] does not work
+        sg.d[i] = 3;									// TODO this is maybe something we want to initialise before run and so 3 -> degrees[i] does not work
     }
 
     SG_INIT(sg_canon);
@@ -14250,12 +14277,6 @@ void print_help(char * argv0) {
 int SNARKHUNTERMAIN(int argc, char *argv[]) {
     int i;
     char strbuffer[50];
-    
-    // TODO degree initialisation should be moved, where vertices are added to the graph
-    for(i = 0; i < MAXN; i++) {
-    	degrees[i] = REG;
-    }
-    // END TODO
     
     /* Checks to test if the WORDSIZE and sizeof setwords is valid */
     if(WORDSIZE != 32 && WORDSIZE != 64) {
