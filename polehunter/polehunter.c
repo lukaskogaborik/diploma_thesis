@@ -171,8 +171,10 @@ void replace_neighbour(unsigned char vertex, unsigned char v1, unsigned char v2)
 #include PLUGIN
 #endif
 
-/**************Methods for the generation of irreducible graphs****************/
+#define HANGING_EDGES 2
 
+/**************Methods for the generation of irreducible graphs****************/
+/*
 void init_generate_irreducible_graphs() {									// TODO Polehunter TODO K2
     //Startgraph is the K4
     int i, j;    
@@ -208,8 +210,35 @@ void init_generate_irreducible_graphs() {									// TODO Polehunter TODO K2
     number_of_nonadj_edge_diamonds = 0;
     number_of_lollipop_diamonds = 0;
 }
+*/
 
-/**
+void init_generate_irreducible_graphs() {									// TODO Polehunter TODO K2
+    //Startgraph is the K2
+    int i, j;
+    degrees[0] = 1;
+    current_graph[0][0] = 1;
+    degrees[1] = 1;
+    current_graph[1][0] = 0;
+    
+    current_number_of_vertices = 2;
+
+    current_number_of_edges = 0;
+    edge_labels[0][1] = current_number_of_edges;
+    edge_labels[1][0] = current_number_of_edges++;
+    
+    number_of_edge_diamonds = 0;
+
+    eligible_edges[0][0] = 0;
+    eligible_edges[0][1] = 1;
+    eligible_edges_size = 1;
+
+    number_of_nonadj_edge_diamonds = 0;
+    number_of_lollipop_diamonds = 0;
+    
+    add_bridge(0, 1);
+}
+
+	/**
  * Main method of the generation algorithm.
  * Order is the number of vertices the generated graphs should have.
  * Min_girth can at the moment only be 3, 4 or 5.
@@ -220,14 +249,8 @@ void generate_irreducible_graphs(int order, int min_girth, void (*userproc) (uns
     DEBUGASSERT(min_girth >= 3 && min_girth <= 5);
 
     number_of_vertices = order;
-    if(girth == 3)
+    if(girth <= 6)
         max_number_of_vertices_irred_graph = order;
-    else if(girth == 4)
-        max_number_of_vertices_irred_graph = order - 2;
-    else if(girth == 5)
-        max_number_of_vertices_irred_graph = order - 4;
-    else if(girth == 6)
-        max_number_of_vertices_irred_graph = order - 6;							// TODO Polehunter TODO zmensit hranicu
     else {
         fprintf(stderr, "Error: invalid girth: %d\n", girth);
         exit(1);
@@ -263,9 +286,9 @@ void generate_irreducible_graphs(int order, int min_girth, void (*userproc) (uns
     
     int i = 0;
     int number_of_edges;
-    for(i = 4; i <= number_of_vertices - 2; i += 2) {
+    for(i = 2; i <= number_of_vertices - 2; i += 2) {
         number_of_edges = 3 * i / 2;
-        max_edgepairlist_size[i] = number_of_edges * (number_of_edges - 5) / 2; //Is correct!
+        max_edgepairlist_size[i] = number_of_edges * (number_of_edges - 3) / 2; //Is correct!
         //max_edgepairlist_size[36]: 1323, so certainly no malloc needed here!
         //fprintf(stderr, "max_edgepairlist_size[%d]: %d\n", i, max_edgepairlist_size[i]);
         //max_edgetriplelist_size[i] = number_of_edges * (number_of_edges - 5) * (number_of_edges - 10) / 6;
@@ -4963,6 +4986,10 @@ int generate_edge_4_tuples_girth_at_least_6(int *edge_4_tuple_list_size) {
  * This methods checks if the current graph is canonical and determines the
  * possible extensions for it.
  */
+
+void extend(int edge_inserted, int trivial_group) {} // TODO commented due to testing only on prime graphs
+
+#if 0
 void extend(int edge_inserted, int trivial_group) {
     if(modulo && current_number_of_vertices == splitlevel) {
         //Is cheaper than just doing mod
@@ -5525,7 +5552,7 @@ void extend(int edge_inserted, int trivial_group) {
             find_edge_pairs(edge_pairs_list, &edge_pair_list_size);
 
             DEBUGASSERT(edge_pair_list_size >= 0 && edge_pair_list_size <= max_edgepairlist_size[current_number_of_vertices]);
-
+            
             //Make copy of generators because they will be modified by edge_extend and triangle_extend
             int generators_local[number_of_generators+1][MAXN];
             int vertex_orbits_local[current_number_of_vertices];
@@ -5569,6 +5596,7 @@ void extend(int edge_inserted, int trivial_group) {
     }
 
 }
+#endif
 
 /**
  * Last_edge will be set to the reducible edge with min_colour_three which has
@@ -13823,15 +13851,12 @@ void code_multicode(unsigned char *code, GRAPH g, int num_of_vertices) {
 
     *(code++) = num_of_vertices;
     for(j = 0, p = g[0]; j < num_of_vertices - 1; j++) {
-        if(j < *p)
-            *(code++) = (*p) + 1;
+        for (int k = 0; k < REG; k++) {
+        	if(j < *p && k < degrees[j])
+            		*(code++) = (*p) + 1;
+        	p++;
+        }
         p++;
-        if(j < *p)
-            *(code++) = (*p) + 1;
-        p++;
-        if(j < *p)
-            *(code++) = (*p) + 1;
-        p += 2; //Because graph is REG + 1: element at last position is empty
         *(code++) = 0;
     }
 }
@@ -13863,20 +13888,12 @@ void code_graph6(unsigned char *code, GRAPH g, int num_of_vertices) {
     body[bodylen] = '\n';
 
     for(i = org = 0; i < num_of_vertices; org += i, ++i) {
-        j = g[i][0];
-        if(j < i) {
-            k = org + j;
-            body[k / 6] += g6bit[k % 6];
-        }
-        j = g[i][1];
-        if(j < i) {
-            k = org + j;
-            body[k / 6] += g6bit[k % 6];
-        }
-        j = g[i][2];
-        if(j < i) {
-            k = org + j;
-            body[k / 6] += g6bit[k % 6];
+        for (int l = 0; l < degrees[i]; l++) {
+		j = g[i][l];
+		if(j < i) {
+		    k = org + j;
+		    body[k / 6] += g6bit[k % 6];
+		}
         }
     }
 }
@@ -14241,13 +14258,13 @@ void handle_3_regular_result(unsigned char snarkhunter_graph[MAXN][REG + 1], int
  */
 void copy_sparse_graph() {
     sg.nv = current_number_of_vertices;
-    sg.nde = 3 * current_number_of_vertices;
+    sg.nde = 3 * current_number_of_vertices - 4 * HANGING_EDGES;
 
     int i, j;
     for(i = 0; i < current_number_of_vertices;i++) {
         //These values were already set in init_nauty_options()
         //sg.v[i] = i * REG;
-        //sg.d[i] = 3;											// TODO maybe we can set it here
+        sg.d[i] = degrees[i];											// TODO maybe we can set it here
         for(j = 0; j < degrees[i]; j++) {
             sg.e[i * REG + j] = current_graph[i][j];
         }
@@ -14449,38 +14466,7 @@ int SNARKHUNTERMAIN(int argc, char *argv[]) {
             }
         }            
 
-        switch(girth) {
-            case 3:
-            {
-                min_order = 4;
-                break;
-            }
-            case 4:
-            {
-                min_order = 6;
-                break;
-            }
-            case 5:
-            {
-                min_order = 10;
-                break;
-            }
-            case 6:
-            {
-                min_order = 14;
-                break;
-            }         
-            case 7:
-            {
-                min_order = 24;
-                break;
-            }                        
-            default:
-            {
-                fprintf(stderr, "Error: invalid minimum girth: %d (valid girths are 3, 4, 5, 6 or 7).\n", girth);
-                exit(1);
-            }
-        }
+        min_order = 2;
 
         if(min_order > number_of_vertices) {
             fprintf(stderr, "Cubic graphs of the given order and girth do not exist.\n");
