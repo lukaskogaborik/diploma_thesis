@@ -19,7 +19,7 @@
 /******************************Configuration***********************************/
 
 //Uncomment to turn debugmode on
-//#define _DEBUG
+#define _DEBUG
 
 
 /**
@@ -110,6 +110,7 @@
 #define EDGE_DIAMOND_INSERTED 3 /* For the generation of the irreducible graphs */
 #define NONADJ_EDGE_DIAMOND_INSERTED 4 /* For the generation of the irreducible graphs */
 #define LOLLIPOP_DIAMOND_INSERTED 5 /* For the generation of the irreducible graphs */
+#define HANGING_EDGE_INSERTED 6 /* For the generation of the irreducible graphs */
 
 /* Nauty worksize */
 #define WORKSIZE 50 * MAXM
@@ -271,6 +272,9 @@ int number_of_nonadj_edge_diamonds = 0;
 
 IRRED_TRIANGLE lollipop_diamonds[MAXN];
 int number_of_lollipop_diamonds = 0;
+
+EDGE hanging_edges[(3 * MAXN) / 2];
+int number_of_hanging_edges = 0;
 
 //Eligible edges are edges that aren't fully in a diamond
 EDGE eligible_edges[(3 * MAXN) / 2];
