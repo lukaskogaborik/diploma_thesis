@@ -735,16 +735,25 @@ void extend_irreducible_graph(int edge_inserted) {
     irreducible_graph_generated();
     
     if (current_number_of_vertices <= max_number_of_vertices_irred_graph - 2) {
-	    // TODO insert hanging edge
+	    //Make copy of generators because they will be modified by edge_extend and triangle_extend
+	    int generators_local[number_of_generators][MAXN];
+	    memcpy(generators_local, generators, sizeof(int) * number_of_generators * MAXN);
+	    int number_of_generators_local = number_of_generators;
+	    
+	    EDGE eligible_edges_list[eligible_edges_size];
+	    int eligible_edges_list_size = 0;
+	    generate_eligible_lollipop_edges(eligible_edges_list, &eligible_edges_list_size);
+	    
+	    if(eligible_edges_list_size > 0) {
+	    		hanging_edge_extend(eligible_edges_list, eligible_edges_list_size);
+	    		
+	    		number_of_generators = number_of_generators_local;
+	    		memcpy(generators, generators_local, sizeof(int) * number_of_generators * MAXN);
+	    }
+	    	
 	    if(current_number_of_vertices <= max_number_of_vertices_irred_graph - 4) {											// TODO Polehunter TODO check -4
-			//Make copy of generators because they will be modified by edge_extend and triangle_extend
-			int generators_local[number_of_generators][MAXN];
-			memcpy(generators_local, generators, sizeof(int) * number_of_generators * MAXN);
-			int number_of_generators_local = number_of_generators;
-
 			//Diamond edges
-			EDGE eligible_edges_list[eligible_edges_size];
-			int eligible_edges_list_size = 0;
+			eligible_edges_list_size = 0;
 			generate_eligible_diamond_edges(eligible_edges_list, &eligible_edges_list_size);
 
 			if(eligible_edges_list_size > 0) {
@@ -1054,6 +1063,61 @@ void remove_lollipop_edge(EDGE edge) {
     current_number_of_edges -= 9;
 }
 
+void add_hanging_edge(EDGE edge) {
+    replace_neighbour(edge[0], edge[1], current_number_of_vertices);
+    replace_neighbour(edge[1], edge[0], current_number_of_vertices);
+
+    degrees[current_number_of_vertices] = REG;
+    current_graph[current_number_of_vertices][0] = edge[0];
+    current_graph[current_number_of_vertices][1] = edge[1];
+    current_graph[current_number_of_vertices][2] = current_number_of_vertices + 1;
+
+    degrees[current_number_of_vertices + 1] = HANGING_DEGREE;
+    current_graph[current_number_of_vertices + 1][0] = current_number_of_vertices;
+    
+    //Update labels (needed to calculate edgepair orbits)
+    //One old label and 2 new labels
+    //Recycle old label
+    edge_labels[edge[0]][current_number_of_vertices] = edge_labels[edge[0]][edge[1]];
+    edge_labels[current_number_of_vertices][edge[0]] = edge_labels[edge[0]][edge[1]];
+
+    //New labels
+    edge_labels[edge[1]][current_number_of_vertices] = current_number_of_edges;
+    edge_labels[current_number_of_vertices][edge[1]] = current_number_of_edges++;
+
+    edge_labels[current_number_of_vertices][current_number_of_vertices + 1] = current_number_of_edges;
+    edge_labels[current_number_of_vertices + 1][current_number_of_vertices] = current_number_of_edges++;
+
+    //Update bridges
+    if(is_a_bridge_list(edge[0], edge[1])) {
+        replace_bridge(edge[0], edge[1], edge[0], current_number_of_vertices);
+        add_bridge(edge[1], current_number_of_vertices);
+    }
+    add_bridge(current_number_of_vertices, current_number_of_vertices + 1);
+
+    hanging_edge[number_of_hanging_edges] = edge;
+    number_of_hanging_edges++;
+    
+    update_edge_diamonds();
+
+    //Update eligible edges
+    replace_eligible_edge(edge[0], edge[1], edge[0], current_number_of_vertices);
+    add_eligible_edge(edge[1], current_number_of_vertices);
+    add_eligible_edge(current_number_of_vertices, current_number_of_vertices + 1);
+
+    current_number_of_vertices += 2;
+}
+
+void remove_hanging_edge(EDGE edge) {
+    replace_neighbour(edge[0], current_number_of_vertices - 2, edge[1]);
+    replace_neighbour(edge[1], current_number_of_vertices - 2, edge[0]);
+
+    current_number_of_vertices -= 2;
+    current_number_of_edges -= 2;
+    
+    number_of_hanging_edges--;
+}
+
 unsigned char determine_external_diamond_neighbour(IRRED_TRIANGLE diamond) {
     int i;
     for(i = 0; i < degrees[diamond[0]]; i++) {
@@ -1189,6 +1253,11 @@ void edge_diamond_extend(EDGE eligible_diamond_edges[], int eligible_diamond_edg
     int eligible_edges_size_local = eligible_edges_size;
     if(eligible_edges_size_local > 0)
         memcpy(eligible_edges_local, eligible_edges, sizeof(EDGE) * eligible_edges_size_local);
+        
+    EDGE hanging_edges_local[number_of_hanging_edges+1];
+    int number_of_hanging_edges_local = number_of_hanging_edges;
+    if(number_of_hanging_edges_local > 0)
+    	memcpy(hanging_edges_local, hanging_edges, sizeof(EDGE) * number_of_hanging_edges_local)
 
     IRRED_TRIANGLE edge_diamonds_local[number_of_edge_diamonds+1];
     int number_of_edge_diamonds_local = number_of_edge_diamonds;
@@ -1240,6 +1309,11 @@ void edge_diamond_extend(EDGE eligible_diamond_edges[], int eligible_diamond_edg
                 memcpy(nonadj_edge_diamonds, nonadj_edge_diamonds_local, sizeof (IRRED_TRIANGLE) * number_of_nonadj_edge_diamonds);
             }
 
+	    number_of_hanging_edges = number_of_hanging_edges_local;
+	    if(number_of_hanging_edges > 0) {
+	    	memcpy(hanging_edges, hanging_edges_local, sizeof (IRRED_TRIANGLE) * number_of_hanging_edges);
+            }
+
             num_orbits++;
             if(num_orbits == number_of_edge_diamond_orbits)
                 break;
@@ -1270,6 +1344,11 @@ void edge_lollipop_extend(EDGE eligible_lollipop_edges[], int eligible_lollipop_
     int eligible_edges_size_local = eligible_edges_size;
     if(eligible_edges_size_local > 0)
         memcpy(eligible_edges_local, eligible_edges, sizeof(EDGE) * eligible_edges_size_local);
+        
+    EDGE hanging_edges_local[number_of_hanging_edges+1];
+    int number_of_hanging_edges_local = number_of_hanging_edges;
+    if(number_of_hanging_edges_local > 0)
+    	memcpy(hanging_edges_local, hanging_edges, sizeof(EDGE) * number_of_hanging_edges_local)
 
     IRRED_TRIANGLE edge_diamonds_local[number_of_edge_diamonds+1];
     int number_of_edge_diamonds_local = number_of_edge_diamonds;
@@ -1318,6 +1397,101 @@ void edge_lollipop_extend(EDGE eligible_lollipop_edges[], int eligible_lollipop_
             number_of_nonadj_edge_diamonds = number_of_nonadj_edge_diamonds_local;
             if(number_of_nonadj_edge_diamonds > 0) {
                 memcpy(nonadj_edge_diamonds, nonadj_edge_diamonds_local, sizeof (IRRED_TRIANGLE) * number_of_nonadj_edge_diamonds);
+            }
+
+	    number_of_hanging_edges = number_of_hanging_edges_local;
+	    if(number_of_hanging_edges > 0) {
+	    	memcpy(hanging_edges, hanging_edges_local, sizeof (IRRED_TRIANGLE) * number_of_hanging_edges);
+            }
+
+            num_orbits++;
+            if(num_orbits == number_of_edge_diamond_orbits)
+                break;
+        }
+    }
+    DEBUGASSERT(num_orbits == number_of_edge_diamond_orbits);
+}
+
+void hanging_edge_extend(EDGE eligible_edges[], int eligible_edges_size) {
+    int edge_diamond_orbits[eligible_edges_size+1];
+    int number_of_edge_diamond_orbits = 0;
+
+    int is_trivial_group = 0;
+    if(number_of_generators > 0 && eligible_lollipop_edges_size > 1) {
+        //The generators are still ok, because edge_extension is done before triangle extension
+        determine_edge_orbits(eligible_edges, eligible_edges_size, edge_diamond_orbits, &number_of_edge_diamond_orbits);
+    } else {
+        is_trivial_group = 1;
+        number_of_edge_diamond_orbits = eligible_edges_size;
+    }
+
+    int number_of_bridges_local = number_of_bridges;
+    EDGE bridges_local[number_of_bridges+1];
+    if(number_of_bridges_local > 0)
+        memcpy(bridges_local, bridges, sizeof(EDGE) * number_of_bridges_local);
+
+    EDGE hanging_edges_local[number_of_hanging_edges+1];
+    int number_of_hanging_edges_local = number_of_hanging_edges;
+    if(number_of_hanging_edges_local > 0)
+    	memcpy(hanging_edges_local, hanging_edges, sizeof(EDGE) * number_of_hanging_edges_local)
+
+    EDGE eligible_edges_local[eligible_edges_size+1];
+    int eligible_edges_size_local = eligible_edges_size;
+    if(eligible_edges_size_local > 0)
+        memcpy(eligible_edges_local, eligible_edges, sizeof(EDGE) * eligible_edges_size_local);
+
+    IRRED_TRIANGLE edge_diamonds_local[number_of_edge_diamonds+1];
+    int number_of_edge_diamonds_local = number_of_edge_diamonds;
+    if(number_of_edge_diamonds_local > 0)
+        memcpy(edge_diamonds_local, edge_diamonds, sizeof(IRRED_TRIANGLE) * number_of_edge_diamonds_local);
+
+    IRRED_TRIANGLE lollipop_diamonds_local[number_of_lollipop_diamonds+1];
+    int number_of_lollipop_diamonds_local = number_of_lollipop_diamonds;
+    if(number_of_lollipop_diamonds_local > 0)
+        memcpy(lollipop_diamonds_local, lollipop_diamonds, sizeof(IRRED_TRIANGLE) * number_of_lollipop_diamonds);
+
+    IRRED_TRIANGLE nonadj_edge_diamonds_local[number_of_nonadj_edge_diamonds+1];
+    int number_of_nonadj_edge_diamonds_local = number_of_nonadj_edge_diamonds;
+    if(number_of_nonadj_edge_diamonds_local > 0)
+        memcpy(nonadj_edge_diamonds_local, nonadj_edge_diamonds, sizeof(IRRED_TRIANGLE) * number_of_nonadj_edge_diamonds);
+
+    int i;
+    int num_orbits = 0;
+    for(i = 0; i < eligible_edges_size; i++) {
+        if(is_trivial_group || edge_diamond_orbits[i] == i) {
+            add_hanging_edge(eligible_edges[i]);
+
+            extend_irreducible_graph(HANGING_EDGE_INSERTED);
+
+            remove_hanging_edge(eligible_hanging_edges[i]);
+
+            //Restore lists
+            number_of_bridges = number_of_bridges_local;
+            if(number_of_bridges_local > 0)
+                memcpy(bridges, bridges_local, sizeof(EDGE) * number_of_bridges_local);
+
+            eligible_edges_size = eligible_edges_size_local;
+            if(eligible_edges_size_local > 0)
+                memcpy(eligible_edges, eligible_edges_local, sizeof(EDGE) * eligible_edges_size_local);
+
+            number_of_edge_diamonds = number_of_edge_diamonds_local;
+            if(number_of_edge_diamonds > 0) {
+                memcpy(edge_diamonds, edge_diamonds_local, sizeof (IRRED_TRIANGLE) * number_of_edge_diamonds);
+            }
+
+            number_of_lollipop_diamonds = number_of_lollipop_diamonds_local;
+            if(number_of_lollipop_diamonds > 0) {
+                memcpy(lollipop_diamonds, lollipop_diamonds_local, sizeof (IRRED_TRIANGLE) * number_of_lollipop_diamonds);
+            }
+
+            number_of_nonadj_edge_diamonds = number_of_nonadj_edge_diamonds_local;
+            if(number_of_nonadj_edge_diamonds > 0) {
+                memcpy(nonadj_edge_diamonds, nonadj_edge_diamonds_local, sizeof (IRRED_TRIANGLE) * number_of_nonadj_edge_diamonds);
+            }
+            
+            number_of_hanging_edges = number_of_hanging_edges_local;
+	    if(number_of_hanging_edges > 0) {
+	    	memcpy(hanging_edges, hanging_edges_local, sizeof (IRRED_TRIANGLE) * number_of_hanging_edges);
             }
 
             num_orbits++;
@@ -1670,6 +1844,11 @@ void nonadj_edge_diamond_extend(EDGEPAIR edge_pairs_list[], int edge_pair_list_s
     int eligible_edges_size_local = eligible_edges_size;
     if(eligible_edges_size_local > 0)
         memcpy(eligible_edges_local, eligible_edges, sizeof(EDGE) * eligible_edges_size_local);
+        
+    EDGE hanging_edges_local[number_of_hanging_edges+1];
+    int number_of_hanging_edges_local = number_of_hanging_edges;
+    if(number_of_hanging_edges_local > 0)
+    	memcpy(hanging_edges_local, hanging_edges, sizeof(EDGE) * number_of_hanging_edges_local)
 
     IRRED_TRIANGLE edge_diamonds_local[number_of_edge_diamonds+1];
     int number_of_edge_diamonds_local = number_of_edge_diamonds;
@@ -1719,6 +1898,11 @@ void nonadj_edge_diamond_extend(EDGEPAIR edge_pairs_list[], int edge_pair_list_s
             number_of_nonadj_edge_diamonds = number_of_nonadj_edge_diamonds_local;
             if(number_of_nonadj_edge_diamonds > 0) {
                 memcpy(nonadj_edge_diamonds, nonadj_edge_diamonds_local, sizeof (IRRED_TRIANGLE) * number_of_nonadj_edge_diamonds);
+            }
+            
+            number_of_hanging_edges = number_of_hanging_edges_local;
+	    if(number_of_hanging_edges > 0) {
+	    	memcpy(hanging_edges, hanging_edges_local, sizeof (IRRED_TRIANGLE) * number_of_hanging_edges);
             }
 
             num_orbits++;

@@ -88,6 +88,7 @@
 /*******************************Other defines**********************************/
 
 #define REG 3
+#define HANGING_DEGREE 1
 
 /**
  * Priority of operations
