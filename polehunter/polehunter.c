@@ -172,8 +172,8 @@ void replace_neighbour(unsigned char vertex, unsigned char v1, unsigned char v2)
 #endif
 
 /**************Methods for the generation of irreducible graphs****************/
-/*
-void init_generate_irreducible_graphs() {									// TODO Polehunter TODO K2
+
+void init_generate_irreducible_graphs_from_K4() {									// TODO Polehunter TODO K2
     //Startgraph is the K4
     int i, j;    
     for(i = 0; i < 4; i++) {
@@ -208,9 +208,9 @@ void init_generate_irreducible_graphs() {									// TODO Polehunter TODO K2
     number_of_nonadj_edge_diamonds = 0;
     number_of_lollipop_diamonds = 0;
 }
-*/
 
-void init_generate_irreducible_graphs() {									// TODO Polehunter TODO K2
+
+void init_generate_irreducible_graphs_from_K2() {									// TODO Polehunter TODO K2
     //Startgraph is the K2
     int i, j;
     degrees[0] = 1;
@@ -308,9 +308,13 @@ void generate_irreducible_graphs(int order, int min_girth, void (*userproc) (uns
         userproc_sh = userproc;
     }
 
-    init_generate_irreducible_graphs();
-
+    init_generate_irreducible_graphs_from_K2();
     extend_irreducible_graph(INIT);
+    
+    if(max_number_of_vertices_irred_graph >= 4) {
+    	init_generate_irreducible_graphs_from_K4();
+    	extend_irreducible_graph(INIT);
+    }
 
     //Write any remaining graphs to the file
     if(!noout) {
@@ -521,6 +525,7 @@ int determine_last_hanging_edge(int lab[]) {
     */
     setword hanging_edge_fixed_vertices_bitvector = (setword) 0;
     int i;
+    unsigned char fixed_vertex;
     for(i = 0; i < number_of_hanging_edges; i++) {
     	fixed_vertex = determine_fixed_vertex_of_hanging_edge(hanging_edges[i]);
     	hanging_edge_fixed_vertices_bitvector |= BIT(fixed_vertex);
@@ -605,7 +610,7 @@ int is_major_hanging_edge() {
 
         nauty_sh((graph*) & sg, lab, ptn, NULL, orbits, &options, &stats, workspace, WORKSIZE, MAXM, current_number_of_vertices, (graph*) & sg_canon);
 
-        DEBUGASSERT(number_of_nonadj_edge_diamonds == 0 && number_of_lollipop_diamonds == 0 && number_of_edge_diamonds == 0);
+        // DEBUGASSERT(number_of_nonadj_edge_diamonds == 0 && number_of_lollipop_diamonds == 0 && number_of_edge_diamonds == 0);				// TODO probably uncomment
 
         int last_hanging_edge_fixed_vertex = determine_last_hanging_edge(lab);
         int last_hanging_edge_orbit = orbits[last_hanging_edge_fixed_vertex];
@@ -888,6 +893,14 @@ void add_edge_diamond(EDGE edge) {
         replace_bridge(edge[0], edge[1], edge[0], current_number_of_vertices);
         add_bridge(edge[1], current_number_of_vertices + 3);
     }
+    
+    //Update hanging edges
+    if(is_hanging_list(edge[0], edge[1])) {
+    	replace_hanging_edge(edge[0], edge[1], current_number_of_vertices + 3, edge[1]);
+    }
+    if(is_hanging_list(edge[1], edge[0])) {
+    	replace_hanging_edge(edge[1], edge[0], current_number_of_vertices, edge[0]);
+    }
 
     add_edge_diamond_to_list(current_number_of_vertices, current_number_of_vertices + 1, current_number_of_vertices + 2, current_number_of_vertices + 3);
 
@@ -1037,6 +1050,14 @@ void add_lollipop_edge(EDGE edge) {
         add_bridge(edge[1], current_number_of_vertices);
     }
     add_bridge(current_number_of_vertices, current_number_of_vertices + 1);
+    
+    //Update hanging edges
+    if(is_hanging_list(edge[0], edge[1])) {
+    	replace_hanging_edge(edge[0], edge[1], current_number_of_vertices, edge[1]);
+    }
+    if(is_hanging_list(edge[1], edge[0])) {
+    	replace_hanging_edge(edge[1], edge[0], current_number_of_vertices, edge[0]);
+    }
 
     add_lollipop_to_list(current_number_of_vertices + 2, current_number_of_vertices + 3, current_number_of_vertices + 4, current_number_of_vertices + 5);
 
@@ -1094,8 +1115,17 @@ void add_hanging_edge(EDGE edge) {
         add_bridge(edge[1], current_number_of_vertices);
     }
     add_bridge(current_number_of_vertices, current_number_of_vertices + 1);
+    
+    //Update hanging edges
+    if(is_hanging_list(edge[0], edge[1])) {
+    	replace_hanging_edge(edge[0], edge[1], current_number_of_vertices, edge[1]);
+    }
+    if(is_hanging_list(edge[1], edge[0])) {
+    	replace_hanging_edge(edge[1], edge[0], current_number_of_vertices, edge[0]);
+    }
 
-    hanging_edge[number_of_hanging_edges] = edge;
+    hanging_edges[number_of_hanging_edges][0] = current_number_of_vertices;
+    hanging_edges[number_of_hanging_edges][1] = current_number_of_vertices + 1;
     number_of_hanging_edges++;
     
     update_edge_diamonds();
@@ -1257,7 +1287,7 @@ void edge_diamond_extend(EDGE eligible_diamond_edges[], int eligible_diamond_edg
     EDGE hanging_edges_local[number_of_hanging_edges+1];
     int number_of_hanging_edges_local = number_of_hanging_edges;
     if(number_of_hanging_edges_local > 0)
-    	memcpy(hanging_edges_local, hanging_edges, sizeof(EDGE) * number_of_hanging_edges_local)
+    	memcpy(hanging_edges_local, hanging_edges, sizeof(EDGE) * number_of_hanging_edges_local);
 
     IRRED_TRIANGLE edge_diamonds_local[number_of_edge_diamonds+1];
     int number_of_edge_diamonds_local = number_of_edge_diamonds;
@@ -1348,7 +1378,7 @@ void edge_lollipop_extend(EDGE eligible_lollipop_edges[], int eligible_lollipop_
     EDGE hanging_edges_local[number_of_hanging_edges+1];
     int number_of_hanging_edges_local = number_of_hanging_edges;
     if(number_of_hanging_edges_local > 0)
-    	memcpy(hanging_edges_local, hanging_edges, sizeof(EDGE) * number_of_hanging_edges_local)
+    	memcpy(hanging_edges_local, hanging_edges, sizeof(EDGE) * number_of_hanging_edges_local);
 
     IRRED_TRIANGLE edge_diamonds_local[number_of_edge_diamonds+1];
     int number_of_edge_diamonds_local = number_of_edge_diamonds;
@@ -1412,17 +1442,17 @@ void edge_lollipop_extend(EDGE eligible_lollipop_edges[], int eligible_lollipop_
     DEBUGASSERT(num_orbits == number_of_edge_diamond_orbits);
 }
 
-void hanging_edge_extend(EDGE eligible_edges[], int eligible_edges_size) {
+void hanging_edge_extend(EDGE eligible_hanging_edges[], int eligible_hanging_edges_size) {
     int edge_diamond_orbits[eligible_edges_size+1];
     int number_of_edge_diamond_orbits = 0;
 
     int is_trivial_group = 0;
-    if(number_of_generators > 0 && eligible_lollipop_edges_size > 1) {
+    if(number_of_generators > 0 && eligible_hanging_edges_size > 1) {
         //The generators are still ok, because edge_extension is done before triangle extension
-        determine_edge_orbits(eligible_edges, eligible_edges_size, edge_diamond_orbits, &number_of_edge_diamond_orbits);
+        determine_edge_orbits(eligible_hanging_edges, eligible_hanging_edges_size, edge_diamond_orbits, &number_of_edge_diamond_orbits);
     } else {
         is_trivial_group = 1;
-        number_of_edge_diamond_orbits = eligible_edges_size;
+        number_of_edge_diamond_orbits = eligible_hanging_edges_size;
     }
 
     int number_of_bridges_local = number_of_bridges;
@@ -1433,7 +1463,7 @@ void hanging_edge_extend(EDGE eligible_edges[], int eligible_edges_size) {
     EDGE hanging_edges_local[number_of_hanging_edges+1];
     int number_of_hanging_edges_local = number_of_hanging_edges;
     if(number_of_hanging_edges_local > 0)
-    	memcpy(hanging_edges_local, hanging_edges, sizeof(EDGE) * number_of_hanging_edges_local)
+    	memcpy(hanging_edges_local, hanging_edges, sizeof(EDGE) * number_of_hanging_edges_local);
 
     EDGE eligible_edges_local[eligible_edges_size+1];
     int eligible_edges_size_local = eligible_edges_size;
@@ -1457,9 +1487,9 @@ void hanging_edge_extend(EDGE eligible_edges[], int eligible_edges_size) {
 
     int i;
     int num_orbits = 0;
-    for(i = 0; i < eligible_edges_size; i++) {
+    for(i = 0; i < eligible_hanging_edges_size; i++) {
         if(is_trivial_group || edge_diamond_orbits[i] == i) {
-            add_hanging_edge(eligible_edges[i]);
+            add_hanging_edge(eligible_hanging_edges[i]);
 
             extend_irreducible_graph(HANGING_EDGE_INSERTED);
 
@@ -1705,6 +1735,19 @@ int add_nonadj_diamond_edge(EDGEPAIR edge_pair) {
         else
             replace_bridge(edge_pair[2], edge_pair[3], edge_pair[3], current_number_of_vertices + 5);
     }
+    
+    if(is_hanging_list(edge_pair[0], edge_pair[1])) {
+    	replace_hanging_edge(edge_pair[0], edge_pair[1], current_number_of_vertices, edge_pair[1]);
+    }
+    if(is_hanging_list(edge_pair[1], edge_pair[0])) {
+    	replace_hanging_edge(edge_pair[1], edge_pair[0], current_number_of_vertices, edge_pair[0]);
+    }
+    if(is_hanging_list(edge_pair[2], edge_pair[3])) {
+    	replace_hanging_edge(edge_pair[2], edge_pair[3], current_number_of_vertices + 5, edge_pair[3]);
+    }
+    if(is_hanging_list(edge_pair[3], edge_pair[2])) {
+    	replace_hanging_edge(edge_pair[3], edge_pair[2], current_number_of_vertices + 2, edge_pair[2]);
+    }
 
     update_bridges_add_edge();
 
@@ -1848,7 +1891,7 @@ void nonadj_edge_diamond_extend(EDGEPAIR edge_pairs_list[], int edge_pair_list_s
     EDGE hanging_edges_local[number_of_hanging_edges+1];
     int number_of_hanging_edges_local = number_of_hanging_edges;
     if(number_of_hanging_edges_local > 0)
-    	memcpy(hanging_edges_local, hanging_edges, sizeof(EDGE) * number_of_hanging_edges_local)
+    	memcpy(hanging_edges_local, hanging_edges, sizeof(EDGE) * number_of_hanging_edges_local);
 
     IRRED_TRIANGLE edge_diamonds_local[number_of_edge_diamonds+1];
     int number_of_edge_diamonds_local = number_of_edge_diamonds;
@@ -8180,6 +8223,32 @@ void replace_bridge(int old_from, int old_to, int from, int to) {
 }
 
 /**
+ * Adds a hanging edge to the list of hanging edges.
+ */
+void add_hanging_edge_list(unsigned char from, unsigned char to) {
+    hanging_edges[number_of_hanging_edges][0] = from;
+    hanging_edges[number_of_hanging_edges][1] = to;
+    number_of_hanging_edges++;
+}
+
+
+/**
+ * If old_from, old_to was a bridge in the parent graph, it is
+ * updated to from, to.
+ */
+void replace_hanging_edge(int old_from, int old_to, int from, int to) {
+    int i;
+    for(i = 0; i < number_of_hanging_edges; i++) {
+        if(hanging_edges[i][0] == old_from && hanging_edges[i][1] == old_to) {
+            hanging_edges[i][0] = from;
+            hanging_edges[i][1] = to;
+            break;
+        }
+    }
+    DEBUGASSERT(i < number_of_bridges);
+}
+
+/**
  * Returns 1 if edge is in the list of bridges, else 0 is returned.
  *
  * From is assumed to be < than to.
@@ -8192,6 +8261,18 @@ int is_a_bridge_list(unsigned char from, unsigned char to) {
     int i;
     for(i = 0; i < number_of_bridges; i++)
         if(bridges[i][0] == from && bridges[i][1] == to)
+            return 1;
+    return 0;
+}
+
+int is_hanging_list(unsigned char from, unsigned char to) {
+    //Remark: this method is not very efficient, but is only used for the generation of prime graphs,
+    //so it hardly consumes any cpu-time
+    if(number_of_hanging_edges == 0)
+        return 0;
+    int i;
+    for(i = 0; i < number_of_hanging_edges; i++)
+        if(hanging_edges[i][0] == from && hanging_edges[i][1] == to)
             return 1;
     return 0;
 }
@@ -11274,6 +11355,8 @@ void add_edge(EDGEPAIR edge_pair) {
         else
             replace_bridge(edge_pair[2], edge_pair[3], edge_pair[3], current_number_of_vertices + 1);
     }
+    
+    // probably TODO updating hanging edges
 
     //Even when one edge of the edgepair is a bridge, an other bridge can still be undone by inserting the new edge
     update_bridges_add_edge();

@@ -759,6 +759,9 @@ void replace_eligible_edge(int old_from, int old_to, int from, int to);
 
 void add_nonadj_edge_diamond_to_list(unsigned char v0, unsigned char v1, unsigned char v2, unsigned char v3);
 
+void hanging_edge_extend(EDGE eligible_edges[], int eligible_edges_size);
+unsigned char determine_fixed_vertex_of_hanging_edge(EDGE hanging_edge);
+
 unsigned char determine_external_diamond_neighbour(IRRED_TRIANGLE diamond);
 unsigned char determine_external_diamond_neighbour_index(IRRED_TRIANGLE diamond, int index);
 
@@ -790,7 +793,7 @@ int is_part_of_reducible_triangle(int vertex, int *triangle);
 
 int is_a_bridge(unsigned char from, unsigned char to);
 int is_a_bridge_list(unsigned char from, unsigned char to);
-
+int is_hanging_list(unsigned char from, unsigned char to);
 
 int contains_squares();
 int find_squares(SQUARE squares[], setword squares_bitvectors[], int *squares_size, EDGE adjacent_squares[], int *adjacent_squares_sizes);
@@ -883,6 +886,8 @@ void update_bridges_add_edge();
 void add_bridge(unsigned char from, unsigned char to);
 void remove_bridge(int index);
 void replace_bridge(int old_from, int old_to, int from, int to);
+void add_hanging_edge_list(unsigned char from, unsigned char to);
+void replace_hanging_edge(int old_from, int old_to, int from, int to);
 
 void add_tripod(EDGETRIPLE edge_triple);
 void remove_tripod(EDGETRIPLE edge_triple);
