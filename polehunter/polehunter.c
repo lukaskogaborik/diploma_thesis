@@ -213,9 +213,9 @@ void init_generate_irreducible_graphs_from_K4() {									// TODO Polehunter TOD
 void init_generate_irreducible_graphs_from_K2() {									// TODO Polehunter TODO K2
     //Startgraph is the K2
     int i, j;
-    degrees[0] = 1;
+    degrees[0] = HANGING_DEGREE;
     current_graph[0][0] = 1;
-    degrees[1] = 1;
+    degrees[1] = HANGING_DEGREE;
     current_graph[1][0] = 0;
     
     current_number_of_vertices = 2;
@@ -239,6 +239,66 @@ void init_generate_irreducible_graphs_from_K2() {									// TODO Polehunter TOD
     hanging_edges[0][1] = 1;
     hanging_edges[1][0] = 1;
     hanging_edges[1][1] = 0;
+}
+
+void init_generate_irreducible_graphs_from_lollipop() {									// TODO Polehunter TODO K2
+    //Startgraph is the lollipop multipole
+    int i, j;    
+    for(i = 0; i < 4; i++) {
+    	degrees[i] = REG;
+        for(j = 0; j < degrees[i]; j++) {
+            current_graph[i][j] = (i + j + 1) % 4;
+        }
+        edge_diamonds[0][i] = i;
+    }
+    current_graph[0][2] = 4;
+    current_graph[3][0] = 4;
+    
+    degrees[4] = REG;
+    current_graph[4][0] = 0;
+    current_graph[4][1] = 3;
+    current_graph[4][2] = 5;
+    
+    degrees[5] = HANGING_DEGREE;
+    current_graph[5][0] = 4;
+    
+    current_number_of_vertices = 6;
+
+    current_number_of_edges = 0;
+    edge_labels[0][1] = current_number_of_edges;
+    edge_labels[1][0] = current_number_of_edges++;
+    edge_labels[0][2] = current_number_of_edges;
+    edge_labels[2][0] = current_number_of_edges++;
+    edge_labels[0][4] = current_number_of_edges;
+    edge_labels[4][0] = current_number_of_edges++;
+    edge_labels[1][2] = current_number_of_edges;
+    edge_labels[2][1] = current_number_of_edges++;
+    edge_labels[1][3] = current_number_of_edges;
+    edge_labels[3][1] = current_number_of_edges++;
+    edge_labels[2][3] = current_number_of_edges;
+    edge_labels[3][2] = current_number_of_edges++;
+    edge_labels[3][4] = current_number_of_edges;
+    edge_labels[4][3] = current_number_of_edges++;
+    edge_labels[4][5] = current_number_of_edges;
+    edge_labels[5][4] = current_number_of_edges++;
+
+    number_of_edge_diamonds = 1;
+
+    eligible_edges[0][0] = 0;
+    eligible_edges[0][1] = 4;
+    eligible_edges[1][0] = 3;
+    eligible_edges[1][1] = 4;
+    eligible_edges[2][0] = 4;
+    eligible_edges[2][1] = 5;
+    eligible_edges_size = 3;
+
+    number_of_nonadj_edge_diamonds = 0;
+    number_of_lollipop_diamonds = 0;
+    
+    number_of_hanging_edges = 1;
+    add_bridge(4, 5);
+    hanging_edges[0][0] = 4;
+    hanging_edges[0][1] = 5;
 }
 
 	/**
@@ -313,6 +373,11 @@ void generate_irreducible_graphs(int order, int min_girth, void (*userproc) (uns
     
     if(max_number_of_vertices_irred_graph >= 4) {
     	init_generate_irreducible_graphs_from_K4();
+    	extend_irreducible_graph(INIT);
+    }
+    
+    if(max_number_of_vertices_irred_graph >= 6) {
+    	init_generate_irreducible_graphs_from_lollipop();
     	extend_irreducible_graph(INIT);
     }
 
@@ -610,7 +675,7 @@ int is_major_hanging_edge() {
 
         nauty_sh((graph*) & sg, lab, ptn, NULL, orbits, &options, &stats, workspace, WORKSIZE, MAXM, current_number_of_vertices, (graph*) & sg_canon);
 
-        // DEBUGASSERT(number_of_nonadj_edge_diamonds == 0 && number_of_lollipop_diamonds == 0 && number_of_edge_diamonds == 0);				// TODO probably uncomment
+        DEBUGASSERT(number_of_nonadj_edge_diamonds == 0 && number_of_lollipop_diamonds == 0 && number_of_edge_diamonds == 0);
 
         int last_hanging_edge_fixed_vertex = determine_last_hanging_edge(lab);
         int last_hanging_edge_orbit = orbits[last_hanging_edge_fixed_vertex];
@@ -747,7 +812,7 @@ void extend_irreducible_graph(int edge_inserted) {
 	    
 	    EDGE eligible_edges_list[eligible_edges_size];
 	    int eligible_edges_list_size = 0;
-	    generate_eligible_lollipop_edges(eligible_edges_list, &eligible_edges_list_size);
+	    generate_eligible_hanging_edges(eligible_edges_list, &eligible_edges_list_size);
 	    
 	    if(eligible_edges_list_size > 0) {
 	    		hanging_edge_extend(eligible_edges_list, eligible_edges_list_size);
@@ -1250,6 +1315,22 @@ void generate_eligible_diamond_edges(EDGE eligible_diamond_edges[], int *eligibl
 void generate_eligible_lollipop_edges(EDGE eligible_lollipop_edges[], int *eligible_lollipop_edges_size) {
     *eligible_lollipop_edges_size = eligible_edges_size;
     memcpy(eligible_lollipop_edges, eligible_edges, sizeof(EDGE) * eligible_edges_size);
+
+    if(*eligible_lollipop_edges_size > 0) {
+        int i;
+        for(i = 0; i < *eligible_lollipop_edges_size; i++) {
+            DEBUGASSERT(eligible_lollipop_edges[i][0] < eligible_lollipop_edges[i][1]);
+            edge_index[eligible_lollipop_edges[i][0]][eligible_lollipop_edges[i][1]] = i;
+        }
+    }
+}
+
+void generate_eligible_hanging_edges(EDGE eligible_lollipop_edges[], int *eligible_lollipop_edges_size) {
+    
+    if(number_of_nonadj_edge_diamonds == 0 && number_of_lollipop_diamonds == 0 && number_of_edge_diamonds == 0) {
+    	*eligible_lollipop_edges_size = eligible_edges_size;
+    	memcpy(eligible_lollipop_edges, eligible_edges, sizeof(EDGE) * eligible_edges_size);
+    }
 
     if(*eligible_lollipop_edges_size > 0) {
         int i;
