@@ -234,7 +234,7 @@ void init_generate_irreducible_graphs_from_K2() {									// TODO Polehunter TOD
     number_of_lollipop_diamonds = 0;
     
     number_of_hanging_edges = 2;
-    add_bridge(0, 1);
+    // add_bridge(0, 1);
     hanging_edges[0][0] = 0;
     hanging_edges[0][1] = 1;
     hanging_edges[1][0] = 1;
@@ -247,58 +247,62 @@ void init_generate_irreducible_graphs_from_lollipop() {									// TODO Polehunt
     for(i = 0; i < 4; i++) {
     	degrees[i] = REG;
         for(j = 0; j < degrees[i]; j++) {
-            current_graph[i][j] = (i + j + 1) % 4;
+            current_graph[2+i][j] = 2 + (i + j + 1) % 4;
         }
-        edge_diamonds[0][i] = i;
+        // edge_diamonds[0][i] = i;
     }
-    current_graph[0][2] = 4;
-    current_graph[3][0] = 4;
+    current_graph[2][2] = 1;
+    current_graph[5][0] = 1;
     
-    degrees[4] = REG;
-    current_graph[4][0] = 0;
-    current_graph[4][1] = 3;
-    current_graph[4][2] = 5;
+    degrees[1] = REG;
+    current_graph[1][0] = 2;
+    current_graph[1][1] = 5;
+    current_graph[1][2] = 0;
     
-    degrees[5] = HANGING_DEGREE;
-    current_graph[5][0] = 4;
+    degrees[0] = HANGING_DEGREE;
+    current_graph[0][0] = 1;
     
     current_number_of_vertices = 6;
 
     current_number_of_edges = 0;
-    edge_labels[0][1] = current_number_of_edges;
-    edge_labels[1][0] = current_number_of_edges++;
-    edge_labels[0][2] = current_number_of_edges;
-    edge_labels[2][0] = current_number_of_edges++;
-    edge_labels[0][4] = current_number_of_edges;
-    edge_labels[4][0] = current_number_of_edges++;
-    edge_labels[1][2] = current_number_of_edges;
-    edge_labels[2][1] = current_number_of_edges++;
-    edge_labels[1][3] = current_number_of_edges;
-    edge_labels[3][1] = current_number_of_edges++;
     edge_labels[2][3] = current_number_of_edges;
     edge_labels[3][2] = current_number_of_edges++;
+    edge_labels[2][4] = current_number_of_edges;
+    edge_labels[4][2] = current_number_of_edges++;
+    edge_labels[2][1] = current_number_of_edges;
+    edge_labels[1][2] = current_number_of_edges++;
     edge_labels[3][4] = current_number_of_edges;
     edge_labels[4][3] = current_number_of_edges++;
+    edge_labels[3][5] = current_number_of_edges;
+    edge_labels[5][3] = current_number_of_edges++;
     edge_labels[4][5] = current_number_of_edges;
     edge_labels[5][4] = current_number_of_edges++;
+    edge_labels[5][1] = current_number_of_edges;
+    edge_labels[1][5] = current_number_of_edges++;
+    edge_labels[1][0] = current_number_of_edges;
+    edge_labels[0][1] = current_number_of_edges++;
 
-    number_of_edge_diamonds = 1;
-
-    eligible_edges[0][0] = 0;
-    eligible_edges[0][1] = 4;
-    eligible_edges[1][0] = 3;
-    eligible_edges[1][1] = 4;
-    eligible_edges[2][0] = 4;
-    eligible_edges[2][1] = 5;
+    eligible_edges[0][0] = 1;
+    eligible_edges[0][1] = 2;
+    eligible_edges[1][0] = 1;
+    eligible_edges[1][1] = 5;
+    eligible_edges[2][0] = 0;
+    eligible_edges[2][1] = 1;
     eligible_edges_size = 3;
 
+    number_of_edge_diamonds = 0; // number_of_edge_diamonds = 1;
     number_of_nonadj_edge_diamonds = 0;
-    number_of_lollipop_diamonds = 0;
+    
+    lollipop_diamonds[0][0] = 2;
+    lollipop_diamonds[0][1] = 3;
+    lollipop_diamonds[0][2] = 4;
+    lollipop_diamonds[0][3] = 5;
+    number_of_lollipop_diamonds = 1; // number_of_lollipop_diamonds = 0;
     
     number_of_hanging_edges = 1;
-    add_bridge(4, 5);
-    hanging_edges[0][0] = 4;
-    hanging_edges[0][1] = 5;
+    // add_bridge(0, 1);
+    hanging_edges[0][0] = 1;
+    hanging_edges[0][1] = 0;
 }
 
 	/**
@@ -760,7 +764,9 @@ void extend_irreducible_graph(int edge_inserted) {
     for(i = 0; i < eligible_edges_size; i++) {
         if(!is_part_of_irreducible_triangle_bitvector(eligible_edges[i][0]) &&
                 !is_part_of_irreducible_triangle_bitvector(eligible_edges[i][1]) &&
-                !is_a_bridge_list(eligible_edges[i][0], eligible_edges[i][1])) {
+                !is_a_bridge_list(eligible_edges[i][0], eligible_edges[i][1]) &&
+                !is_hanging_list(eligible_edges[i][0], eligible_edges[i][1]) &&
+                !is_hanging_list(eligible_edges[i][1], eligible_edges[i][0])) {
             /**
              * I.e. graph contains reducible edges.
              * Only irreducible graphs allowed because the canonical parent of an
@@ -960,11 +966,17 @@ void add_edge_diamond(EDGE edge) {
     }
     
     //Update hanging edges
-    if(is_hanging_list(edge[0], edge[1])) {
+    if(is_hanging_list(edge[0], edge[1]) && is_hanging_list(edge[1], edge[0])) {
     	replace_hanging_edge(edge[0], edge[1], current_number_of_vertices + 3, edge[1]);
-    }
-    if(is_hanging_list(edge[1], edge[0])) {
     	replace_hanging_edge(edge[1], edge[0], current_number_of_vertices, edge[0]);
+    }
+    else if(is_hanging_list(edge[0], edge[1])) {
+    	replace_hanging_edge(edge[0], edge[1], current_number_of_vertices + 3, edge[1]);
+    	add_bridge(edge[0], current_number_of_vertices);
+    }
+    else if(is_hanging_list(edge[1], edge[0])) {
+    	replace_hanging_edge(edge[1], edge[0], current_number_of_vertices, edge[0]);
+    	add_bridge(edge[1], current_number_of_vertices + 3);
     }
 
     add_edge_diamond_to_list(current_number_of_vertices, current_number_of_vertices + 1, current_number_of_vertices + 2, current_number_of_vertices + 3);
@@ -1117,11 +1129,17 @@ void add_lollipop_edge(EDGE edge) {
     add_bridge(current_number_of_vertices, current_number_of_vertices + 1);
     
     //Update hanging edges
-    if(is_hanging_list(edge[0], edge[1])) {
+    if(is_hanging_list(edge[0], edge[1]) && is_hanging_list(edge[1], edge[0])) {
     	replace_hanging_edge(edge[0], edge[1], current_number_of_vertices, edge[1]);
-    }
-    if(is_hanging_list(edge[1], edge[0])) {
     	replace_hanging_edge(edge[1], edge[0], current_number_of_vertices, edge[0]);
+    }
+    else if(is_hanging_list(edge[0], edge[1])) {
+    	replace_hanging_edge(edge[0], edge[1], current_number_of_vertices, edge[1]);
+    	add_bridge(edge[0], current_number_of_vertices);
+    }
+    else if(is_hanging_list(edge[1], edge[0])) {
+    	replace_hanging_edge(edge[1], edge[0], current_number_of_vertices, edge[0]);
+    	add_bridge(edge[1], current_number_of_vertices);
     }
 
     add_lollipop_to_list(current_number_of_vertices + 2, current_number_of_vertices + 3, current_number_of_vertices + 4, current_number_of_vertices + 5);
@@ -1179,16 +1197,20 @@ void add_hanging_edge(EDGE edge) {
         replace_bridge(edge[0], edge[1], edge[0], current_number_of_vertices);
         add_bridge(edge[1], current_number_of_vertices);
     }
-    add_bridge(current_number_of_vertices, current_number_of_vertices + 1);
     
-    //Update hanging edges
-    if(is_hanging_list(edge[0], edge[1])) {
+    if(is_hanging_list(edge[0], edge[1]) && is_hanging_list(edge[1], edge[0])) {
     	replace_hanging_edge(edge[0], edge[1], current_number_of_vertices, edge[1]);
-    }
-    if(is_hanging_list(edge[1], edge[0])) {
     	replace_hanging_edge(edge[1], edge[0], current_number_of_vertices, edge[0]);
     }
-
+    else if(is_hanging_list(edge[0], edge[1])) {
+    	replace_hanging_edge(edge[0], edge[1], current_number_of_vertices, edge[1]);
+    	add_bridge(edge[0], current_number_of_vertices);
+    }
+    else if(is_hanging_list(edge[1], edge[0])) {
+    	replace_hanging_edge(edge[1], edge[0], current_number_of_vertices, edge[0]);
+    	add_bridge(edge[1], current_number_of_vertices);
+    }
+    
     hanging_edges[number_of_hanging_edges][0] = current_number_of_vertices;
     hanging_edges[number_of_hanging_edges][1] = current_number_of_vertices + 1;
     number_of_hanging_edges++;
@@ -8326,7 +8348,7 @@ void replace_hanging_edge(int old_from, int old_to, int from, int to) {
             break;
         }
     }
-    DEBUGASSERT(i < number_of_bridges);
+    DEBUGASSERT(i < number_of_hanging_edges);
 }
 
 /**

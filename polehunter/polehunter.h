@@ -759,6 +759,7 @@ void replace_eligible_edge(int old_from, int old_to, int from, int to);
 
 void add_nonadj_edge_diamond_to_list(unsigned char v0, unsigned char v1, unsigned char v2, unsigned char v3);
 
+void generate_eligible_hanging_edges(EDGE eligible_lollipop_edges[], int *eligible_lollipop_edges_size);
 void hanging_edge_extend(EDGE eligible_edges[], int eligible_edges_size);
 unsigned char determine_fixed_vertex_of_hanging_edge(EDGE hanging_edge);
 
