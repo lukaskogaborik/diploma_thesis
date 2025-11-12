@@ -173,7 +173,7 @@ void replace_neighbour(unsigned char vertex, unsigned char v1, unsigned char v2)
 
 /**************Methods for the generation of irreducible graphs****************/
 
-void init_generate_irreducible_graphs_from_K4() {									// TODO Polehunter TODO K2
+void init_generate_irreducible_graphs_from_K4() {
     //Startgraph is the K4
     int i, j;    
     for(i = 0; i < 4; i++) {
@@ -207,10 +207,12 @@ void init_generate_irreducible_graphs_from_K4() {									// TODO Polehunter TOD
 
     number_of_nonadj_edge_diamonds = 0;
     number_of_lollipop_diamonds = 0;
+    
+    number_of_hanging_edges = 0;
 }
 
 
-void init_generate_irreducible_graphs_from_K2() {									// TODO Polehunter TODO K2
+void init_generate_irreducible_graphs_from_K2() {
     //Startgraph is the K2
     int i, j;
     degrees[0] = HANGING_DEGREE;
@@ -241,7 +243,7 @@ void init_generate_irreducible_graphs_from_K2() {									// TODO Polehunter TOD
     hanging_edges[1][1] = 0;
 }
 
-void init_generate_irreducible_graphs_from_lollipop() {									// TODO Polehunter TODO K2
+void init_generate_irreducible_graphs_from_lollipop() {
     //Startgraph is the lollipop multipole
     int i, j;    
     for(i = 0; i < 4; i++) {
@@ -465,7 +467,7 @@ int is_major_edge_diamond() {
         int last_edge_diamond_border_vertex = determine_last_edge_diamond(lab);
         int last_diamond_orbit = orbits[last_edge_diamond_border_vertex];
 
-        return orbits[current_number_of_vertices - 4] == last_diamond_orbit || orbits[current_number_of_vertices - 1] == last_diamond_orbit;			// TODO Polehunter TODO check -1, -4
+        return orbits[current_number_of_vertices - 4] == last_diamond_orbit || orbits[current_number_of_vertices - 1] == last_diamond_orbit;
     }
 }
 
@@ -501,7 +503,7 @@ int is_major_lollipop_diamond() {
         int last_lollipop = determine_last_lollipop(lab);
         int last_lollipop_orbit = orbits[last_lollipop];
 
-        return orbits[current_number_of_vertices - 5] == last_lollipop_orbit;											// TODO Polehunter TODO check -5
+        return orbits[current_number_of_vertices - 5] == last_lollipop_orbit;
     }
 }
 
@@ -542,56 +544,11 @@ int is_major_nonadj_edge_diamond() {
         int last_edge_diamond_border_vertex = determine_last_nonadj_edge_diamond(lab);
         int last_diamond_orbit = orbits[last_edge_diamond_border_vertex];
 
-        return orbits[current_number_of_vertices - 5] == last_diamond_orbit || orbits[current_number_of_vertices - 2] == last_diamond_orbit;			// TODO Polehunter TODO check -2, -5
+        return orbits[current_number_of_vertices - 5] == last_diamond_orbit || orbits[current_number_of_vertices - 2] == last_diamond_orbit;
     }
 }
 
 int determine_last_hanging_edge(int lab[]) {
-    /*
-    setword diamonds_border_vertices_bitvector = (setword) 0;
-    int i;
-    unsigned char neighbour0, neighbour1;
-    for(i = 0; i < number_of_edge_diamonds; i++) {
-        neighbour0 = determine_external_diamond_neighbour_index(edge_diamonds[i], 0);
-        neighbour1 = determine_external_diamond_neighbour_index(edge_diamonds[i], 3);
-    }
-    for(i = current_number_of_vertices - 1; i >= 0; i--) {
-        if((BIT(lab[i]) & diamonds_border_vertices_bitvector) > 0)
-            return lab[i];
-    }
-    fprintf(stderr, "Error: no border vertex found -- edge diamond (can never happen)\n");
-    exit(1);
-    */
-    
-    /*
-    setword lollipop_central_vertices_bitvector = (setword) 0;
-    int i;
-    unsigned char central_vertex;
-    for(i = 0; i < number_of_lollipop_diamonds; i++) {
-        central_vertex = determine_external_diamond_neighbour(lollipop_diamonds[i]);
-        lollipop_central_vertices_bitvector |= BIT(central_vertex);
-    }
-    for(i = current_number_of_vertices - 1; i >= 0; i--) {
-        if((BIT(lab[i]) & lollipop_central_vertices_bitvector) > 0)
-            return lab[i];
-    }
-    fprintf(stderr, "Error: no central vertex found (can never happen)\n");
-    exit(1);
-    */
-    
-    /*
-    setword diamonds_border_vertices_bitvector = (setword) 0;
-    int i;
-    for(i = 0; i < number_of_nonadj_edge_diamonds; i++) {
-        diamonds_border_vertices_bitvector |= BIT(nonadj_edge_diamonds[i][0]) | BIT(nonadj_edge_diamonds[i][3]);
-    }
-    for(i = current_number_of_vertices - 1; i >= 0; i--) {
-        if((BIT(lab[i]) & diamonds_border_vertices_bitvector) > 0)
-            return lab[i];
-    }
-    fprintf(stderr, "Error no border vertex found -- nonadjacent edge diamond (can never happen)\n");
-    exit(1);
-    */
     setword hanging_edge_fixed_vertices_bitvector = (setword) 0;
     int i;
     unsigned char fixed_vertex;
@@ -608,66 +565,6 @@ int determine_last_hanging_edge(int lab[]) {
 }
 
 int is_major_hanging_edge() {
-    /*
-    if(number_of_edge_diamonds == 1 && current_number_of_vertices == max_number_of_vertices_irred_graph) {
-        return 1;
-    } else {
-        number_of_generators = 0;
-
-        options.getcanon = TRUE;
-        options.defaultptn = TRUE;
-        copy_sparse_graph();
-
-        nauty_sh((graph*) & sg, lab, ptn, NULL, orbits, &options, &stats, workspace, WORKSIZE, MAXM, current_number_of_vertices, (graph*) & sg_canon);
-
-        DEBUGASSERT(number_of_nonadj_edge_diamonds == 0 && number_of_lollipop_diamonds == 0);
-
-        int last_edge_diamond_border_vertex = determine_last_edge_diamond(lab);
-        int last_diamond_orbit = orbits[last_edge_diamond_border_vertex];
-
-        return orbits[current_number_of_vertices - 4] == last_diamond_orbit || orbits[current_number_of_vertices - 1] == last_diamond_orbit;			// TODO Polehunter TODO check -1, -4
-    }
-    */
-    
-    /*
-    if(number_of_lollipop_diamonds == 1 && current_number_of_vertices == max_number_of_vertices_irred_graph) {
-        return 1;
-    } else {
-        number_of_generators = 0;
-
-        options.getcanon = TRUE;
-        options.defaultptn = TRUE;
-        copy_sparse_graph();
-
-        nauty_sh((graph*) & sg, lab, ptn, NULL, orbits, &options, &stats, workspace, WORKSIZE, MAXM, current_number_of_vertices, (graph*) & sg_canon);
-
-        int last_lollipop = determine_last_lollipop(lab);
-        int last_lollipop_orbit = orbits[last_lollipop];
-
-        return orbits[current_number_of_vertices - 5] == last_lollipop_orbit;											// TODO Polehunter TODO check -5
-    }
-    */
-    
-    /*
-    if(number_of_nonadj_edge_diamonds == 1 && current_number_of_vertices == max_number_of_vertices_irred_graph) {
-        return 1;
-    } else {
-        number_of_generators = 0;
-
-        options.getcanon = TRUE;
-        options.defaultptn = TRUE;
-        copy_sparse_graph();
-
-        nauty_sh((graph*) & sg, lab, ptn, NULL, orbits, &options, &stats, workspace, WORKSIZE, MAXM, current_number_of_vertices, (graph*) & sg_canon);
-
-        DEBUGASSERT(number_of_lollipop_diamonds == 0);
-
-        int last_edge_diamond_border_vertex = determine_last_nonadj_edge_diamond(lab);
-        int last_diamond_orbit = orbits[last_edge_diamond_border_vertex];
-
-        return orbits[current_number_of_vertices - 5] == last_diamond_orbit || orbits[current_number_of_vertices - 2] == last_diamond_orbit;			// TODO Polehunter TODO check -2, -5
-    }
-    */
     if(number_of_hanging_edges == 1 && current_number_of_vertices == max_number_of_vertices_irred_graph) {
         return 1;
     } else {
@@ -684,7 +581,7 @@ int is_major_hanging_edge() {
         int last_hanging_edge_fixed_vertex = determine_last_hanging_edge(lab);
         int last_hanging_edge_orbit = orbits[last_hanging_edge_fixed_vertex];
 
-        return orbits[current_number_of_vertices - 2] == last_hanging_edge_orbit || orbits[current_number_of_vertices - 1] == last_hanging_edge_orbit;		// TODO Polehunter TODO check -1, -4
+        return orbits[current_number_of_vertices - 2] == last_hanging_edge_orbit || orbits[current_number_of_vertices - 1] == last_hanging_edge_orbit;
     }
 }
 
@@ -827,7 +724,7 @@ void extend_irreducible_graph(int edge_inserted) {
 	    		memcpy(generators, generators_local, sizeof(int) * number_of_generators * MAXN);
 	    }
 	    	
-	    if(current_number_of_vertices <= max_number_of_vertices_irred_graph - 4) {											// TODO Polehunter TODO check -4
+	    if(current_number_of_vertices <= max_number_of_vertices_irred_graph - 4) {
 			//Diamond edges
 			eligible_edges_list_size = 0;
 			generate_eligible_diamond_edges(eligible_edges_list, &eligible_edges_list_size);
@@ -1849,7 +1746,7 @@ int add_nonadj_diamond_edge(EDGEPAIR edge_pair) {
     	replace_hanging_edge(edge_pair[2], edge_pair[3], current_number_of_vertices + 5, edge_pair[3]);
     }
     if(is_hanging_list(edge_pair[3], edge_pair[2])) {
-    	replace_hanging_edge(edge_pair[3], edge_pair[2], current_number_of_vertices + 2, edge_pair[2]);
+    	replace_hanging_edge(edge_pair[3], edge_pair[2], current_number_of_vertices + 5, edge_pair[2]);
     }
 
     update_bridges_add_edge();
@@ -5475,9 +5372,8 @@ int generate_edge_4_tuples_girth_at_least_6(int *edge_4_tuple_list_size) {
  * possible extensions for it.
  */
 
-void extend(int edge_inserted, int trivial_group) {} // TODO commented due to testing only on prime graphs
 
-#if 0
+
 void extend(int edge_inserted, int trivial_group) {
     if(modulo && current_number_of_vertices == splitlevel) {
         //Is cheaper than just doing mod
@@ -6084,7 +5980,6 @@ void extend(int edge_inserted, int trivial_group) {
     }
 
 }
-#endif
 
 /**
  * Last_edge will be set to the reducible edge with min_colour_three which has
@@ -11459,7 +11354,18 @@ void add_edge(EDGEPAIR edge_pair) {
             replace_bridge(edge_pair[2], edge_pair[3], edge_pair[3], current_number_of_vertices + 1);
     }
     
-    // probably TODO updating hanging edges
+    if(is_hanging_list(edge_pair[0], edge_pair[1])) {
+    	replace_hanging_edge(edge_pair[0], edge_pair[1], current_number_of_vertices, edge_pair[1]);
+    }
+    if(is_hanging_list(edge_pair[1], edge_pair[0])) {
+    	replace_hanging_edge(edge_pair[1], edge_pair[0], current_number_of_vertices, edge_pair[0]);
+    }
+    if(is_hanging_list(edge_pair[2], edge_pair[3])) {
+    	replace_hanging_edge(edge_pair[2], edge_pair[3], current_number_of_vertices + 5, edge_pair[3]);
+    }
+    if(is_hanging_list(edge_pair[3], edge_pair[2])) {
+    	replace_hanging_edge(edge_pair[3], edge_pair[2], current_number_of_vertices + 5, edge_pair[2]);
+    }
 
     //Even when one edge of the edgepair is a bridge, an other bridge can still be undone by inserting the new edge
     update_bridges_add_edge();
@@ -14643,6 +14549,7 @@ void aufschreiben_irred() {
         int codelength = nlen + ((current_number_of_vertices * (current_number_of_vertices - 1)) / 2 + 5) / 6 + 1;
         unsigned char code[codelength];
         code_graph6(code, current_graph, current_number_of_vertices);
+        fprintf(outputfile_irred, "%d ", number_of_hanging_edges);
         wegspeichern_irred(code, codelength, current_number_of_vertices);
     }
 
