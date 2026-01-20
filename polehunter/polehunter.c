@@ -142,7 +142,8 @@ static unsigned long long int total_num_4_tuples_g7 = 0;
 /**
  * Returns 1 if v2 is a neighbour of v1, else 0.
  */
-#define is_neighbour_old(v1, v2) (current_graph[v1][0] == v2 ? 1 : current_graph[v1][1] == v2 ? 1 : current_graph[v1][2] == v2)
+ 
+#define is_neighbour_old(v1, v2) (current_graph[v1][0] == v2 ? 1 : degrees[v1] == 1 ? 0 : current_graph[v1][1] == v2 ? 1 : current_graph[v1][2] == v2)
 #define is_neighbour(v1, v2) ((vertex_neighbourhood[v1] & BIT(v2)) > 0)
 
 /**
@@ -423,7 +424,6 @@ int determine_last_edge_diamond(int lab[]) {
     for(i = 0; i < number_of_edge_diamonds; i++) {
         neighbour0 = determine_external_diamond_neighbour_index(edge_diamonds[i], 0);
         neighbour1 = determine_external_diamond_neighbour_index(edge_diamonds[i], 3);
-
 
         //Will never be neighbours since the graph won't contain any reducible edges
         DEBUGASSERT(!is_neighbour_old(neighbour0, neighbour1));
@@ -5373,6 +5373,11 @@ int generate_edge_4_tuples_girth_at_least_6(int *edge_4_tuple_list_size) {
  */
 
 
+void extend(int edge_inserted, int trivial_group) {
+	return;
+}
+
+#if 0
 
 void extend(int edge_inserted, int trivial_group) {
     if(modulo && current_number_of_vertices == splitlevel) {
@@ -5981,6 +5986,8 @@ void extend(int edge_inserted, int trivial_group) {
 
 }
 
+#endif
+
 /**
  * Last_edge will be set to the reducible edge with min_colour_three which has
  * the biggest label in the canonical graph.
@@ -6048,6 +6055,7 @@ void determine_last_edge(sparsegraph sparse_graph_canon, int lab[], EDGE lastedg
     fprintf(stderr, "Error: last edge not found\n");
     exit(1);
 }
+
 
 void determine_last_edge_h_operation(sparsegraph sparse_graph_canon, int lab[], EDGE lastedge) {
     /**
@@ -7605,6 +7613,9 @@ void triangle_extend_all(int generators_local[][MAXN], int number_of_generators_
 
     int number_of_bridges_local;
     EDGE bridges_local[number_of_bridges+1];
+    
+    int number_of_hanging_edges_local;
+    EDGE hanging_edges_local[number_of_hanging_edges+1];
 
     if(current_number_of_vertices + 2 * min_i < number_of_vertices) {
         //Backup not needed on last level
@@ -7622,6 +7633,10 @@ void triangle_extend_all(int generators_local[][MAXN], int number_of_generators_
         number_of_bridges_local = number_of_bridges;
         if(number_of_bridges_local > 0)
             memcpy(bridges_local, bridges, sizeof (EDGE) * number_of_bridges_local);
+            
+        number_of_hanging_edges_local = number_of_hanging_edges;
+        if(number_of_hanging_edges_local > 0)
+            memcpy(hanging_edges_local, hanging_edges, sizeof (EDGE) * number_of_hanging_edges_local);
     }
 
     int num_orbits;
@@ -7780,10 +7795,15 @@ void triangle_extend_all(int generators_local[][MAXN], int number_of_generators_
                     number_of_bridges = number_of_bridges_local;
                     if(number_of_bridges_local > 0)
                         memcpy(bridges, bridges_local, sizeof(EDGE) * number_of_bridges_local);
+                        
+                    number_of_hanging_edges = number_of_hanging_edges_local;
+                    if(number_of_hanging_edges_local > 0)
+                        memcpy(hanging_edges, hanging_edges_local, sizeof(EDGE) * number_of_hanging_edges_local);
 
                     //Restore is_bridge
                     for(k = 0; k < number_of_bridges; k++)
                         is_bridge[bridges[k][0]][bridges[k][1]] = 1;
+                        
                 }
                 num_orbits++;
                 if(num_orbits == number_of_vertexset_orbits)
@@ -7841,8 +7861,8 @@ void generate_triangle_vertexsets_remaining(int current_index, int num_vertices_
             previous = vertexset[*vertexset_size][current_index - 1];
         for(i = previous + 1; i < current_number_of_vertices; i++) {
             int triangle;
-            //Valid if it's not part of a reducible triangle or it is and it can be added (its in canonical form)
-            if(!is_part_of_reducible_triangle(i, &triangle) || can_be_added_to_reducible_triangle_vertexset(vertexset[*vertexset_size], current_index, i, triangle)) {
+            //Valid if it's not part of a reducible triangle or it is and it can be added (its in canonical form); also cannot be a dangling vertex
+            if(degrees[i] == REG && (!is_part_of_reducible_triangle(i, &triangle) || can_be_added_to_reducible_triangle_vertexset(vertexset[*vertexset_size], current_index, i, triangle))) {
                 vertexset[*vertexset_size][current_index] = i;
                 generate_triangle_vertexsets_remaining(current_index + 1, num_vertices_in_set, vertexset, vertexset_size);
             }
@@ -7886,8 +7906,11 @@ void generate_all_vertexsets(int current_index, int num_vertices_in_set,
         if(current_index > 0)
             previous = vertexset[*vertexset_size][current_index - 1];
         for(i = previous + 1; i < current_number_of_vertices; i++) {
-                vertexset[*vertexset_size][current_index] = i;
-                generate_all_vertexsets(current_index + 1, num_vertices_in_set, vertexset, vertexset_size);
+        	// cannot be a dangling vertex
+        	if(degrees[i] == REG) {
+                	vertexset[*vertexset_size][current_index] = i;
+                	generate_all_vertexsets(current_index + 1, num_vertices_in_set, vertexset, vertexset_size);
+                }
         }
     } else {
         //DEBUGARRAYDUMP(vertexset[*vertexset_size], num_vertices_in_set, "%d");
