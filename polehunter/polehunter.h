@@ -277,6 +277,8 @@ int number_of_lollipop_diamonds = 0;
 EDGE hanging_edges[(3 * MAXN) / 2];
 int number_of_hanging_edges = 0;
 
+unsigned char is_hanging_edge[MAXN][MAXN];
+
 //Eligible edges are edges that aren't fully in a diamond
 EDGE eligible_edges[(3 * MAXN) / 2];
 int eligible_edges_size = 0;

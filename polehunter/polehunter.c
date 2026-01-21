@@ -629,6 +629,14 @@ void irreducible_graph_generated() {
     }
     for(j = 0; j < number_of_bridges; j++)
         is_bridge[bridges[j][0]][bridges[j][1]] = 1;
+        
+    for(j = 0; j < number_of_vertices; j++) {
+        for(k = 0; k < number_of_vertices; k++) {
+            is_hanging_edge[j][k] = 0;
+        }
+    }
+    for(j = 0; j < number_of_hanging_edges; j++)
+        is_hanging_edge[hanging_edges[j][0]][hanging_edges[j][1]] = 1;
 
     //Set variables
     previous_min_edge[0] = 0;
@@ -7259,7 +7267,7 @@ void edge_extend(EDGEPAIR edge_pairs_list[], int edge_pair_list_size) {
             }
             
             if(!abort) {
-                all_edges_are_reducible = number_of_bridges == 0 && number_of_irreducible_triangles == 0;
+                all_edges_are_reducible = number_of_bridges == 0 && number_of_irreducible_triangles == 0 && number_of_hanging_edges == 0;
 
                 inserted_edge[0] = current_number_of_vertices - 2;
                 inserted_edge[1] = current_number_of_vertices - 1;
@@ -8260,6 +8268,8 @@ void add_hanging_edge_list(unsigned char from, unsigned char to) {
  */
 void replace_hanging_edge(int old_from, int old_to, int from, int to) {
     int i;
+    is_hanging_edge[old_from][old_to] = 0;
+    is_hanging_edge[from][to] = 1;
     for(i = 0; i < number_of_hanging_edges; i++) {
         if(hanging_edges[i][0] == old_from && hanging_edges[i][1] == old_to) {
             hanging_edges[i][0] = from;
@@ -8313,7 +8323,7 @@ int is_reducible_edge(EDGE edge) {
      * 13 vs 1.5% (for 26 vertices)
      */
     //return !is_bridge[edge[0]][edge[1]] && (irreducible_triangles_bitvector & (BIT(edge[0]) | BIT(edge[1]))) == 0;
-    return (irreducible_triangles_bitvector & (BIT(edge[0]) | BIT(edge[1]))) == 0 && !is_bridge[edge[0]][edge[1]];
+    return (irreducible_triangles_bitvector & (BIT(edge[0]) | BIT(edge[1]))) == 0 && !is_bridge[edge[0]][edge[1]] && !is_hanging_edge[edge[0]][edge[1]] && !is_hanging_edge[edge[1]][edge[0]];
 }
 
 //Edge is a bridge if both endpoints are cutvertices
