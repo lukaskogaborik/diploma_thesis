@@ -606,6 +606,11 @@ void irreducible_graph_generated() {
     int generators_local[number_of_generators][MAXN];
     memcpy(generators_local, generators, sizeof(int) * number_of_generators * MAXN);
     int number_of_generators_local = number_of_generators;
+    
+    EDGE hanging_edges_local[number_of_hanging_edges+1];
+    int number_of_hanging_edges_local = number_of_hanging_edges;
+    if(number_of_hanging_edges_local > 0)
+    	memcpy(hanging_edges_local, hanging_edges, sizeof(EDGE) * number_of_hanging_edges_local);
 
     number_of_reducible_triangles = 0;
 
@@ -642,6 +647,11 @@ void irreducible_graph_generated() {
     //Restore backups
     number_of_generators = number_of_generators_local;
     memcpy(generators, generators_local, sizeof(int) * number_of_generators * MAXN);
+    
+    number_of_hanging_edges = number_of_hanging_edges_local;
+    if(number_of_hanging_edges > 0) {
+    	memcpy(hanging_edges, hanging_edges_local, sizeof (IRRED_TRIANGLE) * number_of_hanging_edges);
+    }
 
     //Bridges are already restored by extend
 /*
@@ -1287,7 +1297,7 @@ void edge_diamond_extend(EDGE eligible_diamond_edges[], int eligible_diamond_edg
     EDGE hanging_edges_local[number_of_hanging_edges+1];
     int number_of_hanging_edges_local = number_of_hanging_edges;
     if(number_of_hanging_edges_local > 0)
-    	memcpy(hanging_edges_local, hanging_edges, sizeof(EDGE) * number_of_hanging_edges_local);
+    	memcpy(hanging_edges_local, hanging_edges, sizeof(EDGE) * number_of_hanging_edges_local);	
 
     IRRED_TRIANGLE edge_diamonds_local[number_of_edge_diamonds+1];
     int number_of_edge_diamonds_local = number_of_edge_diamonds;
@@ -5372,13 +5382,6 @@ int generate_edge_4_tuples_girth_at_least_6(int *edge_4_tuple_list_size) {
  * possible extensions for it.
  */
 
-
-void extend(int edge_inserted, int trivial_group) {
-	return;
-}
-
-#if 0
-
 void extend(int edge_inserted, int trivial_group) {
     if(modulo && current_number_of_vertices == splitlevel) {
         //Is cheaper than just doing mod
@@ -5986,8 +5989,6 @@ void extend(int edge_inserted, int trivial_group) {
 
 }
 
-#endif
-
 /**
  * Last_edge will be set to the reducible edge with min_colour_three which has
  * the biggest label in the canonical graph.
@@ -6011,8 +6012,8 @@ void determine_last_edge(sparsegraph sparse_graph_canon, int lab[], EDGE lastedg
 
     for(i = current_number_of_vertices - 1; i >= 1; i--) {
         if(!is_part_of_irreducible_triangle_bitvector(lab[i])) {
-            for(j = 0; j < degrees[i]; j++) {
-                neighbours[j] = sparse_graph_canon.e[i * REG + j];
+            for(j = 0; j < sparse_graph_canon.d[i]; j++) {
+                neighbours[j] = sparse_graph_canon.e[sparse_graph_canon.v[i] + j];
             }
 
             /**
@@ -6026,7 +6027,7 @@ void determine_last_edge(sparsegraph sparse_graph_canon, int lab[], EDGE lastedg
             //Is needed, otherwise the "last" edge might not always be the same (the order of the edges doesnt matter in the e-list)
             transform_triangle_into_canonical_form_full(neighbours);
 
-            for(j = degrees[i] - 1; j >= 0; j--) {
+            for(j = sparse_graph_canon.d[i] - 1; j >= 0; j--) {
                 neighbour = neighbours[j];
 
                 if(!is_part_of_irreducible_triangle_bitvector(lab[neighbour])) {
@@ -6073,8 +6074,8 @@ void determine_last_edge_h_operation(sparsegraph sparse_graph_canon, int lab[], 
     TRIANGLE neighbours;
 
     for(i = current_number_of_vertices - 1; i >= 1; i--) {
-        for(j = 0; j < degrees[i]; j++) {
-            neighbours[j] = sparse_graph_canon.e[i * REG + j];
+        for(j = 0; j < sparse_graph_canon.d[i]; j++) {
+            neighbours[j] = sparse_graph_canon.e[sparse_graph_canon.v[i] + j];
         }
 
         /**
@@ -6088,7 +6089,7 @@ void determine_last_edge_h_operation(sparsegraph sparse_graph_canon, int lab[], 
         //Is needed, otherwise the "last" edge might not always be the same (the order of the edges doesnt matter in the e-list)
         transform_triangle_into_canonical_form_full(neighbours);
 
-        for(j = degrees[i] - 1; j >= 0; j--) {
+        for(j = sparse_graph_canon.d[i] - 1; j >= 0; j--) {
             neighbour = neighbours[j];
 
             /**
@@ -14724,7 +14725,7 @@ void copy_sparse_graph() {
         //sg.v[i] = i * REG;
         sg.d[i] = degrees[i];											// TODO maybe we can set it here
         for(j = 0; j < degrees[i]; j++) {
-            sg.e[i * REG + j] = current_graph[i][j];
+            sg.e[sg.v[i] + j] = current_graph[i][j];
         }
     }
 }
