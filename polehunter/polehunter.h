@@ -88,7 +88,7 @@
 /*******************************Other defines**********************************/
 
 #define REG 3
-#define HANGING_DEGREE 1
+#define DANGLING_DEGREE 1
 
 /**
  * Priority of operations
@@ -111,7 +111,7 @@
 #define EDGE_DIAMOND_INSERTED 3 /* For the generation of the irreducible graphs */
 #define NONADJ_EDGE_DIAMOND_INSERTED 4 /* For the generation of the irreducible graphs */
 #define LOLLIPOP_DIAMOND_INSERTED 5 /* For the generation of the irreducible graphs */
-#define HANGING_EDGE_INSERTED 6 /* For the generation of the irreducible graphs */
+#define DANGLING_EDGE_INSERTED 6 /* For the generation of the irreducible graphs */
 
 /* Nauty worksize */
 #define WORKSIZE 50 * MAXM
@@ -274,10 +274,11 @@ int number_of_nonadj_edge_diamonds = 0;
 IRRED_TRIANGLE lollipop_diamonds[MAXN];
 int number_of_lollipop_diamonds = 0;
 
-EDGE hanging_edges[(3 * MAXN) / 2];
-int number_of_hanging_edges = 0;
+EDGE dangling_edges[(3 * MAXN) / 2];
+int current_number_of_dangling_edges = 0;
+int number_of_dangling_edges;
 
-unsigned char is_hanging_edge[MAXN][MAXN];
+unsigned char is_dangling_edge[MAXN][MAXN];
 
 //Eligible edges are edges that aren't fully in a diamond
 EDGE eligible_edges[(3 * MAXN) / 2];
@@ -761,9 +762,9 @@ void replace_eligible_edge(int old_from, int old_to, int from, int to);
 
 void add_nonadj_edge_diamond_to_list(unsigned char v0, unsigned char v1, unsigned char v2, unsigned char v3);
 
-void generate_eligible_hanging_edges(EDGE eligible_lollipop_edges[], int *eligible_lollipop_edges_size);
-void hanging_edge_extend(EDGE eligible_edges[], int eligible_edges_size);
-unsigned char determine_fixed_vertex_of_hanging_edge(EDGE hanging_edge);
+void generate_eligible_dangling_edges(EDGE eligible_lollipop_edges[], int *eligible_lollipop_edges_size);
+void dangling_edge_extend(EDGE eligible_edges[], int eligible_edges_size);
+unsigned char determine_fixed_vertex_of_dangling_edge(EDGE dangling_edge);
 
 unsigned char determine_external_diamond_neighbour(IRRED_TRIANGLE diamond);
 unsigned char determine_external_diamond_neighbour_index(IRRED_TRIANGLE diamond, int index);
@@ -796,7 +797,7 @@ int is_part_of_reducible_triangle(int vertex, int *triangle);
 
 int is_a_bridge(unsigned char from, unsigned char to);
 int is_a_bridge_list(unsigned char from, unsigned char to);
-int is_hanging_list(unsigned char from, unsigned char to);
+int is_dangling_list(unsigned char from, unsigned char to);
 
 int contains_squares();
 int find_squares(SQUARE squares[], setword squares_bitvectors[], int *squares_size, EDGE adjacent_squares[], int *adjacent_squares_sizes);
@@ -889,8 +890,8 @@ void update_bridges_add_edge();
 void add_bridge(unsigned char from, unsigned char to);
 void remove_bridge(int index);
 void replace_bridge(int old_from, int old_to, int from, int to);
-void add_hanging_edge_list(unsigned char from, unsigned char to);
-void replace_hanging_edge(int old_from, int old_to, int from, int to);
+void add_dangling_edge_list(unsigned char from, unsigned char to);
+void replace_dangling_edge(int old_from, int old_to, int from, int to);
 
 void add_tripod(EDGETRIPLE edge_triple);
 void remove_tripod(EDGETRIPLE edge_triple);
