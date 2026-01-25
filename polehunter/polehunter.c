@@ -11421,7 +11421,9 @@ void add_edge(EDGEPAIR edge_pair) {
          * it should only be checked if edgepair[0, 1] = 01 or 02
          */
         for(i = 0; i < number_of_irreducible_triangles; i++) {
-            if(edge_pair[0] == irreducible_triangles[i][0] && (edge_pair[1] == irreducible_triangles[i][1] || edge_pair[1] == irreducible_triangles[i][2])) {
+            if((edge_pair[0] == irreducible_triangles[i][0] && (edge_pair[1] == irreducible_triangles[i][1] || edge_pair[1] == irreducible_triangles[i][2])) ||
+            		(edge_pair[2] == irreducible_triangles[i][3] && (edge_pair[3] == irreducible_triangles[i][1] || edge_pair[3] == irreducible_triangles[i][2])) ||
+            		(edge_pair[3] == irreducible_triangles[i][3] && (edge_pair[2] == irreducible_triangles[i][1] || edge_pair[2] == irreducible_triangles[i][2]))) {
                 remove_irreducible_triangle(i);
                 break;
             }
@@ -13452,7 +13454,7 @@ void generate_edgepairs_no_triangles(EDGEPAIR edge_pairs_list[], int *edge_pair_
     update_min_edges();
 
     //Generate edgepairs which are part of a diamond and which can yield a minimal edge
-    //The edge connecting 2 diamonds will never be minimal, only possibilities are ep's 01 23 and 02 13
+    //The edge connecting 2 diamonds will never be minimal, only possibilities are ep's 01 23 and 02 13 (others are triangles)
     int i, j, k, l, next, next0;
     for(i = 0; i < number_of_irreducible_triangles; i++) {
         edge_pairs_list[*edge_pair_list_size][0] = irreducible_triangles[i][0];
@@ -13488,19 +13490,22 @@ void generate_edgepairs_no_triangles(EDGEPAIR edge_pairs_list[], int *edge_pair_
         }
     }
 
-    //Generate the edgepairs that contain no edge which is fully in a diamond
+    //Generate the edgepairs that contain no edge which is fully in a diamond, all vertices are different, since otherwise it would be addition of a triangle
     int diamond;
     for(i = 0; i < current_number_of_vertices - 3; i++) {
         for(j = 0; j < degrees[i]; j++) {
             next = current_graph[i][j];
             if(i < next) {
-                if(!(is_part_of_irreducible_triangle_diamond(i, &diamond) && is_part_of_same_irreducible_triangle(next, diamond))) {
+                if(1) {
                     for(k = i + 1; k < current_number_of_vertices - 1; k++) {
                         if(k != next) { // k != i is automatically implied because k >= i+1
                             for(l = 0; l < degrees[k]; l++) {
                                 next0 = current_graph[k][l];
                                 if(k < next0 && next0 != next) {
-                                    if(!(is_part_of_irreducible_triangle_diamond(k, &diamond) && is_part_of_same_irreducible_triangle(next0, diamond))) {
+                                    if(!is_part_of_irreducible_triangle_diamond(i, &diamond) ||
+                                    		!is_part_of_same_irreducible_triangle(next, diamond) || 
+                                    		!is_part_of_irreducible_triangle_diamond(k, &diamond) ||
+                                    		!is_part_of_same_irreducible_triangle(next0, diamond)) {
                                         //Add edgepair i next k next0
                                         edge_pairs_list[*edge_pair_list_size][0] = i;
                                         edge_pairs_list[*edge_pair_list_size][1] = next;
