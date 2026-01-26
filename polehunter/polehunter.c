@@ -11422,8 +11422,8 @@ void add_edge(EDGEPAIR edge_pair) {
          */
         for(i = 0; i < number_of_irreducible_triangles; i++) {
             if((edge_pair[0] == irreducible_triangles[i][0] && (edge_pair[1] == irreducible_triangles[i][1] || edge_pair[1] == irreducible_triangles[i][2])) ||
-            		(edge_pair[2] == irreducible_triangles[i][3] && (edge_pair[3] == irreducible_triangles[i][1] || edge_pair[3] == irreducible_triangles[i][2])) ||
-            		(edge_pair[3] == irreducible_triangles[i][3] && (edge_pair[2] == irreducible_triangles[i][1] || edge_pair[2] == irreducible_triangles[i][2]))) {
+            		(edge_pair[0] == irreducible_triangles[i][1] && edge_pair[1] == irreducible_triangles[i][2]) || (edge_pair[1] == irreducible_triangles[i][1] && edge_pair[0] == irreducible_triangles[i][2]) || 
+            		(edge_pair[2] == irreducible_triangles[i][1] && edge_pair[3] == irreducible_triangles[i][2]) || (edge_pair[3] == irreducible_triangles[i][1] && edge_pair[2] == irreducible_triangles[i][2])) {
                 remove_irreducible_triangle(i);
                 break;
             }
@@ -13491,21 +13491,19 @@ void generate_edgepairs_no_triangles(EDGEPAIR edge_pairs_list[], int *edge_pair_
     }
 
     //Generate the edgepairs that contain no edge which is fully in a diamond, all vertices are different, since otherwise it would be addition of a triangle
+    //Also, choosing only one edge from diamond not being diagonal makes a reducible triangle, so the insertion is not canonical
     int diamond;
     for(i = 0; i < current_number_of_vertices - 3; i++) {
         for(j = 0; j < degrees[i]; j++) {
             next = current_graph[i][j];
             if(i < next) {
-                if(1) {
+                if(!is_part_of_irreducible_triangle_diamond(i, &diamond) || !is_part_of_same_irreducible_triangle(next, diamond)) {
                     for(k = i + 1; k < current_number_of_vertices - 1; k++) {
                         if(k != next) { // k != i is automatically implied because k >= i+1
                             for(l = 0; l < degrees[k]; l++) {
                                 next0 = current_graph[k][l];
                                 if(k < next0 && next0 != next) {
-                                    if(!is_part_of_irreducible_triangle_diamond(i, &diamond) ||
-                                    		!is_part_of_same_irreducible_triangle(next, diamond) || 
-                                    		!is_part_of_irreducible_triangle_diamond(k, &diamond) ||
-                                    		!is_part_of_same_irreducible_triangle(next0, diamond)) {
+                                    if(!is_part_of_irreducible_triangle_diamond(k, &diamond) || !is_part_of_same_irreducible_triangle(next0, diamond)) {
                                         //Add edgepair i next k next0
                                         edge_pairs_list[*edge_pair_list_size][0] = i;
                                         edge_pairs_list[*edge_pair_list_size][1] = next;
@@ -13529,6 +13527,44 @@ void generate_edgepairs_no_triangles(EDGEPAIR edge_pairs_list[], int *edge_pair_
                 }
             }
         }
+    }
+    // Edgepairs consisting of one diagonal of a diamond and one edge outside diamonds
+    for(i = 0; i < number_of_irreducible_triangles; i++) {
+    	for(j = 0; j < current_number_of_vertices - 1; j++) {
+    	    for(k = 0; k < degrees[j]; k++) {
+    	    	next = current_graph[j][k];
+    	    	if(j < next && (!is_part_of_irreducible_triangle_diamond(j, &diamond) || !is_part_of_same_irreducible_triangle(next, diamond))) {
+    	    	    edge_pairs_list[*edge_pair_list_size][0] = irreducible_triangles[i][1];
+    		    edge_pairs_list[*edge_pair_list_size][1] = irreducible_triangles[i][2];
+    	    	    edge_pairs_list[*edge_pair_list_size][2] = j;
+    	    	    edge_pairs_list[*edge_pair_list_size][3] = next;
+    	    	    transform_edgepair_into_canonical_form(edge_pairs_list[*edge_pair_list_size]);
+    	    	    	    
+    	    	    if(inserted_edge_will_be_part_of_square(edge_pairs_list[*edge_pair_list_size])
+                            && new_edge_has_min_colour(edge_pairs_list[*edge_pair_list_size])) {
+            		edgepair_index[edge_labels[edge_pairs_list[*edge_pair_list_size][0]][edge_pairs_list[*edge_pair_list_size][1]]][edge_labels[edge_pairs_list[*edge_pair_list_size][2]][edge_pairs_list[*edge_pair_list_size][3]]] = *edge_pair_list_size;
+            		(*edge_pair_list_size)++;
+            	    }
+    	    	}
+    	    }
+    	    
+    	}
+    }
+    // Edgepairs consisting of two diamond diagonals
+    for(i = 0; i < number_of_irreducible_triangles; i++) {
+    	for(j = i + 1; j < number_of_irreducible_triangles; j++) {
+    	    edge_pairs_list[*edge_pair_list_size][0] = irreducible_triangles[i][1];
+            edge_pairs_list[*edge_pair_list_size][1] = irreducible_triangles[i][2];
+            edge_pairs_list[*edge_pair_list_size][2] = irreducible_triangles[j][1];
+            edge_pairs_list[*edge_pair_list_size][3] = irreducible_triangles[j][2];
+            transform_edgepair_into_canonical_form(edge_pairs_list[*edge_pair_list_size]);
+            
+            if(inserted_edge_will_be_part_of_square(edge_pairs_list[*edge_pair_list_size])
+            	    && new_edge_has_min_colour(edge_pairs_list[*edge_pair_list_size])) {
+            	edgepair_index[edge_labels[edge_pairs_list[*edge_pair_list_size][0]][edge_pairs_list[*edge_pair_list_size][1]]][edge_labels[edge_pairs_list[*edge_pair_list_size][2]][edge_pairs_list[*edge_pair_list_size][3]]] = *edge_pair_list_size;
+            	(*edge_pair_list_size)++;
+            }
+    	}
     }
 }
 
