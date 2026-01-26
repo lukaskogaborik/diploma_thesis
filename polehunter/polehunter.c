@@ -11403,10 +11403,10 @@ void add_edge(EDGEPAIR edge_pair) {
     	replace_dangling_edge(edge_pair[1], edge_pair[0], current_number_of_vertices, edge_pair[0]);
     }
     if(is_dangling_list(edge_pair[2], edge_pair[3])) {
-    	replace_dangling_edge(edge_pair[2], edge_pair[3], current_number_of_vertices + 5, edge_pair[3]);
+    	replace_dangling_edge(edge_pair[2], edge_pair[3], current_number_of_vertices + 1, edge_pair[3]);
     }
     if(is_dangling_list(edge_pair[3], edge_pair[2])) {
-    	replace_dangling_edge(edge_pair[3], edge_pair[2], current_number_of_vertices + 5, edge_pair[2]);
+    	replace_dangling_edge(edge_pair[3], edge_pair[2], current_number_of_vertices + 1, edge_pair[2]);
     }
 
     //Even when one edge of the edgepair is a bridge, an other bridge can still be undone by inserting the new edge
