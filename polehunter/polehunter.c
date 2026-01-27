@@ -1143,12 +1143,16 @@ void add_dangling_edge(EDGE edge) {
     add_eligible_edge(edge[1], current_number_of_vertices);
     add_eligible_edge(current_number_of_vertices, current_number_of_vertices + 1);
 
+    degree_one_vertices |= BIT(current_number_of_vertices + 1);
+
     current_number_of_vertices += 2;
 }
 
 void remove_dangling_edge(EDGE edge) {
     replace_neighbour(edge[0], current_number_of_vertices - 2, edge[1]);
     replace_neighbour(edge[1], current_number_of_vertices - 2, edge[0]);
+
+    degree_one_vertices &= ~BIT(current_number_of_vertices - 1);
 
     current_number_of_vertices -= 2;
     current_number_of_edges -= 2;
@@ -8226,6 +8230,23 @@ int update_bridges_triangle_insert(unsigned char org_vertex, unsigned char new_v
     return 0;
 }
 
+int update_dangling_edges_triangle_insert(unsigned char org_vertex, unsigned char new_vertex, unsigned char fixed_vertex) {
+    if(current_number_of_dangling_edges == 0)
+        return 0;
+    int i;
+
+    for(i = 0; i < current_number_of_dangling_edges; i++)
+        if(dangling_edges[i][0] == org_vertex && dangling_edges[i][1] == fixed_vertex) {
+            is_dangling_edge[org_vertex][fixed_vertex] = 0;
+            is_dangling_edge[new_vertex][fixed_vertex] = 1;
+            dangling_edges[i][0] = fixed_vertex;
+            
+            return 1;
+        }
+        
+    return 0;
+}
+
 /**
  * Checks if the bridges of the old graph are still bridges in the modified graph.
  * The edges which are no longer bridges are removed from the list of bridges
@@ -13614,7 +13635,7 @@ int new_edge_has_min_colour(EDGEPAIR edge_pair) {
             edge[1] = edge_pair[3];
             setword neighbours1 = get_neighbours_distance_one(edge);
 
-            int colour_inserted = MAX_EDGE_COLOUR_TWO;
+            int colour_inserted = MAX_EDGE_COLOUR_TWO - 2*POPC(degree_one_vertices & neighbours0) - 2*POPC(degree_one_vertices & neighbours1);
 
             int number_overlapping = POPC(neighbours0 & neighbours1);
 
