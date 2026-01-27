@@ -1971,7 +1971,7 @@ void nonadj_edge_diamond_extend(EDGEPAIR edge_pairs_list[], int edge_pair_list_s
             
             current_number_of_dangling_edges = current_number_of_dangling_edges_local;
 	    if(current_number_of_dangling_edges > 0) {
-	    	memcpy(dangling_edges, dangling_edges_local, sizeof (IRRED_TRIANGLE) * current_number_of_dangling_edges);
+	    	memcpy(dangling_edges, dangling_edges_local, sizeof (EDGE) * current_number_of_dangling_edges);
             }
 
             num_orbits++;
@@ -7230,6 +7230,11 @@ void edge_extend(EDGEPAIR edge_pairs_list[], int edge_pair_list_size) {
     EDGE bridges_local[number_of_bridges+1];
     if(number_of_bridges_local > 0)
         memcpy(bridges_local, bridges, sizeof(EDGE) * number_of_bridges_local);
+        
+    EDGE dangling_edges_local[current_number_of_dangling_edges+1];
+    int current_number_of_dangling_edges_local = current_number_of_dangling_edges;
+    if(current_number_of_dangling_edges_local > 0)
+    	memcpy(dangling_edges_local, dangling_edges, sizeof(EDGE) * current_number_of_dangling_edges_local);
 
     EDGE min_edge_local;
     min_edge_local[0] = min_edge[0];
@@ -7345,6 +7350,17 @@ void edge_extend(EDGEPAIR edge_pairs_list[], int edge_pair_list_size) {
             //Restore is_bridge
             for(j = 0; j < number_of_bridges; j++)
                 is_bridge[bridges[j][0]][bridges[j][1]] = 1;
+                
+            for(j = 0; j < current_number_of_dangling_edges; j++)
+                is_dangling_edge[dangling_edges[j][0]][dangling_edges[j][1]] = 0;    
+                
+            current_number_of_dangling_edges = current_number_of_dangling_edges_local;
+	    if(current_number_of_dangling_edges > 0) {
+	    	memcpy(dangling_edges, dangling_edges_local, sizeof (EDGE) * current_number_of_dangling_edges);
+            }
+            
+            for(j = 0; j < current_number_of_dangling_edges; j++)
+                is_dangling_edge[dangling_edges[j][0]][dangling_edges[j][1]] = 1;
 
             num_orbits++;
             if(num_orbits == number_of_edgepair_orbits)
