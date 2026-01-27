@@ -11096,13 +11096,20 @@ int are_two_cutvertices_method(unsigned char v1, unsigned char v2) {
     MARK3(v2);
     number_of_vertices_marked_cutvertex = 2;
     
+    if(degrees[v1] == DANGLING_DEGREE && degrees[v2] == DANGLING_DEGREE) {
+    	return 0;
+    }
+    else if(degrees[v1] == DANGLING_DEGREE) {
+    	return are_two_cutvertices_method(v2, v1);
+    }
+    
     int i;
     for(i = 0; i < degrees[v1]; i++)
         if(current_graph[v1][i] != v2)
             break;
     
     //TODO: temp!
-    if(i == degrees[v1]) {								// TODO there might be a problem with REG -> degrees[v1]
+    if(i == REG) {
         fprintf(stderr, "Error: i should be < REG\n");
         exit(1);
     }
