@@ -13684,7 +13684,7 @@ int new_edge_has_min_colour_no_squares(EDGEPAIR edge_pair) {
         edge[1] = edge_pair[3];
         setword neighbours1 = get_neighbours_distance_one(edge);
 
-        int colour_inserted = MAX_EDGE_COLOUR_TWO;
+        int colour_inserted = MAX_EDGE_COLOUR_TWO - 2*POPC(degree_one_vertices & neighbours0) - 2*POPC(degree_one_vertices & neighbours1);
 
         int number_overlapping = POPC(neighbours0 & neighbours1);
 
