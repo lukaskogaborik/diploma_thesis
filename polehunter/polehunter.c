@@ -8239,7 +8239,7 @@ int update_dangling_edges_triangle_insert(unsigned char org_vertex, unsigned cha
         if(dangling_edges[i][0] == org_vertex && dangling_edges[i][1] == fixed_vertex) {
             is_dangling_edge[org_vertex][fixed_vertex] = 0;
             is_dangling_edge[new_vertex][fixed_vertex] = 1;
-            dangling_edges[i][0] = fixed_vertex;
+            dangling_edges[i][0] = new_vertex;
             
             return 1;
         }
@@ -10914,6 +10914,7 @@ void transform_vertexset_into_triangles(unsigned char vertexset[], int vertexset
                 edge_labels[current_number_of_vertices + i][neighbour] = edge_labels[vertexset[j]][neighbour];
 
                 update_bridges_triangle_insert(vertexset[j], current_number_of_vertices + i, neighbour);
+                update_dangling_edges_triangle_insert(vertexset[j], current_number_of_vertices + i, neighbour);
             }
 
             current_graph[vertexset[j]][0] = current_number_of_vertices;
@@ -12974,6 +12975,28 @@ void generate_non_adjacent_edge_pairs_two_adjacent_squares(EDGEPAIR edge_pairs_l
         edgepair_index[index0][index1] = *edge_pair_list_size;
 
         (*edge_pair_list_size)++;
+    }
+    
+    // Edgepairs where one edge is the common one
+    int k, next, diamond;
+    for(j = 0; j < current_number_of_vertices - 1; j++) {
+	    if(j != common_edge[0] && j != common_edge[1]) {
+	    	    for(k = 0; k < degrees[j]; k++) {
+	    	    	next = current_graph[j][k];
+	    	    	if(j < next && next != common_edge[0] && next != common_edge[1]) {
+	    	    	    edge_pairs_list[*edge_pair_list_size][0] = common_edge[0];
+	    		    edge_pairs_list[*edge_pair_list_size][1] = common_edge[1];
+	    	    	    edge_pairs_list[*edge_pair_list_size][2] = j;
+	    	    	    edge_pairs_list[*edge_pair_list_size][3] = next;
+	    	    	    transform_edgepair_into_canonical_form(edge_pairs_list[*edge_pair_list_size]);
+	    	    	    	    
+	    	    	    if(!inserted_edge_will_be_part_of_square(edge_pairs_list[*edge_pair_list_size]) && new_edge_has_min_colour_no_squares(edge_pairs_list[*edge_pair_list_size])) {
+		    		edgepair_index[edge_labels[edge_pairs_list[*edge_pair_list_size][0]][edge_pairs_list[*edge_pair_list_size][1]]][edge_labels[edge_pairs_list[*edge_pair_list_size][2]][edge_pairs_list[*edge_pair_list_size][3]]] = *edge_pair_list_size;
+		    		(*edge_pair_list_size)++;
+		    	    }
+	    	    	}
+	    	    }
+	    }
     }
 
     //Other edgepairs won't have minimal colour
