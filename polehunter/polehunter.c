@@ -7828,14 +7828,21 @@ void triangle_extend_all(int generators_local[][MAXN], int number_of_generators_
                     number_of_bridges = number_of_bridges_local;
                     if(number_of_bridges_local > 0)
                         memcpy(bridges, bridges_local, sizeof(EDGE) * number_of_bridges_local);
+                    
+                    //Restore is_bridge
+                    for(k = 0; k < number_of_bridges; k++)
+                        is_bridge[bridges[k][0]][bridges[k][1]] = 1;
+                    
+                    for(k = 0; k < number_of_dangling_edges; k++)
+                        is_dangling_edge[dangling_edges[k][0]][dangling_edges[k][1]] = 0;
                         
                     current_number_of_dangling_edges = current_number_of_dangling_edges_local;
                     if(current_number_of_dangling_edges_local > 0)
                         memcpy(dangling_edges, dangling_edges_local, sizeof(EDGE) * current_number_of_dangling_edges_local);
-
-                    //Restore is_bridge
-                    for(k = 0; k < number_of_bridges; k++)
-                        is_bridge[bridges[k][0]][bridges[k][1]] = 1;
+                        
+                    
+                    for(k = 0; k < number_of_dangling_edges; k++)
+                        is_dangling_edge[dangling_edges[k][0]][dangling_edges[k][1]] = 1;
                         
                 }
                 num_orbits++;
@@ -11583,53 +11590,29 @@ int inserted_edge_will_be_part_of_pentagon(EDGEPAIR edgepair) {
 void generate_edgepairs_one_triangle(EDGEPAIR edge_pairs_list[], int *edge_pair_list_size) {
     DEBUGASSERT(number_of_reducible_triangles == 1);
 
-    int i, j;
-    unsigned char third_vertex;
-
-    //Neighbours which aren't part of the triangle
-    TRIANGLE external_neighbours;
+    // Edgepair must have one edge in a triangle, and the inserted edge must be in square (otherwise it is not minimal)
+    int i, j, k, next;
     for(i = 0; i < 3; i++) {
-        edge_pairs_list[*edge_pair_list_size][0] = reducible_triangles[0][i];
-        edge_pairs_list[*edge_pair_list_size][1] = reducible_triangles[0][(i + 1) % 3];
-
-        third_vertex = reducible_triangles[0][(i + 2) % 3];
-        edge_pairs_list[*edge_pair_list_size][2] = third_vertex;
-        for(j = 0; j < degrees[third_vertex]; j++) {
-            if(current_graph[third_vertex][j] != reducible_triangles[0][i] && current_graph[third_vertex][j] != reducible_triangles[0][(i + 1) % 3])
-            //if(!is_part_of_same_reducible_triangle(current_graph[third_vertex][j], 0))
-                break;
-        }
-        edge_pairs_list[*edge_pair_list_size][3] = current_graph[third_vertex][j];
-        external_neighbours[(i + 2) % 3] = current_graph[third_vertex][j];
-
-        transform_edgepair_into_canonical_form(edge_pairs_list[*edge_pair_list_size]);
-
-        int index0 = edge_labels[edge_pairs_list[*edge_pair_list_size][0]][edge_pairs_list[*edge_pair_list_size][1]];
-        int index1 = edge_labels[edge_pairs_list[*edge_pair_list_size][2]][edge_pairs_list[*edge_pair_list_size][3]];
-
-        edgepair_index[index0][index1] = *edge_pair_list_size;
-
-        (*edge_pair_list_size)++;
+    	for(j = 0; j < current_number_of_vertices - 1; j++) {
+    	    if(j != reducible_triangles[0][i] && j != reducible_triangles[0][(i + 1) % 3]) {
+	    	    for(k = 0; k < degrees[j]; k++) {
+	    	    	next = current_graph[j][k];
+	    	    	if(j < next && next != reducible_triangles[0][i] && next != reducible_triangles[0][(i + 1) % 3]) {
+	    	    	    edge_pairs_list[*edge_pair_list_size][0] = reducible_triangles[0][i];
+	    		    edge_pairs_list[*edge_pair_list_size][1] = reducible_triangles[0][(i + 1) % 3];
+	    	    	    edge_pairs_list[*edge_pair_list_size][2] = j;
+	    	    	    edge_pairs_list[*edge_pair_list_size][3] = next;
+	    	    	    transform_edgepair_into_canonical_form(edge_pairs_list[*edge_pair_list_size]);
+	    	    	    	    
+	    	    	    if(inserted_edge_will_be_part_of_square(edge_pairs_list[*edge_pair_list_size])) {
+		    		edgepair_index[edge_labels[edge_pairs_list[*edge_pair_list_size][0]][edge_pairs_list[*edge_pair_list_size][1]]][edge_labels[edge_pairs_list[*edge_pair_list_size][2]][edge_pairs_list[*edge_pair_list_size][3]]] = *edge_pair_list_size;
+		    		(*edge_pair_list_size)++;
+		    	    }
+	    	    	}
+	    	    }
+    	    }
+    	}
     }
-    for(i = 0; i < 3; i++) {
-        //Edgepair is in a square
-        if(is_neighbour(external_neighbours[i], external_neighbours[(i + 1) % 3])) {
-            edge_pairs_list[*edge_pair_list_size][0] = reducible_triangles[0][i];
-            edge_pairs_list[*edge_pair_list_size][1] = reducible_triangles[0][(i + 1) % 3];
-            edge_pairs_list[*edge_pair_list_size][2] = external_neighbours[i];
-            edge_pairs_list[*edge_pair_list_size][3] = external_neighbours[(i + 1) % 3];
-
-            transform_edgepair_into_canonical_form(edge_pairs_list[*edge_pair_list_size]);
-
-            int index0 = edge_labels[edge_pairs_list[*edge_pair_list_size][0]][edge_pairs_list[*edge_pair_list_size][1]];
-            int index1 = edge_labels[edge_pairs_list[*edge_pair_list_size][2]][edge_pairs_list[*edge_pair_list_size][3]];
-
-            edgepair_index[index0][index1] = *edge_pair_list_size;
-
-            (*edge_pair_list_size)++;
-        }
-    }
-
 }
 
 
