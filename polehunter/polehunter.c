@@ -11590,14 +11590,16 @@ int inserted_edge_will_be_part_of_pentagon(EDGEPAIR edgepair) {
 void generate_edgepairs_one_triangle(EDGEPAIR edge_pairs_list[], int *edge_pair_list_size) {
     DEBUGASSERT(number_of_reducible_triangles == 1);
 
-    // Edgepair must have one edge in a triangle, and the inserted edge must be in square (otherwise it is not minimal)
-    int i, j, k, next;
+    // Edgepair must have one edge in a reducible triangle, other can be in irreducible triangle only if it's its diagonal, the inserted edge must be in square (otherwise it is not minimal)
+    
+    // Edgepairs where the second edge is not in irreducible triangle
+    int i, j, k, next, diamond;
     for(i = 0; i < 3; i++) {
     	for(j = 0; j < current_number_of_vertices - 1; j++) {
     	    if(j != reducible_triangles[0][i] && j != reducible_triangles[0][(i + 1) % 3]) {
 	    	    for(k = 0; k < degrees[j]; k++) {
 	    	    	next = current_graph[j][k];
-	    	    	if(j < next && next != reducible_triangles[0][i] && next != reducible_triangles[0][(i + 1) % 3]) {
+	    	    	if(j < next && next != reducible_triangles[0][i] && next != reducible_triangles[0][(i + 1) % 3] && (!is_part_of_irreducible_triangle_diamond(j, &diamond) || !is_part_of_same_irreducible_triangle(next, diamond))) {
 	    	    	    edge_pairs_list[*edge_pair_list_size][0] = reducible_triangles[0][i];
 	    		    edge_pairs_list[*edge_pair_list_size][1] = reducible_triangles[0][(i + 1) % 3];
 	    	    	    edge_pairs_list[*edge_pair_list_size][2] = j;
@@ -11610,6 +11612,22 @@ void generate_edgepairs_one_triangle(EDGEPAIR edge_pairs_list[], int *edge_pair_
 		    	    }
 	    	    	}
 	    	    }
+    	    }
+    	}
+    }
+    
+    // Edgepairs where the second edge is diagonal of irreducible triangle
+    for(i = 0; i < 3; i++) {
+    	for(j = 0; j < number_of_irreducible_triangles; j++) {
+    	    edge_pairs_list[*edge_pair_list_size][0] = reducible_triangles[0][i];
+	    edge_pairs_list[*edge_pair_list_size][1] = reducible_triangles[0][(i + 1) % 3];
+    	    edge_pairs_list[*edge_pair_list_size][2] = irreducible_triangles[j][1];
+    	    edge_pairs_list[*edge_pair_list_size][3] = irreducible_triangles[j][2];
+    	    transform_edgepair_into_canonical_form(edge_pairs_list[*edge_pair_list_size]);
+    	    	    
+    	    if(inserted_edge_will_be_part_of_square(edge_pairs_list[*edge_pair_list_size])) {
+    		edgepair_index[edge_labels[edge_pairs_list[*edge_pair_list_size][0]][edge_pairs_list[*edge_pair_list_size][1]]][edge_labels[edge_pairs_list[*edge_pair_list_size][2]][edge_pairs_list[*edge_pair_list_size][3]]] = *edge_pair_list_size;
+    		(*edge_pair_list_size)++;
     	    }
     	}
     }
