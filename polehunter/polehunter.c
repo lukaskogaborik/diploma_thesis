@@ -8035,7 +8035,7 @@ void generate_all_vertexsets_girth4(int num_vertices_in_set, unsigned char verte
     DEBUGASSERT(num_vertices_in_set == 2);
     int i, j, k;
     //Blowing up the vertices of the 5 edges which are in the diamond.
-    if(current_number_of_vertices > 4) {
+    if(current_number_of_vertices != 4 || degrees[0] == DANGLING_DEGREE) {
         for(i = 0; i < number_of_irreducible_triangles; i++) {
             for(j = 0; j < 3; j++) {
                 int max;
