@@ -9395,11 +9395,12 @@ int has_min_colour(EDGE inserted_edge, int *edge_inserted, EDGE neighbours[4]) {
                 neighbour = current_graph[i][j];
                 edge[0] = i;
                 edge[1] = neighbour;
+                setword neighbours_bitvector = get_neighbours_distance_one(edge);
 
                 if(all_edges_are_reducible || is_reducible_edge(edge)) {
                     colour = determine_edge_colour(edge);
                     //Edges with col < 14 are part of a pentagon!
-                    if(colour < MAX_EDGE_COLOUR_TWO) {
+                    if(colour < MAX_EDGE_COLOUR_TWO - 2*POPC(degree_one_vertices_bitvector & neighbours_bitvector)) {
                         MARK2(edge[0]);
                         MARK2(edge[1]);
                     }
@@ -9425,8 +9426,9 @@ int has_min_colour(EDGE inserted_edge, int *edge_inserted, EDGE neighbours[4]) {
             }
         }
     }
-
-    if(colour_inserted_edge < MAX_EDGE_COLOUR_TWO) {
+    
+    setword neighbours_bitvector = get_neighbours_distance_one(inserted_edge);
+    if(colour_inserted_edge < MAX_EDGE_COLOUR_TWO - 2*POPC(degree_one_vertices_bitvector & neighbours_bitvector)) {
         MARK2(inserted_edge[0]);
         MARK2(inserted_edge[1]);
     }
