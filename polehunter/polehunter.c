@@ -11686,8 +11686,30 @@ void generate_edgepairs_triangle_free_one_diamond(EDGEPAIR edge_pairs_list[], in
 
     //edgepair_index not needed because *edge_pair_list_size == 1, so no need to determine edge orbits
     (*edge_pair_list_size)++;
-
-    DEBUGASSERT(*edge_pair_list_size == 1);
+    
+    int i, j, k, next, diamond;
+    // Edgepairs consisting of one diagonal of a diamond and one edge outside diamonds
+    for(i = 0; i < number_of_irreducible_triangles; i++) {
+    	for(j = 0; j < current_number_of_vertices - 1; j++) {
+    	    for(k = 0; k < degrees[j]; k++) {
+    	    	next = current_graph[j][k];
+    	    	if(j < next && (!is_part_of_irreducible_triangle_diamond(j, &diamond) || !is_part_of_same_irreducible_triangle(next, diamond))) {
+    	    	    edge_pairs_list[*edge_pair_list_size][0] = irreducible_triangles[i][1];
+    		    edge_pairs_list[*edge_pair_list_size][1] = irreducible_triangles[i][2];
+    	    	    edge_pairs_list[*edge_pair_list_size][2] = j;
+    	    	    edge_pairs_list[*edge_pair_list_size][3] = next;
+    	    	    transform_edgepair_into_canonical_form(edge_pairs_list[*edge_pair_list_size]);
+    	    	    	    
+    	    	    if(inserted_edge_will_be_part_of_square(edge_pairs_list[*edge_pair_list_size])
+                            && new_edge_has_min_colour(edge_pairs_list[*edge_pair_list_size])) {
+            		edgepair_index[edge_labels[edge_pairs_list[*edge_pair_list_size][0]][edge_pairs_list[*edge_pair_list_size][1]]][edge_labels[edge_pairs_list[*edge_pair_list_size][2]][edge_pairs_list[*edge_pair_list_size][3]]] = *edge_pair_list_size;
+            		(*edge_pair_list_size)++;
+            	    }
+    	    	}
+    	    }
+    	    
+    	}
+    }
 }
 
 /**
