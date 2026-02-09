@@ -277,7 +277,7 @@ int number_of_lollipop_diamonds = 0;
 EDGE dangling_edges[(3 * MAXN) / 2];
 int current_number_of_dangling_edges = 0;
 int number_of_dangling_edges;
-setword degree_one_vertices = 0;
+setword degree_one_vertices_bitvector = 0;
 
 unsigned char is_dangling_edge[MAXN][MAXN];
 

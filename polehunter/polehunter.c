@@ -210,6 +210,8 @@ void init_generate_irreducible_graphs_from_K4() {
     number_of_lollipop_diamonds = 0;
     
     current_number_of_dangling_edges = 0;
+    
+    degree_one_vertices_bitvector = 0;
 }
 
 
@@ -242,6 +244,8 @@ void init_generate_irreducible_graphs_from_K2() {
     dangling_edges[0][1] = 1;
     dangling_edges[1][0] = 1;
     dangling_edges[1][1] = 0;
+    
+    degree_one_vertices_bitvector = 3;
 }
 
 void init_generate_irreducible_graphs_from_lollipop() {
@@ -306,6 +310,8 @@ void init_generate_irreducible_graphs_from_lollipop() {
     // add_bridge(0, 1);
     dangling_edges[0][0] = 1;
     dangling_edges[0][1] = 0;
+    
+    degree_one_vertices_bitvector = 1;
 }
 
 	/**
@@ -1143,7 +1149,7 @@ void add_dangling_edge(EDGE edge) {
     add_eligible_edge(edge[1], current_number_of_vertices);
     add_eligible_edge(current_number_of_vertices, current_number_of_vertices + 1);
 
-    degree_one_vertices |= BIT(current_number_of_vertices + 1);
+    degree_one_vertices_bitvector |= BIT(current_number_of_vertices + 1);
 
     current_number_of_vertices += 2;
 }
@@ -1152,7 +1158,7 @@ void remove_dangling_edge(EDGE edge) {
     replace_neighbour(edge[0], current_number_of_vertices - 2, edge[1]);
     replace_neighbour(edge[1], current_number_of_vertices - 2, edge[0]);
 
-    degree_one_vertices &= ~BIT(current_number_of_vertices - 1);
+    degree_one_vertices_bitvector &= ~BIT(current_number_of_vertices - 1);
 
     current_number_of_vertices -= 2;
     current_number_of_edges -= 2;
@@ -11683,11 +11689,58 @@ void generate_edgepairs_triangle_free_one_diamond(EDGEPAIR edge_pairs_list[], in
     edge_pairs_list[*edge_pair_list_size][2] = irreducible_triangles[0][2];
     edge_pairs_list[*edge_pair_list_size][3] = irreducible_triangles[0][3];
     transform_edgepair_into_canonical_form(edge_pairs_list[*edge_pair_list_size]);
-
-    //edgepair_index not needed because *edge_pair_list_size == 1, so no need to determine edge orbits
+    
+    edgepair_index[edge_labels[edge_pairs_list[*edge_pair_list_size][0]][edge_pairs_list[*edge_pair_list_size][1]]][edge_labels[edge_pairs_list[*edge_pair_list_size][2]][edge_pairs_list[*edge_pair_list_size][3]]] = *edge_pair_list_size;
     (*edge_pair_list_size)++;
+    
+    
+    //Edgepair 02 13
+    edge_pairs_list[*edge_pair_list_size][0] = irreducible_triangles[0][0];
+    edge_pairs_list[*edge_pair_list_size][1] = irreducible_triangles[0][2];
+    edge_pairs_list[*edge_pair_list_size][2] = irreducible_triangles[0][1];
+    edge_pairs_list[*edge_pair_list_size][3] = irreducible_triangles[0][3];
+    transform_edgepair_into_canonical_form(edge_pairs_list[*edge_pair_list_size]);
+    
+    edgepair_index[edge_labels[edge_pairs_list[*edge_pair_list_size][0]][edge_pairs_list[*edge_pair_list_size][1]]][edge_labels[edge_pairs_list[*edge_pair_list_size][2]][edge_pairs_list[*edge_pair_list_size][3]]] = *edge_pair_list_size;
+    (*edge_pair_list_size)++;
+    
+    //diagonal and adjacent edge
+    int i, v0, v1, v2, next;
+    v0 = irreducible_triangles[0][1];
+    v1 = irreducible_triangles[0][2];
+    v2 = irreducible_triangles[0][0];
+    for(i = 0; i < degrees[v2]; i++) {
+    	next = current_graph[v2][i];
+    	if(next != v0 && next != v1) {
+    		edge_pairs_list[*edge_pair_list_size][0] = v0;
+		edge_pairs_list[*edge_pair_list_size][1] = v1;
+		edge_pairs_list[*edge_pair_list_size][2] = v2;
+		edge_pairs_list[*edge_pair_list_size][3] = next;
+		transform_edgepair_into_canonical_form(edge_pairs_list[*edge_pair_list_size]);
 
-    DEBUGASSERT(*edge_pair_list_size == 1);
+		edgepair_index[edge_labels[edge_pairs_list[*edge_pair_list_size][0]][edge_pairs_list[*edge_pair_list_size][1]]][edge_labels[edge_pairs_list[*edge_pair_list_size][2]][edge_pairs_list[*edge_pair_list_size][3]]] = *edge_pair_list_size;
+		(*edge_pair_list_size)++;
+    	}
+    }
+    
+    v0 = irreducible_triangles[0][1];
+    v1 = irreducible_triangles[0][2];
+    v2 = irreducible_triangles[0][3];
+    for(i = 0; i < degrees[v2]; i++) {
+    	next = current_graph[v2][i];
+    	if(next != v0 && next != v1) {
+    		edge_pairs_list[*edge_pair_list_size][0] = v0;
+		edge_pairs_list[*edge_pair_list_size][1] = v1;
+		edge_pairs_list[*edge_pair_list_size][2] = v2;
+		edge_pairs_list[*edge_pair_list_size][3] = next;
+		transform_edgepair_into_canonical_form(edge_pairs_list[*edge_pair_list_size]);
+		
+		edgepair_index[edge_labels[edge_pairs_list[*edge_pair_list_size][0]][edge_pairs_list[*edge_pair_list_size][1]]][edge_labels[edge_pairs_list[*edge_pair_list_size][2]][edge_pairs_list[*edge_pair_list_size][3]]] = *edge_pair_list_size;
+		(*edge_pair_list_size)++;
+    	}
+    }
+    
+    DEBUGASSERT(*edge_pair_list_size <= 4);
 }
 
 /**
@@ -13665,7 +13718,7 @@ int new_edge_has_min_colour(EDGEPAIR edge_pair) {
             edge[1] = edge_pair[3];
             setword neighbours1 = get_neighbours_distance_one(edge);
 
-            int colour_inserted = MAX_EDGE_COLOUR_TWO - 2*POPC(degree_one_vertices & neighbours0) - 2*POPC(degree_one_vertices & neighbours1);
+            int colour_inserted = MAX_EDGE_COLOUR_TWO - 2*POPC(degree_one_vertices_bitvector & neighbours0) - 2*POPC(degree_one_vertices_bitvector & neighbours1);
 
             int number_overlapping = POPC(neighbours0 & neighbours1);
 
@@ -13714,7 +13767,7 @@ int new_edge_has_min_colour_no_squares(EDGEPAIR edge_pair) {
         edge[1] = edge_pair[3];
         setword neighbours1 = get_neighbours_distance_one(edge);
 
-        int colour_inserted = MAX_EDGE_COLOUR_TWO - 2*POPC(degree_one_vertices & neighbours0) - 2*POPC(degree_one_vertices & neighbours1);
+        int colour_inserted = MAX_EDGE_COLOUR_TWO - 2*POPC(degree_one_vertices_bitvector & neighbours0) - 2*POPC(degree_one_vertices_bitvector & neighbours1);
 
         int number_overlapping = POPC(neighbours0 & neighbours1);
 
