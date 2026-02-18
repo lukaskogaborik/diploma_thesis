@@ -13039,13 +13039,13 @@ void generate_non_adjacent_edge_pairs_two_adjacent_squares(EDGEPAIR edge_pairs_l
         (*edge_pair_list_size)++;
     }
     
-    // Edgepairs where one edge is the common one
+    // Edgepairs where one edge is the common one; however, the second one cannot be part of irreducible triangle
     int k, next, diamond;
     for(j = 0; j < current_number_of_vertices - 1; j++) {
 	    if(j != common_edge[0] && j != common_edge[1]) {
 	    	    for(k = 0; k < degrees[j]; k++) {
 	    	    	next = current_graph[j][k];
-	    	    	if(j < next && next != common_edge[0] && next != common_edge[1]) {
+	    	    	if(j < next && next != common_edge[0] && next != common_edge[1] && (!is_part_of_irreducible_triangle_diamond(j, &diamond) || !is_part_of_same_irreducible_triangle(next, diamond))) {
 	    	    	    edge_pairs_list[*edge_pair_list_size][0] = common_edge[0];
 	    		    edge_pairs_list[*edge_pair_list_size][1] = common_edge[1];
 	    	    	    edge_pairs_list[*edge_pair_list_size][2] = j;
@@ -13060,7 +13060,7 @@ void generate_non_adjacent_edge_pairs_two_adjacent_squares(EDGEPAIR edge_pairs_l
 	    	    }
 	    }
     }
-
+    
     //Other edgepairs won't have minimal colour
 
 }
