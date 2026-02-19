@@ -13712,21 +13712,19 @@ int new_edge_has_min_colour(EDGEPAIR edge_pair) {
 
         if(min_edge_is_part_of_square) { //i.e. inserted_edge_part_of_square == min_edge_is_part_of_square
             EDGE edge;
+            
+            setword vertices = 0;
             edge[0] = edge_pair[0];
             edge[1] = edge_pair[1];
             setword neighbours0 = get_neighbours_distance_one(edge);
+            vertices |= BIT(edge[0]) | BIT(edge[1]);
 
             edge[0] = edge_pair[2];
             edge[1] = edge_pair[3];
             setword neighbours1 = get_neighbours_distance_one(edge);
+            vertices |= BIT(edge[0]) | BIT(edge[1]);
 
-            int colour_inserted = MAX_EDGE_COLOUR_TWO - 2*POPC(degree_one_vertices_bitvector & neighbours0) - 2*POPC(degree_one_vertices_bitvector & neighbours1);
-
-            int number_overlapping = POPC(neighbours0 & neighbours1);
-
-            DEBUGASSERT(number_overlapping >= 0 && number_overlapping <= 6);
-
-            colour_inserted -= number_overlapping;
+            int colour_inserted = 2 + POPC(vertices) + POPC(neighbours0) + POPC(neighbours1) - POPC(vertices & neighbours0) - POPC(vertices & neighbours1) - POPC(neighbours0 & neighbours1);
 
             if(colour_inserted > min_colour_one) {
                 int i;
@@ -13760,23 +13758,20 @@ int new_edge_has_min_colour_no_squares(EDGEPAIR edge_pair) {
     if(min_edges_size > 0) {
         DEBUGASSERT(min_edge[0] < current_number_of_vertices && min_edge[1] < current_number_of_vertices);
 
-        EDGE edge;
-        edge[0] = edge_pair[0];
-        edge[1] = edge_pair[1];
-        setword neighbours0 = get_neighbours_distance_one(edge);
+	EDGE edge;
+        setword vertices = 0;
+	edge[0] = edge_pair[0];
+	edge[1] = edge_pair[1];
+	setword neighbours0 = get_neighbours_distance_one(edge);
+	vertices |= BIT(edge[0]) | BIT(edge[1]);
 
-        edge[0] = edge_pair[2];
-        edge[1] = edge_pair[3];
-        setword neighbours1 = get_neighbours_distance_one(edge);
+	edge[0] = edge_pair[2];
+	edge[1] = edge_pair[3];
+	setword neighbours1 = get_neighbours_distance_one(edge);
+	vertices |= BIT(edge[0]) | BIT(edge[1]);
 
-        int colour_inserted = MAX_EDGE_COLOUR_TWO - 2*POPC(degree_one_vertices_bitvector & neighbours0) - 2*POPC(degree_one_vertices_bitvector & neighbours1);
-
-        int number_overlapping = POPC(neighbours0 & neighbours1);
-
-        DEBUGASSERT(number_overlapping >= 0 && number_overlapping <= 6);
-
-        colour_inserted -= number_overlapping;
-
+        int colour_inserted = 2 + POPC(vertices) + POPC(neighbours0) + POPC(neighbours1) - POPC(vertices & neighbours0) - POPC(vertices & neighbours1) - POPC(neighbours0 & neighbours1);
+        
         if(colour_inserted > min_colour_one) {
             int i;
             for(i = 0; i < min_edges_size; i++) {
