@@ -13570,11 +13570,11 @@ void generate_non_adjacent_edge_pairs_square_free_contains_diamonds(EDGEPAIR edg
  */
 void generate_edgepairs_no_triangles(EDGEPAIR edge_pairs_list[], int *edge_pair_list_size) {
     DEBUGASSERT(number_of_reducible_triangles == 0);
+    
+    update_min_edges();
 
     generate_edgepairs_penultimate_level_girth5_no_triangles_but_diamonds(edge_pairs_list, edge_pair_list_size);
     edgepair_list_index_squares = *edge_pair_list_size;
-
-    update_min_edges();
 
     //Generate edgepairs which are part of a diamond and which can yield a minimal edge
     //The edge connecting 2 diamonds will never be minimal, only possibilities are ep's 01 23 and 02 13 (others are triangles)
