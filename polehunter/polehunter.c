@@ -13029,7 +13029,7 @@ void generate_non_adjacent_edge_pairs_two_adjacent_squares(EDGEPAIR edge_pairs_l
     }
 
     //Can't be part of square and must be part of pentagon, otherwise colour won't be minimal
-    if(!inserted_edge_will_be_part_of_square(edge_pairs_list[*edge_pair_list_size])) {
+    if(inserted_edge_will_be_part_of_pentagon_but_not_of_square(edge_pairs_list[*edge_pair_list_size])) {
         transform_edgepair_into_canonical_form(edge_pairs_list[*edge_pair_list_size]);
         int index0 = edge_labels[edge_pairs_list[*edge_pair_list_size][0]][edge_pairs_list[*edge_pair_list_size][1]];
         int index1 = edge_labels[edge_pairs_list[*edge_pair_list_size][2]][edge_pairs_list[*edge_pair_list_size][3]];
@@ -13052,7 +13052,7 @@ void generate_non_adjacent_edge_pairs_two_adjacent_squares(EDGEPAIR edge_pairs_l
 	    	    	    edge_pairs_list[*edge_pair_list_size][3] = next;
 	    	    	    transform_edgepair_into_canonical_form(edge_pairs_list[*edge_pair_list_size]);
 	    	    	    	    
-	    	    	    if(!inserted_edge_will_be_part_of_square(edge_pairs_list[*edge_pair_list_size]) && new_edge_has_min_colour_no_squares(edge_pairs_list[*edge_pair_list_size])) {
+	    	    	    if(inserted_edge_will_be_part_of_pentagon_but_not_of_square(edge_pairs_list[*edge_pair_list_size]) && new_edge_has_min_colour_no_squares(edge_pairs_list[*edge_pair_list_size])) {
 		    		edgepair_index[edge_labels[edge_pairs_list[*edge_pair_list_size][0]][edge_pairs_list[*edge_pair_list_size][1]]][edge_labels[edge_pairs_list[*edge_pair_list_size][2]][edge_pairs_list[*edge_pair_list_size][3]]] = *edge_pair_list_size;
 		    		(*edge_pair_list_size)++;
 		    	    }
