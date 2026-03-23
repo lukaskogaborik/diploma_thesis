@@ -1209,10 +1209,10 @@ unsigned char determine_fixed_vertex_of_dangling_edge(EDGE dangling_edge) {
 
 void generate_eligible_diamond_edges(EDGE eligible_diamond_edges[], int *eligible_diamond_edges_size) {
     *eligible_diamond_edges_size = 0;
-    if(number_of_nonadj_edge_diamonds == 0 && number_of_lollipop_diamonds == 0 && current_number_of_dangling_edges == number_of_dangling_edges) {
+    if(number_of_nonadj_edge_diamonds == 0 && number_of_lollipop_diamonds == 0 && current_number_of_dangling_edges >= number_of_dangling_edges - possible_nonprime_dangling_edges) {
         *eligible_diamond_edges_size = eligible_edges_size;
         memcpy(eligible_diamond_edges, eligible_edges, sizeof(EDGE) * eligible_edges_size);
-    } else if(number_of_nonadj_edge_diamonds == 1 && number_of_lollipop_diamonds == 0 && current_number_of_dangling_edges == number_of_dangling_edges) {
+    } else if(number_of_nonadj_edge_diamonds == 1 && number_of_lollipop_diamonds == 0 && current_number_of_dangling_edges >= number_of_dangling_edges - possible_nonprime_dangling_edges) {
         int i;
         for(i = 0; i < 2; i++) {
             eligible_diamond_edges[*eligible_diamond_edges_size][0] = determine_external_diamond_neighbour_index(nonadj_edge_diamonds[0], 3*i);
@@ -1220,7 +1220,7 @@ void generate_eligible_diamond_edges(EDGE eligible_diamond_edges[], int *eligibl
             transform_edge_into_canonical_form(eligible_diamond_edges[*eligible_diamond_edges_size]);
             (*eligible_diamond_edges_size)++;
         }
-    } else if(number_of_lollipop_diamonds == 1 && number_of_nonadj_edge_diamonds == 0 && current_number_of_dangling_edges == number_of_dangling_edges) {
+    } else if(number_of_lollipop_diamonds == 1 && number_of_nonadj_edge_diamonds == 0 && current_number_of_dangling_edges >= number_of_dangling_edges - possible_nonprime_dangling_edges) {
         unsigned char central_vertex = determine_external_diamond_neighbour(lollipop_diamonds[0]);
         int i;
         for(i = 0; i < 2; i++) {
@@ -1239,7 +1239,7 @@ void generate_eligible_diamond_edges(EDGE eligible_diamond_edges[], int *eligibl
 
         DEBUGASSERT(*eligible_diamond_edges_size == 3);
 
-    } else if(number_of_lollipop_diamonds == 2 && number_of_nonadj_edge_diamonds == 0 && current_number_of_dangling_edges == number_of_dangling_edges) {
+    } else if(number_of_lollipop_diamonds == 2 && number_of_nonadj_edge_diamonds == 0 && current_number_of_dangling_edges >= number_of_dangling_edges - possible_nonprime_dangling_edges) {
         //Only possibility to destroy 2 lollipops is if their central vertices are neighbours
         //(Only happens in one case where there are 10 vertices)
         unsigned char central_vertex0 = determine_external_diamond_neighbour(lollipop_diamonds[0]);
@@ -1266,7 +1266,7 @@ void generate_eligible_diamond_edges(EDGE eligible_diamond_edges[], int *eligibl
 }
 
 void generate_eligible_lollipop_edges(EDGE eligible_lollipop_edges[], int *eligible_lollipop_edges_size) {
-    if(current_number_of_dangling_edges == number_of_dangling_edges) {
+    if(current_number_of_dangling_edges >= number_of_dangling_edges - possible_nonprime_dangling_edges) {
     	*eligible_lollipop_edges_size = eligible_edges_size;
     	memcpy(eligible_lollipop_edges, eligible_edges, sizeof(EDGE) * eligible_edges_size);
     }
@@ -1857,7 +1857,7 @@ void generate_non_adjacent_diamond_edge_pairs(EDGEPAIR edge_pairs_list[], int *e
      * If number_of_lollipop_diamonds == 1 or 2, the lollipops can be destroyed,
      * but the extended graph will contain reducible edges.
      */
-    if(number_of_lollipop_diamonds == 0 && current_number_of_dangling_edges == number_of_dangling_edges) {
+    if(number_of_lollipop_diamonds == 0 && current_number_of_dangling_edges >= number_of_dangling_edges - possible_nonprime_dangling_edges) {
         fill_list_of_irreducible_triangles();
         generate_all_nonadj_diamond_edge_pairs(edge_pairs_list, edge_pair_list_size);
     }
@@ -14604,6 +14604,9 @@ void aufschreiben() {
         return;
     }
     
+    if(current_number_of_dangling_edges < number_of_dangling_edges) {
+    	return;
+    }
     //Graphs will never have pentagons on last level for girth 6, 
     //since we destroy every pentagon and don't accept ep's which create a pentagon!
 /*
@@ -15222,7 +15225,7 @@ int SNARKHUNTERMAIN(int argc, char *argv[]) {
             }
 
             if(output_to_file) {
-                sprintf(outputfilename[i], "Generated_graphs.00.00");
+                sprintf(outputfilename[i], "Generated_graphs.00.00.00");
 
                 if(snarks) {
                     sprintf(strbuffer, ".sn");
@@ -15246,7 +15249,10 @@ int SNARKHUNTERMAIN(int argc, char *argv[]) {
                 outputfilename[i][17] = (i / 10) + 48;
                 outputfilename[i][18] = (i % 10) + 48;
 
-                outputfilename[i][21] = girth + 48;
+				outputfilename[i][20] = (number_of_dangling_edges / 10) + 48;
+				outputfilename[i][21] = (number_of_dangling_edges % 10) + 48;
+
+                outputfilename[i][24] = girth + 48;
 
                 //To make sure the output appears in a new file instead of being appended to an existing file
                 outputfile[i] = fopen(outputfilename[i], "w");
@@ -15275,7 +15281,7 @@ int SNARKHUNTERMAIN(int argc, char *argv[]) {
         apply_tripod_optimisation = 1;
         real_girth = girth;
         number_of_vertices -= 6;
-        
+        possible_nonprime_dangling_edges += 2;
         
         if(snarks && !singleout) {
             fprintf(stderr, "Error: graphs outputted on lower levels might not be snarks!\n");
@@ -15334,6 +15340,7 @@ int SNARKHUNTERMAIN(int argc, char *argv[]) {
             
             search_for_graphs_with_girth7 = 1;
             number_of_vertices -= 6;
+            possible_nonprime_dangling_edges += 2;
             
             if(test_for_snarks_tripod) {
                 //fprintf(stderr, "Error: snarks not supported yet for girth 7\n");
