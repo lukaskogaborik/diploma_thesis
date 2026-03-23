@@ -1,0 +1,22 @@
+\chapter{Cubic multipoles generator} % chapter* je necislovana kapitola
+
+In this chapter, we introduce multipoles as elementary building blocks of graphs. Then we adjust known algorithms for
+generation of cubic graphs having given girth \cite{generation_large_girth, generation_moore} to obtain a generator
+of cubic multipoles with given girth.
+
+\begin{definition}
+	A \emph{multipole} is a graph where any edge can have $0,\ 1$ or $2$ incident endvertices. Edges with $1$ incident
+	endvertex are then called \emph{dangling} and edges with no incident endvertices are called \emph{isolated}.
+\end{definition}
+
+First we modify an algorithm \texttt{snarkhunter} \cite{generation_large_girth}.
+
+\begin{definition}
+	A \emph{prime pole} is a multipole which can not be reduced to a smaller one by edge reduction. % TODO edge reduction
+\end{definition}
+
+Graph $K_4^-$ is a $K_4$ after deleting any of its edges (so it looks like a diamond).
+
+\begin{lemma}
+	A multipole is a prime pole if and only if any of its edges is isolated, dangling, a bridge or has an endvertex in $K_4^-$.
+\end{lemma}

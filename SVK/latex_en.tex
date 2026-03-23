@@ -1,0 +1,61 @@
+% !Mode:: "TeX::UTF-8"
+\documentclass{svk_en}
+%% ak pisete po slovensky, pouzijete namiesto horneho riadku
+%% \documentclass{svk_sk}
+
+\begin{document}
+\title{Constructing flows from flow-pairs}
+
+\author{Lukáš Gáborik
+\email{gaborik5@uniba.sk}
+\and 
+Jozef Rajník
+\email{rajnik@dcs.fmph.uniba.sk}
+\thanks{Supervisor}}
+%% vsimnite si, ze u autorov sa nepisu tituly
+%% prikaz \inst sluzi ako odkaz do zoznamu institucii
+%% (vid. nizsie)
+
+%% ak je skolitel/ka prace sucastne autorom, oznacte ho/ju uvedenym sposobom
+%% ak praca ma skolitela, ktory ale nie je autorom, uvedte to cez nasledujuci prikaz
+%% \supervisor{Tomáš Vinař \inst{1}\email{vinar@fmph.uniba.sk}}
+%% ak praca nema skolitela, jednoducho vynechajte
+
+
+%% nasleduje kratka verzia nazvu clanku a 
+%% zoznam autorov (bez krstnych mien)
+%% tieto informacie sa zobrazuju v hlavicke
+\titlerunning{Flow-pairs}
+\authorrunning{Gáborik and Rajník}
+
+\institute{Department of Computer Science,
+FMFI UK,
+Mlynská dolina,
+842~48~Bratislava}
+
+\maketitle
+
+\begin{abstract}
+A nowhere-zero $k$-flow is a mapping of values $\pm 1, \pm 2, \dots, \pm(k-1)$ to edges satisfying Kirchhoff's law -- the inflow is the same as the outflow -- for every vertex of the graph. It is conjectured \cite{tutte} that each bridgeless graph has a nowhere-zero $5$-flow. Almost three decades later, Seymour \cite{seymour} made a general construction of nowhere-zero $6$-flow from $2$-flow and $3$-flow. These two flows permit zeroes, but no edge can have both of them equal to zero. In a recent preprint \cite{chebyshev_flows_preprint}, along the introduction of two-dimensional Chebyshev nowhere-zero flows, the authors showed a similar construction of nowhere-zero $5$-flow from $2$-flow and $4$-flow. Except two simultaneous zeroes, flow values $(0, 1)$ and $(0, -1)$ are now forbidden, too. This structure is called a $1/2$-flow-pair.
+
+In this paper, we explore the properties of $1/2$-flow-pairs. We prove their existence on snarks with oddness $2$, and we also show that one can construct a rich nowhere-zero $7$-flow from them. We also investigate the Chebyshev flow number and show that the two-dimensional Chebyshev flow number of snarks can be arbitrarily small.
+\keywords{...}
+\end{abstract}
+
+\section*{Acknowledgments}
+...
+
+\nocite{*}
+\bibliographystyle{apalike}
+\bibliography{references}
+
+%% citacie ulozte do suboru references.bib
+%% na populaciu zoznamu literatury pouzite program
+%%
+%% bibtex latex_long_en
+%% predosly prikaz samozrejme predpoklada,
+%% ze sa subor ktory  "latex-ujete" vola latex_long_en
+%%
+%% po ktorom je potrebne dokument znova zlatexovat
+
+\end{document}

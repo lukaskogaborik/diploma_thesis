@@ -1,0 +1,96 @@
+\chapter{Chebyshev flow number of snarks} % chapter* je necislovana kapitola
+
+% TODO introducing paragraph
+
+\section{Chebyshev flow number of generalised Blanuša snarks}
+
+\section{General lower bound for Chebyshev flow number}
+
+In one-dimensional flows, there has been proved a lower bound on the flow number of a snark 
+\begin{equation*}
+	\Phi_1(G) \geq 4 + \left.1\middle/\left\lceil\frac{n-4}{8}\right\rceil\right.
+\end{equation*}
+depending on the number $n$ of its vertices \cite[p. 14]{cycle_rank}. Moreover, there is also a meaningful lower bound on the two-dimensional Chebyshev flow number of the Petersen graph $P$ \cite[p. 99]{gloria_phd}. It states that $\Phi_2^\infty(P)\geq 5/2$. We provide generalisation of this bound for any snark. Moreover, the bounding number is roughly a half of the bounding number in one dimension.
+
+\begin{proposition}
+	Let $G$ denote a snark of order $n$. Then $\Phi_2^{\infty}(G) \geq 2+1 / \xi$, where $\xi=\left\lfloor\frac{n-2}{4}\right\rfloor$.
+\end{proposition}
+
+\begin{proof}
+    % TODO rewrite the proof
+    Assume by contradiction that there exists a $2$-dimensional flow $\varphi$ of $G$ such that $\varphi = (\varphi_1(e), \varphi_2(e))$ for each edge $e \in E(G)$, with $\|\varphi(e)\|_\infty\geq 1$ and $\varphi_i(e) \in (-1-1/\xi, 1+1/\xi)$ for $i = 1, 2$.
+
+    We say an edge $e \in E(G)$ to be \emph{large} with respect to $\varphi_i$ if $|\varphi_i(e)| \in [1, 1+1/\xi)$, \emph{small} otherwise. Observe that an edge $e$ can be large with respect to both $\varphi_1$ and $\varphi_2$, but it cannot be small with respect to both $\varphi_1$ and $\varphi_2$, for otherwise $\|\varphi(e)\|_\infty<1$.
+
+    Denote by $S_i$ the subgraph of $G$ induced by the small edges with respect to $\varphi_i$ and by $L_i$ the one induced by the large edges with respect to $\varphi_i$, $i = 1, 2$. By previous observation at least one between $S_1$ and $S_2$ has at most $\lfloor|E(G)|/2\rfloor=\left\lfloor\frac{3n}4\right\rfloor$ edges, say $S_1$.
+
+    \begin{claim}
+        $S_i$ is a spanning subgraph of $G$ and $\Delta(S_i) \leq 2$, for $i = 1, 2$.
+    \end{claim}
+    \begin{proof}
+    \textcolor{red}{is this needed??}
+        Observe that $\Delta(L_i) \leq 2$, because the sum of three real numbers all with absolute value in the interval $[1, 1+1/\xi)$ cannot give $0$ as a result, making the Kirkoff's law impossible to be satisfied by $\varphi$ around a vertex of $G$. Hence $S_i$ is spanning, for otherwise $\Delta(L_i) = 3$ and $\Delta(S_i) \leq 2$, for otherwise $\Delta(L_{3-i}) = 3$.
+    \end{proof}
+
+    \begin{claim}
+        If $C\subseteq E(L_i)$ is an odd edge-cut of $G$ for $i=1, 2$, then $|C|\geq 2\xi+3$.
+    \end{claim}
+    \begin{proof}
+        Consider an odd edge-cut $C$ of $G$ containing $2k+1$ large edges, separating components $G_1, G_2$. WLOG assume $\varphi_i(e)\geq0$ for every edge $e$ of $C$ and more edges are directed towards $G_2$. Then, there are at least $k+1$ edges towards $G_2$, resulting in total inflow at least $(k+1)\cdot1$. Analogously, the total outflow is strictly less than $k\cdot(1+1/\xi)$. Together with the Kirkoff's law, this leads to $k+1<k\cdot(1+1/\xi)$, which is equivalent to $k>\xi$.
+    \end{proof}
+
+    \begin{claim}
+        A path of length $2k$ cannot be a connected component of $S_i$, for $k=1,2,\dots, \xi-1$ and $i = 1, 2$.
+    \end{claim}
+    \begin{proof}
+        For the sake of contradiction assume there is a path of a length $2k$, $k<\xi$ in $S_i$. Then the edges adjacent to this path are in $L_i$ and they form an odd edge-cut of $G$, containing at most $2k+3<2\xi+3$ edges, which is in contradiction with the Claim 2.
+    \end{proof}
+
+    \begin{claim}
+        A cycle of length $2k+1$ cannot be a connected component of $S_i$, for $k=1,2,\dots, \xi$ and $i = 1, 2$.
+    \end{claim}
+    \begin{proof}
+        For the sake of contradiction assume there is a cycle of a length $2k+1$, $k<\xi+1$ in $S_i$. Then the edges adjacent to this cycle are in $L_i$ and they form an odd edge-cut of $G$, containing at most $2k+1<2\xi+3$ edges, which is in contradiction with the Claim 2.
+    \end{proof}
+
+    \begin{claim}
+        $E(S_i)$ cannot contain a perfect matching of $G$, for $i = 1, 2$.
+    \end{claim}
+    \begin{proof}
+        For the sake of contradiction assume that $E(S_i)$ contains a perfect matching $M$ of $G$. Then also $E(L_{3-i})$ contains a perfect matching $M$ of $G$. Next, $F=E(G)\setminus M$ is a $2$-factor of $G$. Note that $F$ must contain an odd cycle of length $2k+1\leq\frac n2$ \textcolor{red}{explain more -- here's implicitly used that $G$ is snark}. This is equivalent with $k\leq\xi$. Then the edges adjacent to this cycle are in $L_{3-i}$ and they form an odd edge-cut of $G$, containing at most $2k+1\leq 2\xi+1$ edges, which is in contradiction with the Claim 2.
+    \end{proof}
+
+    Note that by the Claim 3, each even path in $S_1$ contains at least $2\xi$ edges. Similarly by the Claim 4, each odd cycle in $S_1$ contains at least $2\xi+3$ edges. Let \emph{odd components} denote odd cycles and even paths. Since $4\xi=4\lfloor\frac{n-2}{4}\rfloor>\lfloor\frac{3n}{4}\rfloor\geq E(S_1)$ obviously holds for any $n\geq 10$, $S_1$ may contain at most one odd component. On the other hand, $S_1$ contains even number of odd componentss. As a result, $S_1$ contains only odd paths and even cycles, but then also a perfect matching of $G$, which is in contradiction with the Claim 5.
+\end{proof}
+
+So now, not only for the Petersen graph $P$, but also for both Blanuša snarks $S_1, S_2$ this bound is tight, since there are a ChNZ $5/2$-flow on $P$ and ChNZ $9/4$-flows on $S_1, S_2$. Hence, $\Phi_2^\infty(P)=5/2$ and $\Phi_2^\infty(S_1)=\Phi_2^\infty(S_2)=9/4$.
+
+\section{Three-dimensional Manhattan flow number}
+
+\begin{proposition}
+For any bridgeless graph $G$ it holds $\Phi_3^1(G)\leq \frac{5}{2}$.
+\end{proposition}
+\begin{proof}
+Define the following vectors in $\mathbb{R}^3$:
+\begin{align*}
+&q_1=\left(\frac{3}{8},\ \frac{3}{8},\ -\frac{1}{4}\right),\\
+&q_2=\left(\frac{3}{8},\ -\frac{1}{4},\ \frac{3}{8}\right),\\
+&q_3=\left(-\frac{1}{4},\ \frac{3}{8},\ \frac{3}{8}\right).
+\end{align*}
+
+Note that since the vectors are cyclic, it suffices to find norms of $q_1, q_1+q_2, q_1-q_2, q_1+q_2+q_3$ and $q_1+q_2-q_3$. But 
+\begin{align*}
+    \|q_1\|_1&=1,\\
+    \|q_1+q_2\|_1&=1,\\
+    \|q_1-q_2\|_1&=\frac{5}{4},\\
+    \|q_1+q_2+q_3\|_1&=\frac{3}{2},\\
+    \|q_1+q_2-q_3\|_1&=\frac{3}{2}.
+\end{align*}
+
+By the 8-flow theorem, the graph $G$ can be covered by three cycles $C_1, C_2, C_3$. We orient each cycle arbitrarily and assign to each oriented cycle $C_i$ the flow vector $q_i$. The total flow is then defined as the sum of these three cycle flows.
+
+By construction and the norm evaluations above, for every edge $e \in E$, the resulting flow satisfies
+\[
+\|\varphi(e)\|_1 \in \left\{1, \frac{5}{4}, \frac{3}{2}\right\}.
+\]
+\end{proof}
