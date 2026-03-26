@@ -10,10 +10,10 @@ In one-dimensional flows, there has been proved a lower bound on the flow number
 \begin{equation*}
 	\Phi_1(G) \geq 4 + \left.1\middle/\left\lceil\frac{n-4}{8}\right\rceil\right.
 \end{equation*}
-depending on the number $n$ of its vertices \cite[p. 14]{cycle_rank}. Moreover, there is also a meaningful lower bound on the two-dimensional Chebyshev flow number of the Petersen graph $P$ \cite[p. 99]{gloria_phd}. It states that $\Phi_2^\infty(P)\geq 5/2$. We provide generalisation of this bound for any snark. Moreover, the bounding number is roughly a half of the bounding number in one dimension.
+depending on the number $n$ of its vertices \cite[p. 14]{cycle_rank}. Moreover, there is also a meaningful lower bound on the two-dimensional Chebyshev flow number of the Petersen graph $P$ \cite[p. 99]{gloria_phd}. It states that $\Phi_2^\infty(P)\geq 5/2$. We provide generalisation of this bound for any snark. Additionally, the bounding number is roughly a half of the bounding number in one dimension.
 
-\begin{proposition}
-	Let $G$ denote a snark of order $n$. Then $\Phi_2^{\infty}(G) \geq 2+1 / \xi$, where $\xi=\left\lfloor\frac{n-2}{4}\right\rfloor$.
+\begin{proposition} \emph{\cite[pp. 15, 16]{preprint}}
+	Let $G$ denote a snark of order $n$. Then $\Phi_2^{\infty}(G) \geq 2+1 / \xi$, where $\xi=\left\lfloor\frac{n-2}{4}\right\rfloor$. \label{prop:lower_bound}
 \end{proposition}
 
 \begin{proof}
@@ -63,7 +63,65 @@ depending on the number $n$ of its vertices \cite[p. 14]{cycle_rank}. Moreover, 
     Note that by the Claim 3, each even path in $S_1$ contains at least $2\xi$ edges. Similarly by the Claim 4, each odd cycle in $S_1$ contains at least $2\xi+3$ edges. Let \emph{odd components} denote odd cycles and even paths. Since $4\xi=4\lfloor\frac{n-2}{4}\rfloor>\lfloor\frac{3n}{4}\rfloor\geq E(S_1)$ obviously holds for any $n\geq 10$, $S_1$ may contain at most one odd component. On the other hand, $S_1$ contains even number of odd componentss. As a result, $S_1$ contains only odd paths and even cycles, but then also a perfect matching of $G$, which is in contradiction with the Claim 5.
 \end{proof}
 
-So now, not only for the Petersen graph $P$, but also for both Blanuša snarks $S_1, S_2$ this bound is tight, since there are a ChNZ $5/2$-flow on $P$ and ChNZ $9/4$-flows on $S_1, S_2$. Hence, $\Phi_2^\infty(P)=5/2$ and $\Phi_2^\infty(S_1)=\Phi_2^\infty(S_2)=9/4$.
+% So now, not only for the Petersen graph $P$, but also for both Blanuša snarks $B_1, B_2$ this bound is tight, since there are a ChNZ $5/2$-flow on $P$ and ChNZ $9/4$-flows on $B_1, B_2$. Hence, $\Phi_2^\infty(P)=5/2$ and $\Phi_2^\infty(B_1)=\Phi_2^\infty(B_2)=9/4$.
+
+For now, we are aware of seven snarks meeting this bound \cite[p. 17]{preprint} -- Petersen graph $P$ with $\Phi_2^\infty(P)=5/2$, both Blanuša snarks $B^{(1)}, B^{(2)}$ with $\Phi_2^\infty(P)=9/4$ and $4$ out of $6$ snarks on $20$ vertices with 2D Chebyshev flow number also equal to $9/4$. From computational results, we know that no other example of tightness exists on at most $26$ vertices \cite[p. 17]{preprint}. Although we do not know about any other snark meeting this bound, we think, the bound is not so far from reality, since we found an infinite class of graphs, that are nearly cubic and meet this bound.
+
+The mentioned class was already introduced when constructing graphs with given circular flow number \cite[p. 312]{given_flow_number_not_snarks}.
+\begin{definition}
+	Let $Q$ be the Petersen graph without an edge (since the Petersen graph is edge-transitive, it does not matter, which one is removed) and denote its two vertices of degree two by $x$ and $y$.	Then, a \emph{Petersen fan $PF_n$} is a graph, which arises from $n$ copies of $Q$ by identifying all vertices denoted by $x$ to $\hat{x}$, similarly all vertices denoted by $y$ to $\hat{y}$ and finally joining $\hat{x}$ and $\hat{y}$ by an edge.
+\end{definition}
+
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}{0.45\textwidth}
+		\centering
+		\input images/pf2.tex
+		\caption{$n=2$}
+	\end{subfigure}
+	\begin{subfigure}{0.45\textwidth}
+		\centering
+		\includegraphics[height=40mm]{images/pf3.png}
+		\caption{$n=3$}
+	\end{subfigure}
+	\caption{Two small examples of $PF_n$ graphs}
+\end{figure}
+
+\begin{lemma} \emph{\cite[p. 312]{given_flow_number_not_snarks}}
+	For each positive integer $n$, $\Phi_1(PF_n)=4+1/n$.
+\end{lemma}
+
+From \ref{prop:nzf_from_flow_pair}, one can easily see, that if $PF_n$ admits a $t$-flow-pair, then $t\geq 1/(2n)$. And for $t=1/(2n)$, the flow-pair also exists.
+
+\begin{proposition}
+	For each positive integer $n$, $PF_n$ admits a $(1/(2n))$-flow-pair.
+\end{proposition}
+\begin{proof}
+	We begin the proof by defining flow values of flow-pair $(\varphi_1, \varphi_2)$ on one copy of $Q$. The edges of $2$-factor induced by $\varphi_1$ are bolded.
+	\begin{figure}[h!]
+		\centering
+		\input images/pf_construction.tex
+	\end{figure}
+	We can check that in each vertex except $x$ and $y$, flow conservation costraint is satisfied and non-bolded edges use only flow values $2n$ and $2n+1$. Hence, when we join $n$ copies of $Q$, the sum of flow values outgoing from $\hat{x}$ will be $(0, 2n)$, and the same will be the sum of flow values ingoing to $\hat{y}$. However, this is also a feasible flow value, so by setting $\varphi\left(\vv{\hat{y}\hat{x}}\right) = (0, 2n)$, we get the desired $1/(2n)$-flow-pair of $PF_n$. 
+\end{proof}
+
+This Proposition also gives an upper bound on Chebyshev flow number of $PF_n$.
+\begin{corollary}
+	For each positive integer $n$, $\Phi_2^\infty(PF_n)\leq 2+1/(2n)$.
+\end{corollary}
+
+By a computer, we verified that $\Phi_2^\infty(PF_3)=2+1/6$ and $\Phi_2^\infty(PF_4)=2+1/8$, so we expect that the inequality can be replaced by the equality.
+
+\begin{conjecture}
+	For each positive integer $n$, $\Phi_2^\infty(PF_n) = 2+1/(2n)$.
+\end{conjecture}
+
+Note that $PF_n$ is of order $8n+2$. Even though $PF_n$ is not cubic for $n\geq 2$ (due to two vertices of degree $2n+1$), observe that by inserting the order into the bound from Proposition \ref{prop:lower_bound}, we get $1/(2n)$. Therefore, if we were able to split each of the two vertices of high order into vertices of degree $2$ and one vertex of degree $3$ without increasing the flow number or creating a $3$-edge-colourable graph, we would have a graph meeting the lower bound.
+
+This is possible for $k=2$, where we can obtain both Blanuša snarks \cite[p. 316]{given_flow_number_not_snarks}. For $k=3$ we already know this is not possible, because all snarks on $26$ vertices have 2D Chebyshev flow number at least $2+1/4$. However, we are able to reduce the degrees of these vertices so that in the resulting graph, only one vertex is not of degree $3$, and its degree is $5$. Then we replaced this vertex by a $5$-cycle, and since the flow number still was the same, we constructed a snark on $30$ vertices with 2D Chebyshev flow number $2+1/6$. Hence, we suspect, no snark with 2D Chebyshev flow number $2+1/6$ on $28$ vertices exists.
+
+In summary, adjusting $PF_n$ without changing the flow number can lead to small cubic graphs with small flow number. Now we will show one general construction, giving an upper bound on order of graph with sufficiently small flow number.
+
 
 \section{Three-dimensional Manhattan flow number}
 
