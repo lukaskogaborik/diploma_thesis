@@ -1,10 +1,9 @@
 \chapter{On $1/2$-flow-pairs} % chapter* je necislovana kapitola
+In this chapter % TODO
+\section{Oddness $2$}
 
 % TODO relation to similar theorem for 5-flow, explain why degrees 1 and 2 are not interesting, explain cyclic edge-connectivity
 
-\begin{theorem}[Menger theorem for oriented graphs]
-	\textbf{TODO} https://doi.org/10.1112/jlms/s1-38.1.148 \label{th:oriented_menger}
-\end{theorem}
 
 % TODO why the conditions (a), (b) can be made WLOG
 
@@ -13,7 +12,7 @@
 	\begin{enumerate}[label=(\alph*)]
 		\item flow values are integral pairs -- $\im(\varphi)\subseteq\mathbb Z\times\mathbb Z$,
 		\item $\varphi\left(\vv{uv}\right)=(0,1)$, and
-		\item these are not the flow configurations around $u$ and $v$,
+		\item these are not the flow configurations around $u$ and $v$ in $G'$, % TODO rewrite
 		\begin{figure}[h]
 			\centering
 			\input images/oddness_2_forbidden_config.tex
@@ -32,25 +31,42 @@
 	
 	% By the equivalence between integral and group flows, $G'$ has also a two-dimensional Chebyshev NZ flow $\varphi'=(\varphi'_1, \varphi'_2)$ such that $\varphi'_i\big(\vv d\big)\equiv\varphi_i\big(\vv d\big)\pmod{2}$ for any dart $\vv d\in D(G')$ and $i\in\{1, 2\}$. Hence, $\varphi'\left(\vv{uv}\right)\in\{(0,1), (0,-1)\}$. By changing signs of all flow values in $G'$ we get the other option, and therefore WLOG $\varphi'\left(\vv{uv}\right)=(0,1)$.
 	
-	Multiply the second coordinate of $\varphi$ by two to obtain $\varphi'=(\varphi'_1,\varphi'_2)$. Observe that the flow values of $\varphi'$ are feasible for a $1/2$-flow-pair and $\varphi'\left(\vv{uv}\right)=(0,2)$. Since we are constructing a $1/2$-flow-pair on $G=G'-uv$, the rest of the proof consists of finding two $uv$-paths, where we can send the flow $(0,1)$ and get rid of the edge $e$.
+	Multiply the second coordinate of $\varphi$ by two to obtain $\varphi'=(\varphi'_1,\varphi'_2)$. Observe that the flow values of $\varphi'$ are feasible for a $1/2$-flow-pair and $\varphi'\left(\vv{uv}\right)=(0,2)$. The rest of the proof consists of finding two specific $uv$-paths in $G$. Any dart $\vv{d}$ on this path should satisfy that $\varphi'\left(\vv{d}\right) + (0,1)$ is still a feasible flow value of $1/2$-flow-pair, because then we can redirect the flow $(0,2)$ from edge $uv$ to these paths, and then delete the edge $uv$ without violation of the flow conservation constraint.
 	
-	Let $H$ be an oriented graph such that $V(H)=V(G')$ and
-		$$E(H)=\{\vv{xy}\mid xy\in E(G') \land (\varphi_1(\vv{xy})\neq 0 \lor \varphi_2(\vv{xy})=2)\}.$$
-	One can easily check that this corresponds to set of orientations, in which we can adjust the flow $\varphi'$ by sending a value $(0,1)$ and the flow values remain feasible. However, some edges in $G'$ induce two darts in $H$. But if we take both of these and send $(0,1)$ through each of them, the resulting flow value on the edges is the same as before the process. Hence, if we find two dart-disjoint $uv$-paths in $H-\vv{uv}$, together with edge $uv$ they form two cycles. After sending $(0,1)$ along both of these cycles, the flow value at the edge $uv$ becomes zero and all other flow values remain feasible, and therefore we obtain a $1/2$-flow-pair of $G$.
+	Let $H$ be an oriented graph such that $V(H)=V(G)$ and
+		$$E(H)=\{\vv{xy}\mid xy\in E(G) \land (\varphi_1'(\vv{xy})\neq 0 \lor \varphi_2'(\vv{xy})=2)\}.$$
+	One can easily check that this corresponds to the set of darts $\vv{d}$, for which $\varphi'\left(\vv{d}\right) + (0,1)$ is still a feasible flow value. However, some edges in $G$ induce two darts in $H$. But if we take both of these for some edge $e$ and send $(0,1)$ through each of them, the resulting flow value on $e$ is the same as before the process. Hence, if we find two dart-disjoint $uv$-paths in $H$, the corresponding edges in $G'$ together with the edge $uv$ they form two cycles. After sending $(0,1)$ along both of these cycles, the flow value at the edge $uv$ becomes zero and all other flow values remain feasible, so we can remove the edge $uv$ and therefore obtain a $1/2$-flow-pair of $G$.
 	
-	From the oriented version of Menger's Theorem \ref{th:oriented_menger}, there exist two dart-disjoint $\vv{uv}$-paths in $H-\vv{uv}$ if and only if each $uv$-dart-separator contains at least $2$ darts from the component containing $u$ to the component containing $v$. So it remains to prove this condition.
+	From the oriented version of Menger's Theorem \ref{th:oriented_menger}, there exist two dart-disjoint $\vv{uv}$-paths in $H$ if and only if each $uv$-dart-separator of $H$ contains at least $2$ darts from the component containing $u$ to the component containing $v$. So it remains to prove this condition.
 	
-	Consider any $uv$-dart-separator $\gamma$. Denote the darts from the component containing $u$ to the component containing $v$ as $\gamma^+$.
-	\begin{itemize}
-		\item If there is an edge having flow value with non-zero first coordinate in $\gamma$, there must be at least one more due to flow conservation constraint. Both of them are in $H$ in both orientations.
-		\item If $|\gamma|\geq 5$, the number of incoming $(0,2)$ edges must be equal to the number of outgoing $(0,2)$ edges. Therefore $|\gamma|\geq 6$, $|\gamma^+|\geq 3$, so there are at least two darts different from $\vv{uv}$. 
-		\item If $|\gamma|\leq 4$, the size of cut $\gamma'$ in $H-\vv{uv}$ is equal to $3$. Since the underlying graph $G$ is cyclically $4$-edge connected, at least one of the components must be acyclic mutlipole. Acyclic multipole with vertices of degrees $d_1, \dots, d_k$ has $\sum_{i=1}^k d_i - k$ hanging edges. Together with the fact that $d_i\geq 3$, it has at least $2k$ hanging edges. With the fact that $|\gamma'|=3$, we get $k=1$. This leads to two forbidden configurations -- cut around $u$ and cut around $v$.
-	\end{itemize}
+	% Consider any $uv$-dart-separator $\gamma$ of $H$. Denote the darts from the component containing $u$ to the component containing $v$ as $\gamma^+$. If there is a dart corresponding to the edge of $G$ having a flow value with non-zero first coordinate in $\gamma$, there must be at least one more such dart due to the generalised flow conservation constraint. For both of them, in $H$ there are both darts, hence we have at least two darts in $\gamma^+$. Otherwise, only flow values on the edges corresponding to the darts in $\gamma$ are $(0,\pm 2)$.
+	
+	Consider any $uv$-dart-separator $\gamma_{G'}$ of $G'$. From the generalised flow conservation constraint, $\sum_{\vv{d}\in\gamma_{G'}} \varphi'\left(\vv{d}\right)=(0,0)$. If there is a dart in $\gamma_{G'}$ having a flow value with non-zero first coordinate, there must be at least one more such dart due to the sum of flow values. For both of them there exists a corresponding dart in $H$. Hence we have at least two darts in the corresponding $uv$-dart-separator $\gamma_H$ of $H$. In the remaining case, only possible flow values on the darts of $\gamma_{G'}$ are $(0,\pm 2)$.
+	
+	Observe that the amount of darts with flow value $(0, 2)$ must be the same as of darts with flow value $(0, -2)$ due to the zero sum. This also argues that $|\gamma_{G'}|$ is an even number. One of the $(0,2)$ darts is the new $uv$ edge, and for the others there is a corresponding dart in $\gamma_H$. Hence, if $|\gamma_{G'}|>4$, there are at least three $(0,2)$ darts in $\gamma_{G'}$, and so at least two $(0,2)$ darts in $\gamma_H$. If $|\gamma_{G'}|=2$, there should be a vertex of degree $1$ in $G$, which contradicts the assumptions. So we are left with $|\gamma_{G'}|=4$.
+	
+	From $|\gamma_{G'}|=4$ we already know that $|\gamma_{G}|=3$. Since $G$ is cyclically $4$-edge-connected, at least one of the components separated by $\gamma_{G}$ must be an acyclic $3$-pole with $k$ inner vertices. Let $d_1\geq d_2\geq\cdots\geq d_k\geq 3$ be degrees of its inner vertices and $d_{k+1}=d_{k+2}=d_{k+3}=1$ be degrees of outer vertices of the dangling edges. We will use that this $3$-pole is a tree on $k+3$ vertices, and hence $E(G)=k+2$. Moreover, from the folklore handshaking lemma, we get
+	\begin{align*}
+		\sum_{i=1}^{k+3} d_i &= 2|E(G)|,\\
+		3+\sum_{i=1}^k d_i &= 2k+4,\\
+		3k=\sum_{i=1}^k 3\leq\sum_{i=1}^k d_i &= 2k+1,
+	\end{align*}
+	and so $k\leq 1$. This leads to the two forbidden configurations -- cut around $u$ and cut around $v$.
+	% Acyclic multipole with vertices of degrees $d_1, \dots, d_k$ has $\sum_{i=1}^k d_i - k$ hanging edges. Together with the fact that $d_i\geq 3$, it has at least $2k$ hanging edges. With the fact that $|\gamma'|=3$, we get $k=1$. This leads to two forbidden configurations -- cut around $u$ and cut around $v$.
+	
+%	\begin{itemize}
+%		\item If there is an edge of $G$ having a flow value with non-zero first coordinate in $\gamma$, there must be at least one more such edge due to the flow conservation constraint. For both of them, in $H$ there are both darts, hence we have at least two darts in $\gamma^+$.
+%		\item If $|\gamma|\geq 5$, the number of incoming $(0,2)$ edges must be equal to the number of outgoing $(0,2)$ edges. Therefore $|\gamma|\geq 6$, $|\gamma^+|\geq 3$, so there are at least two darts different from $\vv{uv}$. 
+%		\item If $|\gamma|\leq 4$, the size of cut $\gamma'$ in $H-\vv{uv}$ is equal to $3$. Since the underlying graph $G$ is cyclically $4$-edge connected, at least one of the components must be acyclic mutlipole. Acyclic multipole with vertices of degrees $d_1, \dots, d_k$ has $\sum_{i=1}^k d_i - k$ hanging edges. Together with the fact that $d_i\geq 3$, it has at least $2k$ hanging edges. With the fact that $|\gamma'|=3$, we get $k=1$. This leads to two forbidden configurations -- cut around $u$ and cut around $v$.
+%	\end{itemize}
 \end{proof}
 
 \begin{corollary}
 	Each snark of oddness $2$ has a $1/2$-flow-pair.
 \end{corollary}
+\begin{proof}
+	\textbf{TODO}
+\end{proof}
 
 %\begin{corollary}
 %	Each snark with a hamiltonian path has a $1/2$-flow-pair.

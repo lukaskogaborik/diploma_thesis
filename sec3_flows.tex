@@ -10,7 +10,7 @@ a larger nowhere-zero flow and some Chebyshev flow, also stated in that paper.
 
 \section{Integral nowhere-zero flows}
 
-In this thesis, we consider only unoriented simple connected graphs $G=(V,E)$. Then we can replace each unoriented edge $uv$ with two oriented edges $\vv{uv}$, $\vv{vu}$, called \emph{darts}. By a \emph{dart-set} $D(S)$ of $S\subseteq V$ we mean the set of all darts with initial vertex in the set $S$.
+Unless stated otherwise, we consider only unoriented simple connected graphs $G=(V,E)$. Then we can replace each unoriented edge $uv$ with two oriented edges $\vv{uv}$, $\vv{vu}$, called \emph{darts}. By a \emph{dart-set} $D(S)$ of $S\subseteq V$ we mean the set of all darts with initial vertex in the set $S$.
 
 \begin{definition}
     Let $G=(V, E)$ be a graph and $k\geq 2$ be an integer. A \emph{$k$-flow} on $G$ is an assignment $\varphi\colon D(V)\to \{-(k-1), -(k-2),\dots, k-2, k-1\}$ of flow values to the darts satisfying
@@ -40,6 +40,18 @@ It is not hard to see that a graph with an NZ $k$-flow also admits an NZ $K$-flo
 	\end{equation*}
 \end{definition}
 
+As for many problems in the graph theory, it is sufficient to explore the problem only on the smaller subset of graphs. There exists a folklore reduction of nowhere-zero flows to $3$-regular (or cubic) graphs.
+\begin{proposition}
+    There exists an NZ $k$-flow on any bridgeless graph if and only if there exists an NZ $k$-flow on any cubic bridgeless graph.\label{prop:reduction}
+\end{proposition}
+
+Hence, by considering only cubic graphs, we still solve the universal problem. Moreover, in terms of finding a counterexample to Tutte's $5$-flow conjecture, we can also avoid $3$-edge-colourable ones and limit research to the cubic graphs, that are not $3$-edge-colourable, as a corollary of the next proposition.
+
+\begin{proposition} \emph{\cite[pp. 160, 161]{diestel}}
+    A cubic graph has an NZ $4$-flow if and only if it is $3$-edge-colourable.
+\end{proposition}
+
+
 However, it turns out that this rate of complexity achieves only few values.
 
 \begin{theorem}[$6$-flow theorem] \emph{\cite[p. 133]{seymour}}
@@ -58,16 +70,27 @@ On the other hand, there is no known graph with $\Phi(G)=6$, all known graphs ha
     There exists an NZ $5$-flow on any bridgeless graph.\label{conj:5_flow}
 \end{conjecture}
 
-As for many problems in the graph theory, it is sufficient to explore the problem only on the smaller subset of graphs. There exists a folklore reduction of nowhere-zero flows to $3$-regular (or cubic) graphs.
-\begin{proposition}
-    There exists an NZ $k$-flow on any bridgeless graph if and only if there exists an NZ $k$-flow on any cubic bridgeless graph.\label{prop:reduction}
-\end{proposition}
+This conjecture had been proved for various classes of snarks. Let us mention some of them. One of the first results concerns graphs, which can be easily adjusted to have an NZ $4$-flow.
 
-Hence, by considering only cubic graphs, we still solve the universal problem. Moreover, in terms of finding a counterexample to Tutte's $5$-flow conjecture, we can also avoid $3$-edge-colourable ones and limit research to the cubic graphs, that are not $3$-edge-colourable, as a corollary of the next proposition.
+\begin{theorem} \emph{\cite[p. 89]{nearly_f4}}
+	Let $G$ be a multigraph such that $\Phi(G) = 4$ and $e\in V(G)$ its edge such that $G-e$ is bridgeless. Then, $\Phi(G)\leq 5$.
+\end{theorem}
 
-\begin{proposition} \emph{\cite[pp. 160, 161]{diestel}}
-    A cubic graph has an NZ $4$-flow if and only if it is $3$-edge-colourable.
-\end{proposition}
+The previous theorem in fact shows that all snarks of oddness $2$ have a NZ $5$-flow. However, as for now there is a stronger result.
+
+\begin{theorem} \emph{\cite[p. 364]{oddness_4}}
+	All cyclically $6$-edge-connected snarks of oddness $4$ have an NZ $5$-flow. \label{th:nearly_f4}
+\end{theorem}
+
+Moreover, we know some properties of the potential smallest counterexample to the $5$-flow conjecture.
+
+\begin{theorem} \emph{\cite[p. 142]{min_ctrex_cyc_edge_con}}
+	If the $5$-flow conjecture is false, the smallest counterexample is a cyclically $6$-edge-connected snark.
+\end{theorem}
+
+\begin{theorem} \emph{\cite[p. 386]{min_ctrex_girth}}
+	If the $5$-flow conjecture is false, the smallest counterexample has girth $11$.
+\end{theorem}
 
 \section{Chebyshev flows and flow-pairs}
 % TODO missing relation 1D vs. integral flows

@@ -69,7 +69,7 @@ For now, we are aware of seven snarks meeting this bound \cite[p. 17]{preprint} 
 
 The mentioned class was already introduced when constructing graphs with given circular flow number \cite[p. 312]{given_flow_number_not_snarks}.
 \begin{definition}
-	Let $Q$ be the Petersen graph without an edge (since the Petersen graph is edge-transitive, it does not matter, which one is removed) and denote its two vertices of degree two by $x$ and $y$.	Then, a \emph{Petersen fan $PF_n$} is a graph, which arises from $n$ copies of $Q$ by identifying all vertices denoted by $x$ to $\hat{x}$, similarly all vertices denoted by $y$ to $\hat{y}$ and finally joining $\hat{x}$ and $\hat{y}$ by an edge.
+	Let $Q$ be the Petersen graph without an edge (since the Petersen graph is edge-transitive, it does not matter, which one is removed) and denote its two vertices of degree two by $x$ and $y$.	Then, a \emph{Petersen fan $PF_n$} is a graph, which arises from $n$ copies of $Q$ by identifying all vertices corresponding to $x$ in a vertex $\hat{x}$, similarly all vertices corresponding to $y$ in $\hat{y}$ and finally joining $\hat{x}$ and $\hat{y}$ by an edge.
 \end{definition}
 
 \begin{figure}[h!]
@@ -102,7 +102,7 @@ From \ref{prop:nzf_from_flow_pair}, one can easily see, that if $PF_n$ admits a 
 		\centering
 		\input images/pf_construction.tex
 	\end{figure}
-	We can check that in each vertex except $x$ and $y$, flow conservation costraint is satisfied and non-bolded edges use only flow values $2n$ and $2n+1$. Hence, when we join $n$ copies of $Q$, the sum of flow values outgoing from $\hat{x}$ will be $(0, 2n)$, and the same will be the sum of flow values ingoing to $\hat{y}$. However, this is also a feasible flow value, so by setting $\varphi\left(\vv{\hat{y}\hat{x}}\right) = (0, 2n)$, we get the desired $1/(2n)$-flow-pair of $PF_n$. 
+	We can check that in each vertex except $x$ and $y$, flow conservation costraint is satisfied and non-bolded edges use only flow values $2n$ and $2n+1$. Hence, all flow values used in one copy of $Q$ are feasible. Moreover, when we join $n$ copies of $Q$, the sum of flow values outgoing from $\hat{x}$ will be $(0, 2n)$, and the same will be the sum of flow values ingoing to $\hat{y}$. However, this is also a feasible flow value, so by setting $\varphi\left(\vv{\hat{y}\hat{x}}\right) = (0, 2n)$, we get the desired $1/(2n)$-flow-pair of $PF_n$. 
 \end{proof}
 
 This Proposition also gives an upper bound on Chebyshev flow number of $PF_n$.
@@ -116,12 +116,43 @@ By a computer, we verified that $\Phi_2^\infty(PF_3)=2+1/6$ and $\Phi_2^\infty(P
 	For each positive integer $n$, $\Phi_2^\infty(PF_n) = 2+1/(2n)$.
 \end{conjecture}
 
-Note that $PF_n$ is of order $8n+2$. Even though $PF_n$ is not cubic for $n\geq 2$ (due to two vertices of degree $2n+1$), observe that by inserting the order into the bound from Proposition \ref{prop:lower_bound}, we get $1/(2n)$. Therefore, if we were able to split each of the two vertices of high order into vertices of degree $2$ and one vertex of degree $3$ without increasing the flow number or creating a $3$-edge-colourable graph, we would have a graph meeting the lower bound.
+Note that $PF_n$ is of order $8n+2$. Even though $PF_n$ is not cubic for $n\geq 2$ (due to two vertices of degree $2n+1$), observe that by inserting the order into the bound from Proposition \ref{prop:lower_bound}, we get $1/(2n)$. Therefore, if we were able to split each of the two vertices of high order into vertices of degree $2$ and one vertex of degree $3$ without increasing the flow number or creating a $3$-edge-colourable graph, after smoothing vertices of degree $2$ we will obtain a graph meeting the lower bound.
 
 This is possible for $k=2$, where we can obtain both Blanuša snarks \cite[p. 316]{given_flow_number_not_snarks}. For $k=3$ we already know this is not possible, because all snarks on $26$ vertices have 2D Chebyshev flow number at least $2+1/4$. However, we are able to reduce the degrees of these vertices so that in the resulting graph, only one vertex is not of degree $3$, and its degree is $5$. Then we replaced this vertex by a $5$-cycle, and since the flow number still was the same, we constructed a snark on $30$ vertices with 2D Chebyshev flow number $2+1/6$. Hence, we suspect, no snark with 2D Chebyshev flow number $2+1/6$ on $28$ vertices exists.
 
-In summary, adjusting $PF_n$ without changing the flow number can lead to small cubic graphs with small flow number. Now we will show one general construction, giving an upper bound on order of graph with sufficiently small flow number.
+In summary, adjusting $PF_n$ without changing the flow number can lead to small cubic graphs with small flow number. Now we will show one general construction, giving an upper bound on order of graph with sufficiently small flow number. This method is inspired by the similar construction for circular flow number \cite[pp. 193-195]{given_flow_number}.
 
+\begin{proposition}
+ 	Let $G$ be a graph with $p/q$-flow-pair. Then there exists a cubic graph $G'$ with $p/q$-flow-pair.
+\end{proposition}
+\begin{proof}
+	Fix a $p/q$-flow-pair of $G$ and consider a vertex $v$ with degree $d$ greater than $3$. We aim to construct a cubic $d$-pole, which will be the replacement of $v$ in $G$. Therefore, the multiset of the flow values on dangling edges of this pole should be same as the multiset of flow values surrounding $v$ in the original graph.
+	% Replace it by $d$ vertices of degree one, each connected to one neighbour of $v$ and set the flow values on the new edges to be the same as on the corresponding edges in the original graph.
+	
+	Let us start with the $d$ dangling edges with corresponding flow values. Now, we attach graphs to the dangling edges, to obtain only dangling edges with flow values $(0, \pm(p+q)), (\pm 1, 0)$ in the end. To get rid of unwanted edges with zero first coordinate and $a>0$, we will use the graph in Figure \ref{fig:network0}. The graph for $a<0$ can be obtained in a similar manner.
+	\begin{figure}[h!]
+		\centering
+		\input images/redirecting_vertex.tex
+		\caption{TODO}
+		\label{fig:network0}
+	\end{figure}
+	
+	So now we are left with the unwanted edges with non-zero first coordinate. Take two dangling edges with first coordinates equal to $1$ and second coordinates $-p-q < a \leq b < p+q$. Let $x=\min\{p+q-b, p+q+a\}$. We attach $\lfloor x/p\rfloor$ copies of the graph in Figure \ref{fig:network1} with $\delta=p$ and then another copy with $\delta=x\mod p$. This causes that we get either $(1, -p-q)$ or $(1, p+q)$ on one of the dangling edges. To this dangling edge, we can attach dangling edges with flow values $(1, 0)$ and $(0, \pm(p+q))$, and hence reduce the number of unwanted edges. Since this can be done while there are at least two dangling edges with the first coordinate equal to $1$, we will end up with at most one conflicting edge, whose first coordinate of flow value is $1$. By a similar reasoning, we can deal with dangling edges, where first coordinate of flow value is $-1$.
+	
+	\begin{figure}[h!]
+		\centering
+		\input images/redirecting_network.tex
+		\caption{TODO}
+		\label{fig:network1}
+	\end{figure}
+	
+	At this moment, the majority of dangling edges have flow values $(\pm 1, 0)$ and $(0, \pm(p+q))$. The only two possible exceptions are $(1, s)$ and $(-1, t)$ for some $-p-q < s, t < p+q$. From the flow conservation constraint, we deduce that $s+t\equiv 0\pmod{p+q}$. If $s+t=0$, we can attach those dangling edges and smooth their common vertex of degree $2$. On the other hand, if $s+t=\pm(p+q)$, we will additionally attach a $(0, \pm(p+q))$ dangling edge to fulfill the flow conservation constraint.
+	As the last step, we realize, that from the flow conservation constraint, the number of $(1, 0)$ dangling edges is equal to the number of $(-1, 0)$ dangling edges (and same for the $(0, \pm(p+q))$ edges), so we can attach edges with opposite flow values and smooth their common vertex. Finally, we ended up with (not necessarilly connected) cubic $d$-pole with desired properties, and hence, we constructed a cubic graph with $p/q$-flow-pair.
+\end{proof}
+
+\begin{corollary}
+	For any $r>2$, there exists a non-colourable cubic graph, whose 2D Chebyshev flow number is at most $r$.
+\end{corollary}
 
 \section{Three-dimensional Manhattan flow number}
 

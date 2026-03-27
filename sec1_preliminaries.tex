@@ -1,9 +1,13 @@
 \chapter{Preliminaries}
-% TODO girth; edge coloring and type I/II graphs with Vizing; Menger and oriented Menger; regular graphs (specially cubic); snarks;
+% TODO girth; edge coloring and type I/II graphs with Vizing; Menger and oriented Menger; regular graphs (specially cubic); snarks; oddness
 
 The class of type II cubic graphs is widely used, so its members have special name.
 \begin{definition}
     A \emph{snark} is a bridgeless cubic graph, which has girth at least $5$, is cyclically $4$-edge connected and is not $3$-edge-colourable.
 \end{definition}
 
-% TODO Petersen with vertex- and edge-transitivity
+\begin{theorem}[Menger theorem for oriented graphs] \emph{\cite[p. 149]{menger}}
+	Let $u, v$ be the vertices of an \emph{oriented} multigraph $G$. Then there exist $k$ edge-disjoint oriented $uv$-paths if and only if for any set $S\subseteq V(G)\setminus\{v\}$ containing $u$, there are at least $k$ oriented edges from $S$ to $V(G)\setminus S$. \label{th:oriented_menger}
+\end{theorem}
+
+% TODO Petersen with vertex- and edge-transitivity; minor
