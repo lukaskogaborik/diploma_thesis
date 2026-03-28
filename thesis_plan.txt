@@ -1,0 +1,27 @@
+1	Preliminaries							3.4.									WIP
+Basic notions, Multipoles, Girth, Oddness, Cage problem
+
+2	Cubic graphs generation
+2.1	Snarkhunter								10.4.
+2.2 Minibaum								24.4.
+2.3	Multigraph								24.4.
+
+3	Flows
+3.1 Group flows								27.3.									WIP
+3.2 Integral flows							mainly done, finalize until 20.3.		TBR
+3.3 Chebyshev flows and flow-pairs			mainly done, finalize until 20.3.		TBR
+3.4 Rich flows								27.3.									TBR
+
+4	Cubic multipoles generator
+4.1	Prime poles								17.4.
+4.2 Overall algorithm						17.4.
+4.3 Results									24.4.
+
+5	On $1/2$-flow-pairs
+5.1 Graphs with oddness $2$					mainly done, finalize until 20.3.		OK
+5.2 Graphs with rich flow number $7$		27.3.									TBR
+
+6	Chebyshev flow number of snarks
+6.1 Lower bound								mainly done, finalize until 20.3.		TBR
+6.2	Petersen fan graphs						27.3.									TBR
+6.3 Generalised Blanuša snarks				27.3.									WIP

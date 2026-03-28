@@ -8,6 +8,11 @@ a larger nowhere-zero flow and some Chebyshev flow, also stated in that paper.
 
 % TODO definition of generalised Blanuša snarks
 
+% TODO group flows
+\begin{theorem} \emph{\cite[p. 207]{jaeger1979flows}}
+    There exists an NZ $k$-flow $\varphi$ on a bridgeless graph $G$ if and only if there also exists a NZ $\mathbb Z_k$-flow $\varphi'$ on $G$. Moreover, for each $\varphi'$ there exists $\varphi$ satisfying $\varphi\left(\vv{d}\right)\equiv\varphi'\left(\vv{d}\right)\pmod{k}$. \label{th:finite_group_flows}
+\end{theorem}
+
 \section{Integral nowhere-zero flows}
 
 Unless stated otherwise, we consider only unoriented simple connected graphs $G=(V,E)$. Then we can replace each unoriented edge $uv$ with two oriented edges $\vv{uv}$, $\vv{vu}$, called \emph{darts}. By a \emph{dart-set} $D(S)$ of $S\subseteq V$ we mean the set of all darts with initial vertex in the set $S$.
@@ -73,10 +78,19 @@ On the other hand, there is no known graph with $\Phi(G)=6$, all known graphs ha
 This conjecture had been proved for various classes of snarks. Let us mention some of them. One of the first results concerns graphs, which can be easily adjusted to have an NZ $4$-flow.
 
 \begin{theorem} \emph{\cite[p. 89]{nearly_f4}}
-	Let $G$ be a multigraph such that $\Phi(G) = 4$ and $e\in V(G)$ its edge such that $G-e$ is bridgeless. Then, $\Phi(G)\leq 5$.
+	Let $G$ be a bridgeless graph. If we can add an edge $e$ such that $\Phi(G+e)=4$, then $\Phi(G-e)\leq 5$.
 \end{theorem}
 
-The previous theorem in fact shows that all snarks of oddness $2$ have a NZ $5$-flow. However, as for now there is a stronger result.
+This theorem has two intersting corollaries. In nowhere-zero flows, deletion of an edge can be modeled by an addition of a parallel edge (since sending the same non-zero value through these parallel edges acts same as if there is no flow), which leads to the first of the two corollaries.
+\begin{corollary}
+	Let $G$ be a bridgeless graph and $e\in V(G)$ its edge such that $\Phi(G-e) = 4$. Then, $\Phi(G)\leq 5$.
+\end{corollary}
+
+The second one concerns snarks with small oddness.
+\begin{corollary}
+	Let $G$ be a snark of oddness $2$. Then, $\Phi(G)\leq 5$.
+\end{corollary}
+However, as for now there is a stronger result.
 
 \begin{theorem} \emph{\cite[p. 364]{oddness_4}}
 	All cyclically $6$-edge-connected snarks of oddness $4$ have an NZ $5$-flow. \label{th:nearly_f4}
@@ -188,6 +202,45 @@ In general, edges with non-zero value of $\varphi_2$ form a set of cycles in $G$
 \begin{lemma} \emph{\cite[p. 21]{preprint}}
 	Let $p<q$ be positive integers. Consider a cubic graph $G$ with a $p/q$-flow-pair $(\varphi_2, \varphi_{p+q+1})$. Then the set of edges $e$ with a property $\varphi_2(e)\neq 0$ is a $2$-factor of $G$.\label{lem:flow_pair_2_factor}
 \end{lemma}
+
+\section{Rich flows}
+
+Recently, in the research of flows, there was an idea to forbid two darts surrounding a vertex to have flow values with the same absolute value \cites{rich_flows, rich_flows_not_cubic}. The motivation is, that if we have two darts from the same vertex with $\varphi\left(\vv{d_1}\right)+\varphi\left(\vv{d_2}\right)=0$ (a so-called \emph{confluent pair}), we can split the considered vertex of degree $d$ to vertices of degrees $2$ and $d-2$ without influencing flow properties of a graph. On the other hand, a so-called \emph{contrafluent pair}, where $\varphi\left(\vv{d_1}\right)=\varphi\left(\vv{d_2}\right)$, requires that in the set of flow values contains some element and its double. However, we cannot find such a pair in a $p/q$-flow-pair with $p<q$.
+
+\begin{definition}
+	An NZ $k$-flow $\varphi$ is called \emph{rich} if for each pair of adjacent darts $\vv{d_1}$, $\vv{d_2}$ it holds that $|\varphi\left(\vv{d_1}\right)|\neq|\varphi\left(\vv{d_1}\right)|$.
+\end{definition}
+
+We already know that graph admits a nowhere-zero flow if and only if it is bridgeless. In the theory of rich flows, there is one more obstruction -- a $2$-edge-cut with the common vertex. It can be shown that these two conditions are also sufficient for a graph to have the rich nowhere-zero flow. We call such graphs \emph{rich flow admissible}. 
+
+\begin{definition}
+	Let $G$ be a rich flow admissible graph. A \emph{rich flow number of $G$} is
+	\begin{equation*}
+		R(G) := \min\{k\mid\exists\text{rich NZ } k\text{-flow on }G\}.
+	\end{equation*}
+\end{definition}
+
+Unlike group, integral, circular and multidimensional flows, rich flows and bounding the rich flow number cannot be reduced to the class of cubic graphs. The simple reason is, that if the maximal degree in $G$ is $\Delta$, we clearly need at least $\Delta$ different flow values and therefore $R(G)\geq\Delta+1$. On the other hand, there is an upper bound depending only on $\Delta$ \cite{rich_flows_not_cubic}.
+
+However, if we limit our view only on the cubic graphs, we get similar results as for casual nowhere-zero flows. Again, it suffices to examine the snarks.
+\begin{proposition} \emph{\cite[p. 31]{rich_flows}}
+    A cubic graph has a rich NZ $5$-flow if and only if it is $3$-edge-colourable.
+\end{proposition}
+
+And from the computational results, the gap between the colourable and uncolourable cubic graphs is again equal to $1$.
+\begin{conjecture} \emph{\cite[p. 33]{rich_flows}}
+	There exists a rich NZ $6$-flow on any bridgeless cubic graph.
+\end{conjecture}
+
+However, with the proved results, we are still far from the desired value $6$.
+\begin{proposition} \emph{\cite[p. 33]{rich_flows}}
+	There exists a rich NZ $11$-flow on any bridgeless cubic graph.
+\end{proposition}
+
+For snarks that are ``nearly colourable'', we can reduce a size of the gap from $5$ to $3$.
+\begin{proposition} \emph{\cite[p. 40]{rich_flows}}
+	Let $G$ be a snark and $e\in V(G)$ its edge such that $R(G-e) = 5$. Then, $R(G)\leq 9$.
+\end{proposition}
 
 \iffalse
 \section{Closures and bases}

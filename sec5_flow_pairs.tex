@@ -2,13 +2,14 @@
 In this chapter % TODO
 \section{Oddness $2$}
 
-% TODO relation to similar theorem for 5-flow, explain why degrees 1 and 2 are not interesting, explain cyclic edge-connectivity
+One of the first results on snarks having $5$-flow was the class of graphs, that can be constructed from graph with a $4$-flow by removing an edge, see Theorem \ref{th:nearly_f4}. We generalise this approach and prove a similar lemma for flow-pairs. This lemma has some additional assumptions needed to finish the proof, so let us discuss, how they change the strength of the proved lemma. At first, the $4$-edge-connectivity is not a big deal, since we want to use this lemma mainly for snarks, which are $4$-edge-connected. The minimum degree $3$ makes no harm, since a vertex of degree $1$ cannot be in a bridgeless graph and a vertex of degree $2$ can be smoothed without influencing flow properties of graph.
 
+The main issue of this lemma are the two forbidden special cases of flow values surrounding the new edge. Because of them, we cannot state that \emph{``each snark, that can be constructed from graph with a $0/1$-flow-pair by removing an edge, has a $1/2$-flow-pair''}. That are the sad news. The good news is that this lemma, similarly as for 1D flows, can be used to prove that snarks with oddness $2$ have a $1/2$-flow-pair.
 
 % TODO why the conditions (a), (b) can be made WLOG
 
 \begin{lemma}
-	Let $G$ be a cyclically $4$-edge connected graph with minimum degree at least $3$. Consider a pair of vertices $u, v\in V(G)$ and a graph $G'$, which arises from $G$ by adding the edge $uv$. If $G'$ has a Chebyshev NZ $2$-flow $\varphi$ satisfying
+	Let $G$ be a cyclically $4$-edge-connected graph with minimum degree at least $3$. Consider a pair of vertices $u, v\in V(G)$ and a graph $G'$, which arises from $G$ by adding the edge $uv$. If $G'$ has a Chebyshev NZ $2$-flow $\varphi$ satisfying
 	\begin{enumerate}[label=(\alph*)]
 		\item flow values are integral pairs -- $\im(\varphi)\subseteq\mathbb Z\times\mathbb Z$,
 		\item $\varphi\left(\vv{uv}\right)=(0,1)$, and
@@ -30,6 +31,7 @@ In this chapter % TODO
 	% \textbf{TODO reference -- graph with NZ $\mathbb Z_2$-flow has a NZ $2$-flow with equivalent modulo}
 	
 	% By the equivalence between integral and group flows, $G'$ has also a two-dimensional Chebyshev NZ flow $\varphi'=(\varphi'_1, \varphi'_2)$ such that $\varphi'_i\big(\vv d\big)\equiv\varphi_i\big(\vv d\big)\pmod{2}$ for any dart $\vv d\in D(G')$ and $i\in\{1, 2\}$. Hence, $\varphi'\left(\vv{uv}\right)\in\{(0,1), (0,-1)\}$. By changing signs of all flow values in $G'$ we get the other option, and therefore WLOG $\varphi'\left(\vv{uv}\right)=(0,1)$.
+	
 	
 	Multiply the second coordinate of $\varphi$ by two to obtain $\varphi'=(\varphi'_1,\varphi'_2)$. Observe that the flow values of $\varphi'$ are feasible for a $1/2$-flow-pair and $\varphi'\left(\vv{uv}\right)=(0,2)$. The rest of the proof consists of finding two specific $uv$-paths in $G$. Any dart $\vv{d}$ on this path should satisfy that $\varphi'\left(\vv{d}\right) + (0,1)$ is still a feasible flow value of $1/2$-flow-pair, because then we can redirect the flow $(0,2)$ from edge $uv$ to these paths, and then delete the edge $uv$ without violation of the flow conservation constraint.
 	
@@ -62,15 +64,17 @@ In this chapter % TODO
 \end{proof}
 
 \begin{corollary}
-	Each snark of oddness $2$ has a $1/2$-flow-pair.
+	Each snark $G$ of oddness $2$ has a $1/2$-flow-pair, and hence, $\Phi_2^\infty(G)\leq 5/2$.
 \end{corollary}
 \begin{proof}
-	\textbf{TODO}
+	Consider a $2$-factor $F$ with two odd cycles. Then construct an NZ $(\mathbb Z_2\times \mathbb Z_2)$-flow $\varphi$ on $G$ as follows -- assign $(1,1)$ to edges in $E\setminus F$ and on the $2$-factor $F$, alternate flow values $(0,1)$ and $(1,0)$. On both odd cycles, there is one conflicting vertex, where the sum of flow values is $(1,1)$. Join these two vertices by a new edge $e$ with an assigned flow value $(1,1)$. Thus, we have an NZ $(\mathbb Z_2\times \mathbb Z_2)$-flow $\varphi$ on $G+e$. It remains to realize, that from Theorem \ref{th:finite_group_flows}, both NZ $\mathbb Z_2$-flows can be adjusted to NZ $2$-flows, and since from the modulo condition their flow values cannot be zero simultaneously, this is a $0/1$-flow-pair. Now, from the previous lemma, we get that $G$ has a $1/2$-flow-pair.
 \end{proof}
 
 %\begin{corollary}
 %	Each snark with a hamiltonian path has a $1/2$-flow-pair.
 %\end{corollary}
+
+\section{Rich $7$-flow}
 
 \begin{theorem}
 	Let $G$ be a cubic graph with $1/2$-flow-pair. Then $G$ has a rich nowhere-zero $7$-flow.
