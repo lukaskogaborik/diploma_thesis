@@ -13207,11 +13207,8 @@ void generate_non_adjacent_edge_pairs_square_free(EDGEPAIR edge_pairs_list[], in
 
                                 //Als inserted edge deel van square zal zijn, zal de graaf nog altijd kleurbaar zijn
                                 //if((!check_remove || !ISREMOVED_EDGEPAIR(index0, index1)) && !inserted_edge_will_be_part_of_square(edge_pairs_list[*edge_pair_list_size])) {
-                                //If contains disjoint pentagon and inserted edge won't be part of pentagon, then edge cannot be canonical!
                                 if((!check_remove || ((edge_in_cycles[index0] & edge_in_cycles[index1]) == 0)) && !inserted_edge_will_be_part_of_square(edge_pairs_list[*edge_pair_list_size])) {
-                                    if((inserted_edge_will_be_part_of_pentagon(edge_pairs_list[*edge_pair_list_size])
-                                            || !contains_disjoint_pentagon(edge_pairs_list[*edge_pair_list_size])) &&
-                                            new_edge_has_min_colour_no_squares(edge_pairs_list[*edge_pair_list_size])) {
+                                    if(new_edge_has_min_colour_no_squares(edge_pairs_list[*edge_pair_list_size])) {
                                         if(!check_remove) {
                                             index0 = edge_labels[i][next];
                                             index1 = edge_labels[k][next0];
