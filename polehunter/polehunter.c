@@ -6348,6 +6348,9 @@ int generate_edgepairs_penultimate_level_girth4(EDGEPAIR edge_pairs_list[], int 
  * Returns 1 if such edgepairs were found, else returns 0.
  */
 int generate_edgepairs_penultimate_level_girth5_no_triangles(EDGEPAIR edge_pairs_list[], int *edge_pair_list_size) {
+    
+    update_min_edges();
+    
     *edge_pair_list_size = 0;
 
     if(!find_squares(squares_global, squares_global_bitvectors, &squares_global_size, adjacent_squares_global, &adjacent_squares_global_size)) {
