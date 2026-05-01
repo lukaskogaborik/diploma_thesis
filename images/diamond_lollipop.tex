@@ -1,0 +1,36 @@
+\begin{tikzpicture}[auto,scale=1]
+
+	\node (c2) [circle, draw=black, fill=black, scale=0.3] at (0, -1) {};
+	\node (c3) [circle, draw=black, fill=black, scale=0.3] at (1, -1) {};
+	\node (c4) [circle, draw=black, fill=black, scale=0.3] at (1, {-1+0.5*sqrt(3)}) {};
+	\node (c5) [circle, draw=black, fill=black, scale=0.3] at (1, {-1-0.5*sqrt(3)}) {};
+	\node (c6) [circle, draw=black, fill=black, scale=0.3] at (1.5, -1) {};
+	\node (c7) [circle, draw=black, fill=black, scale=0.3] at (2.5, -1) {};
+
+	\path[thick]
+	(c2) edge[black] (c3)
+	(c3) edge[black] (c4)
+	(c3) edge[black] (c5)
+	(c5) edge[black] (c6)
+	(c5) edge[black] (c7)
+	(c4) edge[black] (c6)
+	(c4) edge[black] (c7)
+	(c6) edge[black] (c7);
+	
+	\node (d0) [circle, draw, fill=black, scale=0.3] at (-1, -1) {};
+	\node (d1) [circle, draw, fill=black, scale=0.3] at (-3.5, -1) {};
+	\node (d2) [circle, draw=black, fill=black, scale=0.3] at (-1.5, -1) {};
+	\node (d3) [circle, draw=black, fill=black, scale=0.3] at (-3, -1) {};
+	\node (d4) [circle, draw=black, fill=black, scale=0.3] at (-2.25, {-1-0.75/sqrt(3)}) {};
+	\node (d5) [circle, draw=black, fill=black, scale=0.3] at (-2.25, {-1+0.75/sqrt(3)}) {};
+
+	\path[thick]
+	(d0) edge (d2)
+	(d1) edge (d3)
+	(d2) edge[black] (d4)
+	(d2) edge[black] (d5)
+	(d3) edge[black] (d4)
+	(d3) edge[black] (d5)
+	(d4) edge[black] (d5);
+	
+\end{tikzpicture}

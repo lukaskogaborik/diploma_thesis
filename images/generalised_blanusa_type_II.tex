@@ -1,0 +1,120 @@
+\begin{tikzpicture}[auto, scale=0.3]
+    
+    \node (aA) [scale=0.03] at (1, 6) {};
+    \node (a1) [circle, draw, fill, scale=0.3] at (3, 6) {};
+    \node (a2) [circle, draw, fill, scale=0.3] at (6, 6) {};
+    \node (a3) [circle, draw, fill, scale=0.3] at (9, 6) {};
+    \node (aC) [scale=0.03] at (11, 6) {};
+    \node (bA) [scale=0.03] at (13, 6) {};
+    \node (b1) [circle, draw, fill, scale=0.3] at (15, 6) {};
+    \node (b2) [circle, draw, fill, scale=0.3] at (18, 6) {};
+    \node (b3) [circle, draw, fill, scale=0.3] at (21, 6) {};
+    \node (bC) [scale=0.03] at (23, 6) {};
+    \node (bDC) [scale=0.03] at (25, 6) {};
+    \node (bDCC) [scale=0.03] at (27, 6) {};
+    \node (cA) [scale=0.03] at (29, 6) {};
+    \node (c1) [circle, draw, fill, scale=0.3] at (31, 6) {};
+    \node (c2) [circle, draw, fill, scale=0.3] at (34, 6) {};
+    \node (c3) [circle, draw, fill, scale=0.3] at (37, 6) {};
+    \node (cC) [scale=0.03] at (39, 6) {};
+    \node (cDC) [scale=0.03] at (41, 6) {};
+    \node (cDCC) [scale=0.03] at (43, 6) {};
+    
+    \node (x1) [circle, draw, fill, scale=0.3] at (18, 4.5) {};
+    
+    \node (a4) [circle, draw, fill, scale=0.3] at (3, 3) {};
+    \node (a5) [scale=0.03] at (6, 3) {};
+    \node (a6) [circle, draw, fill, scale=0.3] at (9, 3) {};
+    \node (b4) [circle, draw, fill, scale=0.3] at (15, 3) {};
+    \node (b5) [scale=0.03] at (18, 3) {};
+    \node (x2) [circle, draw, fill, scale=0.3] at (19.5, 3) {};
+    \node (b6) [circle, draw, fill, scale=0.3] at (21, 3) {};
+    \node (c4) [circle, draw, fill, scale=0.3] at (31, 3) {};
+    \node (c5) [scale=0.03] at (34, 3) {};
+    \node (c6) [circle, draw, fill, scale=0.3] at (37, 3) {};
+    
+    \node (aB) [scale=0.03] at (1, 0) {};
+    \node (a7) [circle, draw, fill, scale=0.3] at (3, 0) {};
+    \node (a8) [circle, draw, fill, scale=0.3] at (6, 0) {};
+    \node (a9) [circle, draw, fill, scale=0.3] at (9, 0) {};
+    \node (aD) [scale=0.03] at (11, 0) {};
+    \node (bB) [scale=0.03] at (13, 0) {};
+    \node (b7) [circle, draw, fill, scale=0.3] at (15, 0) {};
+    \node (b8) [circle, draw, fill, scale=0.3] at (18, 0) {};
+    \node (b9) [circle, draw, fill, scale=0.3] at (21, 0) {};
+    \node (bD) [scale=0.03] at (23, 0) {};
+    \node (bCD) [scale=0.03] at (25, 0) {};
+    \node (bCDD) [scale=0.03] at (27, 0) {};
+    \node (cB) [scale=0.03] at (29, 0) {};
+    \node (c7) [circle, draw, fill, scale=0.3] at (31, 0) {};
+    \node (c8) [circle, draw, fill, scale=0.3] at (34, 0) {};
+    \node (c9) [circle, draw, fill, scale=0.3] at (37, 0) {};
+    \node (cD) [scale=0.03] at (39, 0) {};
+    \node (cCD) [scale=0.03] at (41, 0) {};
+    \node (cCDD) [scale=0.03] at (43, 0) {};
+
+    \path[-latex]
+    (aA) edge[ultra thick] node[above] {\small $3$} (a1)
+    (a2) edge[ultra thick] node[above] {\small $2$} (a1)
+    (a1) edge[thick] node[left] {\small $5$} (a4)
+    (a7) edge[ultra thick] node[below] {\small $5$} (aB)
+    (a4) edge[-, ultra thick] node[left] {\small $0$} (a7)
+    (a8) edge[thick] node[below] {\small $5$} (a7)
+    (a4) edge[-, ultra thick] (a5)
+    (a5) edge[ultra thick] node[above] {\small $5$} (a6)
+    (a5) edge[ultra thick] (a8)
+    (a2) edge[-, ultra thick] node[left] {\small $2$} (a5)
+    (a3) edge[thick] node[above] {\small $4$} (a2)
+    (a9) edge[ultra thick] node[below] {\small $3$} (a8)
+    (a6) edge[ultra thick] node[right] {\small $1$} (a3)
+    (a6) edge[thick] node[right] {\small $4$} (a9)
+    (aC) edge[ultra thick] (a3)
+    (aC) edge[-, ultra thick] (bB)
+    (bB) edge[-, ultra thick] node[below] {\small $3$} (b7)
+    (a9) edge[-, ultra thick] (aD)
+    (aD) edge[-, ultra thick] (bA)
+    (bA) edge[ultra thick] node[above] {\small $1$} (b1)
+    (b1) edge[ultra thick] node[left] {\small $5$} (b4)
+    (b4) edge[thick] node[left] {\small $5$} (b7)
+    (b2) edge[thick] node[above] {\small $4$} (b1)
+    (b4) edge[-, ultra thick] node[above] {\small $0$} (b5)
+    (b5) edge[-, ultra thick] (x2)
+    (b6) edge[ultra thick] node[below] {\small $5$} (x2)
+    (b7) edge[ultra thick] node[below] {\small $2$} (b8)
+    (x1) edge[ultra thick] node[left] {\small $3$} (b2)
+    (x1) edge[-, ultra thick] (b5)
+    (b5) edge[ultra thick] node[left] {\small $2$} (b8)
+    (x2) edge[thick] node[above right] {\small $5$} (x1)
+    (b3) edge[ultra thick] node[above] {\small $1$} (b2)
+    (b8) edge[thick] node[below] {\small $4$} (b9)
+    (b9) edge[ultra thick] node[right] {\small $1$} (b6)
+    (b3) edge[thick] node[right] {\small $4$} (b6)
+    (bC) edge[ultra thick] (b3)
+    (bC) edge[-, ultra thick] (bCD)
+    (bCD) edge[-, ultra thick] node[below] {\small $5$} (bCDD)
+    (b9) edge[-, ultra thick] (bD)
+    (bD) edge[-, ultra thick] (bDC)
+    (bDC) edge[ultra thick] node[above] {\small $3$} (bDCC)
+      
+    (cA) edge[ultra thick] node[above] {\small $3$} (c1)
+    (c7) edge[ultra thick] node[below] {\small $5$} (cB)
+    (c1) edge[thick] node[above] {\small $4$} (c2)
+    (c4) edge[ultra thick] node[left] {\small $1$} (c1)
+    (c5) edge[ultra thick] (c4)
+    (c5) edge[-, ultra thick] node[above] {\small $5$} (c6)
+    (c4) edge[thick] node[left] {\small $4$} (c7)
+    (c8) edge[ultra thick] node[below] {\small $1$} (c7)
+    (c2) edge[-, ultra thick] node[left] {\small $5$} (c5)
+    (c5) edge[ultra thick] (c8)
+    (c3) edge[ultra thick] node[above] {\small $1$} (c2)
+    (c8) edge[thick] node[below] {\small $4$} (c9)
+    (c3) edge[thick] node[right] {\small $4$} (c6)
+    (c9) edge[ultra thick] node[right] {\small $1$} (c6)
+    (cC) edge[ultra thick] (c3)
+    (cC) edge[-, ultra thick] (cCD)
+    (cCD) edge[-, ultra thick] node[below] {\small $5$} (cCDD)
+    (c9) edge[-, ultra thick] (cD)
+    (cD) edge[-, ultra thick] (cDC)
+    (cDC) edge[ultra thick] node[above] {\small $3$} (cDCC);
+    
+\end{tikzpicture}

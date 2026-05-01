@@ -1,0 +1,73 @@
+\begin{tikzpicture}[auto,scale=1]
+
+    \node (a0) [circle, draw=black, fill=black, scale=0.3] at (0, 0) {};
+	\node (a1) [circle, draw=black, fill=black, scale=0.3] at ({-0.5*sqrt(2)}, {0.5*sqrt(2)}) {};
+	\node (a2) [circle, draw=black, fill=black, scale=0.3] at (0, -1) {};
+	\node (a3) [circle, draw=black, fill=black, scale=0.3] at ({-0.5*sqrt(2)}, {-1-0.5*sqrt(2)}) {};
+	\node (a4) [circle, draw=black, fill=black, scale=0.3] at (1, 0) {};
+	\node (a5) [circle, draw=black, fill=black, scale=0.3] at (1, -1) {};	
+	\node (a6) [circle, draw=black, fill=black, scale=0.3] at (2, 0) {};
+	\node (a7) [circle, draw=black, fill=black, scale=0.3] at ({2+0.5*sqrt(2)}, {0.5*sqrt(2)}) {};
+	\node (a8) [circle, draw=black, fill=black, scale=0.3] at (2, -1) {};
+	\node (a9) [circle, draw=black, fill=black, scale=0.3] at ({2+0.5*sqrt(2)}, {-1-0.5*sqrt(2)}) {};
+	\node (a10) [circle, draw=FMFI, fill=FMFI, scale=0.3] at (0, -0.5) {};
+	\node (a11) [circle, draw=FMFI, fill=FMFI, scale=0.3] at (2, -0.5) {};
+
+	\path[thick]
+	(a0) edge[black] (a1)
+	(a0) edge[black] (a10)
+	(a2) edge[black] (a10)
+	(a0) edge[black] (a4)
+	(a2) edge[black] (a3)
+	(a2) edge[black] (a5)
+	(a4) edge[black] (a5)
+	(a4) edge[black] (a6)
+	(a6) edge[black] (a7)
+	(a11) edge[black] (a8)
+	(a6) edge[black] (a11)
+	(a8) edge[black] (a9)
+	(a5) edge[black] (a8)
+	(a10) edge[FMFI] (a11);
+
+	\node (b0) [circle, draw=black, fill=black, scale=0.3] at (5, 0) {};
+	\node (b1) [circle, draw=black, fill=black, scale=0.3] at ({5-0.5*sqrt(2)}, {0.5*sqrt(2)}) {};
+	\node (b2) [circle, draw=black, fill=black, scale=0.3] at (5, -1) {};
+	\node (b3) [circle, draw=black, fill=black, scale=0.3] at ({5-0.5*sqrt(2)}, {-1-0.5*sqrt(2)}) {};
+	\node (b4) [circle, draw=black, fill=black, scale=0.3] at (6, 0) {};
+	\node (b5) [circle, draw=black, fill=black, scale=0.3] at (6, -1) {};	
+	\node (b6) [circle, draw=black, fill=black, scale=0.3] at (7, 0) {};
+	\node (b7) [circle, draw=black, fill=black, scale=0.3] at ({7+0.5*sqrt(2)}, {0.5*sqrt(2)}) {};
+	\node (b8) [circle, draw=black, fill=black, scale=0.3] at (7, -1) {};
+	\node (b9) [circle, draw=black, fill=black, scale=0.3] at ({7+0.5*sqrt(2)}, {-1-0.5*sqrt(2)}) {};
+	\node (b10) [circle, draw=FMFI, fill=FMFI, scale=0.3] at (9, -0.5) {};
+	\node (b11) [circle, draw=FMFI, fill=FMFI, scale=0.3] at (6, -0.5) {};
+	\node (b12) [circle, draw=black, fill=black, scale=0.3] at (9, 0) {};
+	\node (b13) [circle, draw=black, fill=black, scale=0.3] at (9, -1) {};
+	\node (b14) [circle, draw=black, fill=black, scale=0.3] at ({9+cos(30)}, {sin(30)}) {};
+	\node (b15) [circle, draw=black, fill=black, scale=0.3] at ({9+cos(150)}, {sin(150)}) {};
+	\node (b16) [circle, draw=black, fill=black, scale=0.3] at ({9+cos(210)}, {-1+sin(210)}) {};
+	\node (b17) [circle, draw=black, fill=black, scale=0.3] at ({9+cos(330)}, {-1+sin(330)}) {};
+	
+
+	\path[thick]
+	(b0) edge[black] (b1)
+	(b0) edge[black] (b2)
+	(b0) edge[black] (b4)
+	(b2) edge[black] (b3)
+	(b2) edge[black] (b5)
+	(b4) edge[dashed] node[left] {$e'$} (b11)
+	(b11) edge[black] (b5)
+	(b4) edge[black] (b6)
+	(b6) edge[black] (b7)
+	(b6) edge[black] (b8)
+	(b8) edge[black] (b9)
+	(b5) edge[black] (b8)
+	(b10) edge[FMFI] node[above] {$e$} (b11)
+	(b10) edge (b13)
+	(b12) edge (b10)
+	(b12) edge (b14)
+	(b12) edge (b15)
+	(b13) edge (b16)
+	(b13) edge (b17);
+	
+\end{tikzpicture}

@@ -1,58 +1,71 @@
 \chapter{Preliminaries}
 
-Unless stated otherwise, we consider unoriented simple connected graphs $G=(V,E)$. Then we can replace each unoriented edge $uv$ with two oriented edges $\vv{uv}$, $\vv{vu}$, called \emph{darts}. By a \emph{dart-set} $D(S)$ of $S\subseteq V$ we mean the set of all darts with initial vertex in the set $S$. Machimal degree of a graph is denoted by $\Delta(G)$. A graph is called \emph{$r$-regular}, if each its vertex is of degree $r$. \emph{Cubic} graph is a $3$-regular graph. A \emph{dangling edge} is an edge with only one endpoint in a vertex of the graph. A \emph{$k$-pole} is a graph containing $k$ dangling edges.
+Unless stated otherwise, we consider unoriented simple connected graphs $G=(V,E)$. Then we can replace each unoriented edge $uv$ with two oriented edges $\vv{uv}$, $\vv{vu}$, called \emph{darts}. By a \emph{dart-set} $D(S)$ of $S\subseteq V$ we mean the set of all darts with initial vertex in the set $S$. Finally, we define $D(G)$ as $D(V)$. A \emph{subgraph} of a graph is a graph $G'=(V', E')$ with $V'\subseteq V$ and $E'\subseteq E$. The maximal degree of a graph is denoted by $\Delta(G)$. A graph is called \emph{$r$-regular}, if each of its vertices is of degree $r$. A $3$-regular graph is also called \emph{cubic}. Due to an easy parity argument, each cubic graph has even order. A \emph{$k$-factor} is a $k$-regular subgraph of a graph on the same set of vertices. A \emph{dangling edge} is an edge with only one endpoint in a vertex of the graph. A \emph{$k$-pole} is a graph containing $k$ dangling edges.
 
-A \emph{girth} is a length of the shortest cycle in a graph. A set of cycles covering all vertices exactly once is called a \emph{$2$-factor}. The smallest possible number of cycles on odd vertices in a $2$-factor of a graph is called \emph{oddness}.
+For a graph $G$ and its edge $e$, a graph $G-e$ is obtained by removing the edge $e$ without removing its endvertices. For a cubic $G$, we can also suppress these two endvertices (which are of degree $2$) to obtain $G\sim e$. These operations are called \emph{edge deletion} and \emph{edge reduction}, respectively.
 
-A \emph{bridge} is an edge, whose removal disconnects the graph. Similarly, an \emph{edge-cut} is a set of edges disconnecting graph after its removal. An \emph{$uv$-edge-separator} is an edge-cut, for which $u$ and $v$ are in different components. An \emph{edge-connectivity} is a minimal number of edges in the edge-cut of the graph. The Menger's theorem \cite{menger} relates the size of the smallest $uv$-edge-separator to the largest number of disjoint $uv$-paths. We need its oriented version, so we state it below as Theorem \ref{th:oriented_menger}. A \emph{$2$-edge-connected graph} can be also called \emph{bridgeless}. For a \emph{cyclic edge-connectivity}, we also require the components to contain a cycle -- so they cannot be trees.
+A \emph{girth} is the length of the shortest cycle in a graph. Observe that a $2$-factor is a set of cycles covering all vertices exactly once. The smallest possible number of cycles on odd vertices in a $2$-factor of a cubic graph is called the \emph{oddness}. Since cubic graphs have even order, the oddness must be even.
+
+A \emph{bridge} is an edge whose removal disconnects the graph. Similarly, an \emph{edge-cut} is a set of edges disconnecting the graph after its removal. An \emph{edge-connectivity} is the minimal number of edges in the edge-cut of the graph, and a \emph{$k$-edge-connected} graph is a graph with the edge-connectivity not smaller than $k$. A \emph{$2$-edge-connected graph} can also be called \emph{bridgeless}. For a \emph{cyclic edge-connectivity}, we also require the components to contain a cycle – so they cannot be trees. An \emph{$uv$-edge-separator} is an edge-cut, for which $u$ and $v$ are in different components. Menger's theorem \cite{menger} relates the size of the smallest $uv$-edge-separator to the largest number of disjoint $uv$-paths. We need its oriented version, so we state it below as Theorem \ref{th:oriented_menger}.
 
 \begin{theorem}[Menger's theorem for oriented graphs] \emph{\cite[p. 149]{oriented_menger}}
-	Let $u, v$ be the vertices of an \emph{oriented} multigraph $G$. Then there echist $k$ edge-disjoint oriented $uv$-paths if and only if for any set $S\subseteq V(G)\setminus\{v\}$ containing $u$, there are at least $k$ oriented edges from $S$ to $V(G)\setminus S$. \label{th:oriented_menger}
+Let $u, v$ be the vertices of an \emph{oriented} multigraph $G$. Then there exists $k$ edge-disjoint oriented $uv$-paths if and only if for any set $S\subseteq V(G)\setminus{v}$ containing $u$, there are at least $k$ oriented edges from $S$ to $V(G)\setminus S$. \label{th:oriented_menger}
 \end{theorem}
 
-An \emph{edge-colouring} of the graph is an assignment from the set of edges $E$ to the set of colours $C$. The edge-colouring is \emph{proper}, if no adjacent edges share a colour. The minimal $k$, such that a graph has a proper edge-colouring using $k$ colours, is a \emph{chromatic index $\chi'(G)$}. The chromatic index is bounded by $\Delta(G)\leq\chi'(G)\leq\Delta(G)+1$ \cite{vizing}, and so can obtain only two values. Therefore, graphs with $\chi'(G)=\Delta(G)$ are called ``class one'', or ``colourable'' graphs, and the others are called ``class two'', or ``uncolourable'' graphs. A snark is an uncolourable cubic graph, which is cyclically $4$-edge-connected and has girth at least $5$.
+An \emph{edge-colouring} of a graph is an assignment from a set of edges $E$ to a set of colours $C$. The edge-colouring is \emph{proper} if no adjacent edges share a colour. The minimal $k$, such that a graph has a proper edge-colouring using $k$ colours, is a \emph{chromatic index $\chi'(G)$}. The chromatic index is bounded by $\Delta(G)\leq\chi'(G)\leq\Delta(G)+1$ \cite{vizing}, and so can attain only two values. Therefore, graphs with $\chi'(G)=\Delta(G)$ are called \emph{class one}, or \emph{colourable} graphs, and the others are called \emph{class two}, or \emph{uncolourable} graphs. A snark is an uncolourable cubic graph which is cyclically $4$-edge-connected and has girth at least $5$. Since cubic graphs having oddness $0$ are colourable, snarks should have oddness at least $2$. A snark is \emph{weak} if it has an edge $e$ such that $G\sim e$ is colourable. Otherwise, the snark is called \emph{strong}.
 
-A \emph{Petersen graph} (in Figure \ref{fig:petersen}) is the smallest snark. It is \emph{edge-transitive}, which means, that for any pair of edges $e_1, e_2$, there echists a bijection $\sigma\colon V\to V$ that preserves adjacency (i.e. $uv$ is an edge if and only if $\sigma(u)\sigma(v)$ is an edge) and $\sigma(e_1)=e_2$.
+An \emph{automorphism} of a graph is a mapping $\sigma\colon V\to V$ preserving adjacency (i.e. $uv$ is an edge if and only if $\sigma(u)\sigma(v)$ is an edge). Vertices $u_1, u_2$ are in the same \emph{vertex orbit} of a graph, if there exists an automorphism with $\sigma(u_1)=u_2$. Similarly, edges $u_1v_1, u_2v_2$ are in the same \emph{edge orbit} of a graph, if there exists an automorphism with $\sigma(u_1v_1)=u_2v_2$. Graphs with single vertex orbit are called \emph{vertex-transitive}, while the ones with single edge orbit are called \emph{edge-transitive}.
+
+The \emph{Petersen graph} (in Figure \ref{fig:petersen}) is the smallest snark. This graph is vertex-transitive and also edge-transitive.
+
+\begin{minipage}{.3\textwidth}
+\begin{figure}[H]
+\centering
+\input images/petersen.tex
+\caption{Petersen graph}
+\label{fig:petersen}
+\end{figure}
+\end{minipage}%
+%
+\begin{minipage}{.7\textwidth}
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.4\textwidth}
+\centering
+\input images/blanusa_I.tex
+\caption{first}
+\end{subfigure}
+\begin{subfigure}{0.4\textwidth}
+\centering
+\input images/blanusa_II.tex
+\caption{second}
+\end{subfigure}
+\caption{Blanuša snarks}
+\label{fig:blanusa}
+\end{figure}
+\end{minipage}
+
+\emph{Blanuša snarks} (in Figure \ref{fig:blanusa}) are the smallest snarks except the Petersen graph. They are a part of two infinite classes of snarks, called \emph{generalised Blanuša snarks}, constructed from three types of $4$-poles depicted in Figure \ref{fig:networks}. The \emph{$n$-th generalised Blanuša snark of type I $B_n^{(1)}$} is constructed from $n$ copies of the $4$-pole $B$ and one copy of the $4$-pole $I$ by identifying consecutive $a$ with $\overline{a}$ and $b$ with $\overline{b}$. Similarly, we obtain the \emph{$n$-th generalised Blanuša snark of type II $B_n^{(2)}$} from $n-1$ copies of the $4$-pole $B$ and one copy of the $4$-pole $X$. For both classes, the first graph in the class is the Petersen graph, and the second one is the corresponding Blanuša snark.
+
 \begin{figure}[h!]
-	\centering
-	\input images/petersen.tex
-	\caption{Petersen graph}
-	\label{fig:petersen}
+\centering
+\begin{subfigure}{0.3\textwidth}
+\centering
+\input images/blanusa_network_B.tex
+\caption{$B$}
+\end{subfigure}
+\begin{subfigure}{0.15\textwidth}
+\centering
+\input images/blanusa_network_I.tex
+\caption{$I$}
+\end{subfigure}
+\begin{subfigure}{0.3\textwidth}
+\centering
+\input images/blanusa_network_X.tex
+\caption{$X$}
+\end{subfigure}
+\caption{Three $4$-poles used to construct generalised Blanuša snarks}
+\label{fig:networks}
 \end{figure}
 
-\emph{Blanuša snarks} (in Figure \ref{fig:blanusa}) are the smallest snarks except the Petersen graph. They are a part of two infinite classes of snarks, called \emph{generalised Blanuša snarks}, constructed from three types of $4$-poles depicted in Figure \ref{fig:networks}. The \emph{$n$-th generalised Blanuša snark of type I $B_n^{(1)}$} is constructed from $n$ copies of the $4$-pole $B$ and one copy of the $4$-pole $I$ by identifying consecutive $a$ with $\overline{a}$ and $b$ with $\overline{b}$. Similarly, we obtain the \emph{$n$-th generalised Blanuša snark of type II $B_n^{(2)}$} from $n-1$ copies of the $4$-pole $B$ and one copy of the $4$-pole $X$. For both classes, the first graph in the class is the Petersen graph and the second one is the corresponding Blanuša snark.
-\begin{figure}[h!]
-	\begin{subfigure}{0.4\textwidth}
-	\centering
-	\input images/blanusa_I.tex
-	\caption{first}
-	\end{subfigure}
-	\begin{subfigure}{0.4\textwidth}
-	\centering
-	\input images/blanusa_II.tex
-	\caption{second}
-	\end{subfigure}
-	\caption{Blanuša snarks}
-	\label{fig:blanusa}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\begin{subfigure}{0.3\textwidth}
-	\centering
-	\input images/blanusa_network_B.tex
-	\caption{$B$}
-	\end{subfigure}
-	\begin{subfigure}{0.2\textwidth}
-	\centering
-	\input images/blanusa_network_I.tex
-	\caption{$I$}
-	\end{subfigure}
-	\begin{subfigure}{0.3\textwidth}
-	\centering
-	\input images/blanusa_network_X.tex
-	\caption{$X$}
-	\end{subfigure}
-	\caption{Three $4$-poles used to construct generalised Blanuša snarks}
-	\label{fig:networks}
-\end{figure}
+The \emph{cage problem} is a problem of finding the smallest $k$-regular graphs with girth at least $g$. Such graphs are called \emph{$(k,g)$-cages}. The lower bound on the order of a $(k, g)$-cage follows from the fact, that up to a distance $\lfloor\frac{g-1}{2}\rfloor$, the graph locally is a tree. This tree is called a \emph{Moore tree}, the corresponding bound is called a \emph{Moore bound} and graphs attaining this bound are called \emph{Moore graphs}.

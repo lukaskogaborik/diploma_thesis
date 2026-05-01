@@ -1,0 +1,29 @@
+\begin{tikzpicture}
+	\node (d0) [scale=0.3, fill, circle, draw] at (3.38, 3) {};
+    \node (d1) [scale=0.3, fill, circle, draw] at (2.07, 3) {};
+    \node (d2) [scale=0.3, fill, circle, draw] at (1.67, 4.24) {};
+    \node (d3) [scale=0.3, fill, circle, draw] at (2.73, 5) {};
+    \node (d4) [scale=0.3, fill, circle, draw] at (3.78, 4.24) {};
+    \node (d5) [scale=0.3, fill, circle, draw] at (3.12, 3.36) {};
+    \node (d6) [scale=0.3, fill, circle, draw] at (2.34, 3.36) {};
+    \node (d7) [scale=0.3, fill, circle, draw] at (2.09, 4.10) {};
+    \node (d8) [scale=0.3, fill, circle, draw] at (2.73, 4.56) {};
+    \node (d9) [scale=0.3, fill, circle, draw] at (3.36, 4.10) {};
+    
+    \path
+    (d0) edge (d1)
+    (d1) edge (d2)
+    (d2) edge (d3)
+    (d3) edge (d4)
+    (d4) edge (d0)
+    (d5) edge (d0)
+    (d1) edge (d6)
+    (d2) edge (d7)
+    (d3) edge (d8)
+    (d4) edge (d9)
+    (d5) edge (d7)
+    (d6) edge (d8)
+    (d7) edge (d9)
+    (d8) edge (d5)
+    (d9) edge (d6);
+\end{tikzpicture}

@@ -56,18 +56,22 @@
 
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
-\newtheorem*{claim}{Claim}
+\newtheorem{claim}{Claim}
 
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric}
 \usepackage{esvect}
 \usepackage{MnSymbol}
+\usepackage{multirow}
+\usepackage{float}
 % \usetikzlibrary{external}
 % \tikzexternalize[prefix=images/]
 
 \input constants.tex
 
 \DeclareMathOperator{\im}{Im}
+\renewcommand{\qedsymbol}{$\square$}
+\definecolor{FMFI}{rgb}{0.83, 0.27, 0.07}
 
 \begin{document}
 \frontmatter
@@ -263,6 +267,7 @@ Supervisor: & \mfskolitel \\
 % \bibliographystyle{plain}
 % \bibliography{literatura}
 \printbibliography
+\addcontentsline{toc}{chapter}{Bibliography} % rucne pridanie do obsahu
 
 %---koniec Referencii
 
@@ -273,5 +278,7 @@ Supervisor: & \mfskolitel \\
 %Nepovinná časť prílohy obsahuje materiály, ktoré neboli zaradené priamo  do textu. Každá príloha sa začína na novej strane.
 %Zoznam príloh je súčasťou obsahu.
 %
+
+\input apx_computational.tex
 
 \end{document}

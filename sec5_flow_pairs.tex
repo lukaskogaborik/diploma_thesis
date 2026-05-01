@@ -1,118 +1,68 @@
 \chapter{New results on $1/2$-flow-pairs} % chapter* je necislovana kapitola
-In this chapter % TODO
+\label{ch:flow_pairs}
+
+In this chapter we show that $1/2$-flow-pairs are worth further research, since they are in a close relation with several flow concepts. In the first part, we show their existence on snarks of oddness $2$ (and hence also on weak snarks), which form the majority of currently known snarks. We also show, that $1/2$-flow-pair implies a rich $7$-flow, what is an improvement of the upper bound for all snarks of oddness $2$.
+
 \section{Oddness $2$}
 
-One of the first results on snarks having $5$-flow was the class of graphs, that can be constructed from graph with a $4$-flow by removing an edge, see Theorem \ref{th:nearly_f4}. We generalise this approach and prove a similar lemma for flow-pairs. This lemma has some additional assumptions needed to finish the proof, so let us discuss, how they change the strength of the proved lemma. At first, the $4$-edge-connectivity is not a big deal, since we want to use this lemma mainly for snarks, which are $4$-edge-connected. The minimum degree $3$ makes no harm, since a vertex of degree $1$ cannot be in a bridgeless graph and a vertex of degree $2$ can be smoothed without influencing flow properties of graph.
+One of the first results on snarks admitting a NZ $5$-flow was the class of snarks with oddness two (see Theorem \ref{th:oddness_1D}). The main idea of the proof is adding a particular edge $uv$ such that the resulting graph has a NZ $4$-flow, and then finding an oriented $uv$-path, where the flow values are all positive, so we can get rid of the flow on the edge $uv$.
 
-The main issue of this lemma are the two forbidden special cases of flow values surrounding the new edge. Because of them, we cannot state that \emph{``each snark, that can be constructed from graph with a $0/1$-flow-pair by removing an edge, has a $1/2$-flow-pair''}. That are the sad news. The good news is that this lemma, similarly as for 1D flows, can be used to prove that snarks with oddness $2$ have a $1/2$-flow-pair.
-
-\begin{lemma}
-	Let $G$ be a cyclically $4$-edge-connected graph with minimum degree at least $3$. Consider a pair of vertices $u, v\in V(G)$ and a graph $G'$, which arises from $G$ by adding the edge $uv$.
-	% If $G'$ has a Chebyshev NZ $2$-flow $\varphi$ satisfying
-	If $G'$ has a $0/1$-flow-pair $\varphi$ such that for each $x\in\{u, v\}$, at least one of
-	\begin{enumerate}[label=(\roman*)]
-		\item degree of $x$ is at least $5$, or
-		\item some pair of darts surrounding $x$ is neither confluent nor contrafluent
-	\end{enumerate}
-	%\begin{enumerate}[label=(\alph*)]
-	%	\item flow values are integral pairs -- $\im(\varphi)\subseteq\mathbb Z\times\mathbb Z$,
-	%	\item $\varphi\left(\vv{uv}\right)=(0,1)$, and
-	%	\item these are not the flow configurations around $u$ and $v$ in $G'$, % TODO rewrite
-	%	\begin{figure}[h]
-	%		\centering
-	%		\input images/oddness_2_forbidden_config.tex
-	%		\label{fig:odd_2_forbid}
-	%	\end{figure}
-	%\end{enumerate}
-	holds, then $G$ has a $1/2$-flow-pair.
-\end{lemma}
-
-\begin{proof}
-	% \textbf{TODO reference -- graph with flow number $4$ has a NZ $(\mathbb Z_2\times\mathbb Z_2)$-flow}
-	
-	% Take an NZ $(\mathbb Z_2\times\mathbb Z_2)$-flow $\varphi=(\varphi_1, \varphi_2)$ of $G'$. Since for any non-zero element $x$ of $\mathbb Z_2\times\mathbb Z_2$ there exists an automorphism mapping $x$ to $(0, 1)$, we can WLOG assume that $\varphi\left(\vv{uv}\right)=(0,1)$.
-	
-	% \textbf{TODO reference -- graph with NZ $\mathbb Z_2$-flow has a NZ $2$-flow with equivalent modulo}
-	
-	% By the equivalence between integral and group flows, $G'$ has also a two-dimensional Chebyshev NZ flow $\varphi'=(\varphi'_1, \varphi'_2)$ such that $\varphi'_i\big(\vv d\big)\equiv\varphi_i\big(\vv d\big)\pmod{2}$ for any dart $\vv d\in D(G')$ and $i\in\{1, 2\}$. Hence, $\varphi'\left(\vv{uv}\right)\in\{(0,1), (0,-1)\}$. By changing signs of all flow values in $G'$ we get the other option, and therefore WLOG $\varphi'\left(\vv{uv}\right)=(0,1)$.
-	
-	We will show that WLOG $\varphi\left(\vv{uv}\right)=(0,1)$. Using Theorem \ref{th:finite_group_flows}, we can transform the $0/1$-flow-pair to the NZ $(\mathbb Z_2\times\mathbb Z_2)$-flow preserving modulo. Hence, also the confluent and contrafluent pairs are preserved. Then, since for any non-zero element $x$ of $\mathbb Z_2\times\mathbb Z_2$ there exists an automorphism mapping $x$ to $(0, 1)$, we can transform the flow with a mapping, that transforms the flow value on $uv$ to $(0,1)$. The flow conservation constraint clearly remains satisified, since in each automorphism, $0$ maps to $0$. Moreover, confluent and contrafluent pairs are still preserved, because each automorphism maps inverses to inverses. As a last step, we again use Theorem \ref{th:finite_group_flows} to transform this NZ $(\mathbb Z_2\times\mathbb Z_2)$-flow back to a $0/1$-flow-pair. However, we know that either $\varphi\left(\vv{uv}\right)$ is either $(0, 1)$ or $(0, -1)$. In the latter case, we can multiply the second coordinate of the whole flow by $-1$ and get a desired assumption -- WLOG $\varphi\left(\vv{uv}\right)=(0,1)$.
-	
-	Multiply the second coordinate of $\varphi$ by two to obtain $\varphi'=(\varphi'_1,\varphi'_2)$. Observe that the flow values of $\varphi'$ are feasible for a $1/2$-flow-pair and $\varphi'\left(\vv{uv}\right)=(0,2)$. The rest of the proof consists of finding two specific $uv$-paths in $G$. Any dart $d$ on this path should satisfy that $\varphi'\left(d\right) + (0,1)$ is still a feasible flow value of $1/2$-flow-pair, because then we can redirect the flow $(0,2)$ from edge $uv$ to these paths, and then delete the edge $uv$ without violation of the flow conservation constraint.
-	
-	Let $H$ be an oriented graph such that $V(H)=V(G)$ and
-		$$E(H)=\{\vv{xy}\mid xy\in E(G) \land (\varphi_1'(\vv{xy})\neq 0 \lor \varphi_2'(\vv{xy})=2)\}.$$
-	One can easily check that this corresponds to the set of darts $d$, for which $\varphi'\left(d\right) + (0,1)$ is still a feasible flow value. However, some edges in $G$ induce two darts in $H$. But if we take both of these for some edge $e$ and send $(0,1)$ through each of them, the resulting flow value on $e$ is the same as before the process. Hence, if we find two dart-disjoint $uv$-paths in $H$, the corresponding edges in $G'$ together with the edge $uv$ they form two cycles. After sending $(0,1)$ along both of these cycles, the flow value at the edge $uv$ becomes zero and all other flow values remain feasible, so we can remove the edge $uv$ and therefore obtain a $1/2$-flow-pair of $G$.
-	
-	From the oriented version of Menger's Theorem \ref{th:oriented_menger}, there exist two dart-disjoint $\vv{uv}$-paths in $H$ if and only if each $uv$-dart-separator of $H$ contains at least $2$ darts from the component containing $u$ to the component containing $v$. So it remains to prove this condition.
-	
-	% Consider any $uv$-dart-separator $\gamma$ of $H$. Denote the darts from the component containing $u$ to the component containing $v$ as $\gamma^+$. If there is a dart corresponding to the edge of $G$ having a flow value with non-zero first coordinate in $\gamma$, there must be at least one more such dart due to the generalised flow conservation constraint. For both of them, in $H$ there are both darts, hence we have at least two darts in $\gamma^+$. Otherwise, only flow values on the edges corresponding to the darts in $\gamma$ are $(0,\pm 2)$.
-	
-	Consider any $uv$-dart-separator $\gamma_{G'}$ of $G'$. From the generalised flow conservation constraint, $\sum_{d\in\gamma_{G'}} \varphi'\left(d\right)=(0,0)$. If there is a dart in $\gamma_{G'}$ having a flow value with non-zero first coordinate, there must be at least one more such dart due to the sum of flow values. For both of them there exists a corresponding dart in $H$. Hence we have at least two darts in the corresponding $uv$-dart-separator $\gamma_H$ of $H$. In the remaining case, only possible flow values on the darts of $\gamma_{G'}$ are $(0,\pm 2)$.
-	
-	Observe that the amount of darts with flow value $(0, 2)$ must be the same as of darts with flow value $(0, -2)$ due to the zero sum. This also argues that $|\gamma_{G'}|$ is an even number. One of the $(0,2)$ darts is the new $uv$ edge, and for the others there is a corresponding dart in $\gamma_H$. Hence, if $|\gamma_{G'}|>4$, there are at least three $(0,2)$ darts in $\gamma_{G'}$, and so at least two $(0,2)$ darts in $\gamma_H$. If $|\gamma_{G'}|=2$, there should be a vertex of degree $1$ in $G$, which contradicts the assumptions. So we are left with $|\gamma_{G'}|=4$.
-	
-	From $|\gamma_{G'}|=4$ we already know that $|\gamma_{G}|=3$. Since $G$ is cyclically $4$-edge-connected, at least one of the components separated by $\gamma_{G}$ must be an acyclic $3$-pole with $k$ inner vertices. Let $d_1\geq d_2\geq\cdots\geq d_k\geq 3$ be degrees of its inner vertices and $d_{k+1}=d_{k+2}=d_{k+3}=1$ be degrees of outer vertices of the dangling edges. We will use that this $3$-pole is a tree on $k+3$ vertices, and hence $E(G)=k+2$. Moreover, from the folklore handshaking lemma, we get
-	\begin{align*}
-		\sum_{i=1}^{k+3} d_i &= 2|E(G)|,\\
-		3+\sum_{i=1}^k d_i &= 2k+4,\\
-		3k=\sum_{i=1}^k 3\leq\sum_{i=1}^k d_i &= 2k+1,
-	\end{align*}
-	and so $k\leq 1$. This leads to the two forbidden configurations -- cut around $u$ and cut around $v$.
-	% Acyclic multipole with vertices of degrees $d_1, \dots, d_k$ has $\sum_{i=1}^k d_i - k$ hanging edges. Together with the fact that $d_i\geq 3$, it has at least $2k$ hanging edges. With the fact that $|\gamma'|=3$, we get $k=1$. This leads to two forbidden configurations -- cut around $u$ and cut around $v$.
-	
-%	\begin{itemize}
-%		\item If there is an edge of $G$ having a flow value with non-zero first coordinate in $\gamma$, there must be at least one more such edge due to the flow conservation constraint. For both of them, in $H$ there are both darts, hence we have at least two darts in $\gamma^+$.
-%		\item If $|\gamma|\geq 5$, the number of incoming $(0,2)$ edges must be equal to the number of outgoing $(0,2)$ edges. Therefore $|\gamma|\geq 6$, $|\gamma^+|\geq 3$, so there are at least two darts different from $\vv{uv}$. 
-%		\item If $|\gamma|\leq 4$, the size of cut $\gamma'$ in $H-\vv{uv}$ is equal to $3$. Since the underlying graph $G$ is cyclically $4$-edge connected, at least one of the components must be acyclic mutlipole. Acyclic multipole with vertices of degrees $d_1, \dots, d_k$ has $\sum_{i=1}^k d_i - k$ hanging edges. Together with the fact that $d_i\geq 3$, it has at least $2k$ hanging edges. With the fact that $|\gamma'|=3$, we get $k=1$. This leads to two forbidden configurations -- cut around $u$ and cut around $v$.
-%	\end{itemize}
-\end{proof}
-
-\begin{corollary}
-	Each snark $G$ of oddness $2$ has a $1/2$-flow-pair, and hence, $\Phi_2^\infty(G)\leq 5/2$.
-\end{corollary}
-\begin{proof}
-	Consider a $2$-factor $F$ with two odd cycles. Then construct an NZ $(\mathbb Z_2\times \mathbb Z_2)$-flow $\varphi$ on $G$ as follows -- assign $(1,1)$ to edges in $E\setminus F$ and on the $2$-factor $F$, alternate flow values $(0,1)$ and $(1,0)$. On both odd cycles, there is one conflicting vertex, where the sum of flow values is $(1,1)$. Join these two vertices by a new edge $e$ with an assigned flow value $(1,1)$. Thus, we have an NZ $(\mathbb Z_2\times \mathbb Z_2)$-flow $\varphi$ on $G+e$. It remains to realize, that from Theorem \ref{th:finite_group_flows}, both NZ $\mathbb Z_2$-flows can be adjusted to NZ $2$-flows, and since from the modulo condition their flow values cannot be zero simultaneously, this is a $0/1$-flow-pair. Now, from the previous lemma, we get that $G$ has a $1/2$-flow-pair.
-\end{proof}
-
-%\begin{corollary}
-%	Each snark with a hamiltonian path has a $1/2$-flow-pair.
-%\end{corollary}
-
-\section{Rich $7$-flow}
+We generalise this approach and prove a similar theorem for flow-pairs. However, in this setting, we need to find two dart-disjoint $uv$-paths before deleting the edge $uv$.
 
 \begin{theorem}
-	Let $G$ be a cubic graph with $1/2$-flow-pair. Then $G$ has a rich nowhere-zero $7$-flow.
+Each snark $G$ of oddness $2$ admits a $1/2$-flow-pair.
 \end{theorem}
 
 \begin{proof}
-%	Denote the $1/2$-flow-pair of $G$ as $\varphi=(\varphi_1, \varphi_2)$. First, we construct a rich nowhere-zero $13$-flow $\varphi'$, which does not attain values $1$ and $-1$. Then, we will adjust $\varphi'$ by ``dividing by two'' to $\varphi''$, which will be the sought rich nowhere-zero $7$-flow.
-	
-%	Let $\varphi'=9\varphi_1 + \varphi_2$. We see that
-%	\begin{itemize}
-%		\item if $\varphi_1=-1$, then $\varphi'\in\langle -9-3, -9+3\rangle$,
-%		\item if $\varphi_1=0$, then $\varphi'\in\{-3, -2, 2, 3\}$, and
-%		\item if $\varphi_1=1$, then $\varphi'\in\langle 9-3, 9+3\rangle$.
-%	\end{itemize}
-%	This shows that $\varphi'$ is a nowhere-zero $13$-flow not attaining $1$ and $-1$. One can also observe that $\varphi'$ is rich, but since we do not need it later and the reasoning is similar to the %subsequent proof that $\varphi''$ is rich, we ommit this proof.
+Consider a $2$-factor $F$ of $G$ with two odd cycles. Then construct an NZ $(\mathbb Z_2\times \mathbb Z_2)$-flow $\varphi$ on $G$ as follows – assign $(0,1)$ to edges in $E(G)\setminus F$ and, on the $2$-factor $F$, alternate flow values $(1,1)$ and $(1,0)$. Since all elements of $\mathbb Z_2\times \mathbb Z_2$ are involutions, assigning a value to an edge is equivalent to assigning the same value to both corresponding darts. On both odd cycles, there is one conflicting vertex, where the sum of flow values is $(0,1)$. Let these conflicting vertices be $u$ and $v$. Join these two vertices by a new edge $e$ with an assigned flow value $(1,1)$ and denote the new graph by $G'$. Thus, we have an NZ $(\mathbb Z_2\times \mathbb Z_2)$-flow $\varphi$ on $G'$. By Theorem \ref{th:finite_group_flows} we transform this NZ $(\mathbb Z_2\times\mathbb Z_2)$-flow to a $0/1$-flow-pair. However, we know that $\varphi\left(\vv{uv}\right)$ is either $(0, 1)$ or $(0, -1)$. In the latter case, we can multiply the second coordinate of the whole flow by $-1$. Therefore we can WLOG assume $\varphi\left(\vv{uv}\right)=(0,1)$.
 
-	Denote the $1/2$-flow-pair of $G$ as $\varphi=(\varphi_1, \varphi_2)$. First, we construct a circular nowhere-zero $7$-flow $\varphi'$. Then, we will adjust non-integral values of $\varphi'$ to $\varphi''$, which will be the sought rich nowhere-zero $7$-flow.
-	
-	Let $\varphi'\left(d\right)=9\varphi_1\left(d\right)/2 + \varphi_2\left(d\right)/2$. We see that
-	\begin{itemize}
-		\item if $\varphi_1\left(d\right)=-1$, then $\varphi'\left(d\right)\in\langle -9/2-3/2, -9/2+3/2\rangle$,
-		\item if $\varphi_1\left(d\right)=0$, then $\varphi'\left(d\right)\in\{-3/2, -2/2, 2/2, 3/2\}$, and
-		\item if $\varphi_1\left(d\right)=1$, then $\varphi'\left(d\right)\in\langle 9/2-3/2, 9/2+3/2\rangle$.
-	\end{itemize}
-	This shows that $\varphi'$ is a circular nowhere-zero $7$-flow.
+Multiply the second coordinate of $\varphi$ by two to obtain $\varphi'=(\varphi'_1,\varphi'_2)=(\varphi_1, 2\varphi_2)$. Observe that the flow values of $\varphi'$ are feasible for a $1/2$-flow-pair and $\varphi'\left(\vv{uv}\right)=(0,2)$. Call a dart $d$ \emph{good} if the value of $\varphi'\left(d\right) + (0,1)$ is still a feasible flow value of the $1/2$-flow-pair. Now, if we find two oriented cycles containing the dart $\vv{vu}$ such that all other darts in cycles are good, we can get rid of the flow on the edge $uv$ and then delete it. Clearly, we cannot take the same dart twice, but when we take two darts corresponding to the same edge in $G$ and send $(0,1)$ through each of them, the resulting flow value on $e$ is the same as before the process, so this is no issue. Now, we construct a graph $H$ of good darts, formally $V(H)=V(G)$ and
+$$E(H)=\{\vv{xy}\mid xy\in E(G) \land (\varphi_1'(\vv{xy})=\pm 1 \lor \varphi_2'(\vv{xy})=2)\}.$$
+Now we aim to find two dart-disjoint $uv$-paths in $H$. From Theorem \ref{th:oriented_menger}, there exist two dart-disjoint $\vv{uv}$-paths in $H$ if and only if each $uv$-dart-separator of $H$ contains at least $2$ darts from the component containing $u$ to the component containing $v$. So it remains to prove this condition.
 
-	By algorithm given in the proof of Proposition \ref{prop:chebyshev_normal_form}, we can construct an integral nowhere-zero $7$-flow $\varphi''$. Remind that following mentioned algorithm, no flow value exceeds the nearest integers. Hence,
-	\begin{itemize}
-		\item if $\varphi_1\left(d\right)=-1$, then $\varphi''\left(d\right)\in\langle -6, -3\rangle$,
-		\item if $\varphi_1\left(d\right)=0$, then $\varphi''\left(d\right)\in\{-2, -1, 1, 2\}$, and
-		\item if $\varphi_1\left(d\right)=1$, then $\varphi''\left(d\right)\in\langle 3, 6\rangle$.
-	\end{itemize}
-	However, this is the key observation to prove that $\varphi''$ is rich. For the sake of contradiction, assume a vertex $v$ in which flow values of $\varphi''$ in two outgoing darts are the same, denote it by $x$. Hence, the third flow value is $2x$, which is in absolute value greater. Hence, the two equal flow values must have the smallest absolute value. From Lemma \ref{lem:flow_pair_2_factor}, each vertex is surrounded by one dart with $\varphi_1\left(d\right)=0$ and two darts with $\varphi_1\left(d\right)=1$. But absolute values of $\varphi''\left(d\right)$ on darts with $\varphi_1\left(d\right)=0$ are strictly smaller than absolute values of $\varphi''\left(d\right)$ on darts with $\varphi_1\left(d\right)\neq 0$. Therefore, there cannot be two darts with the same smallest absolute value, a contradiction. In final, we get that $\varphi''$ is a rich NZ $7$-flow.
-	
-	% It remains to show that $\varphi'$ is rich. For the sake of contradiction, assume a vertex $v$ in which two flow values of $\varphi'$ are the same. WLOG consider the case when these flow values $x$ are positive and ingoing into $v$. It is clear that the other flow value is $2x$ and outgoing from $v$, and hence 
+Consider any $uv$-dart-separator $\gamma_{G'}$ of $G'$. From the generalised flow conservation, $\sum_{d\in\gamma_{G'}} \varphi'\left(d\right)=(0,0)$. If there is a dart in $\gamma_{G'}$ having a flow value with non-zero first coordinate, there must be at least one more such dart due to the sum of flow values. For both of them, there exists a corresponding dart in $H$. Hence, we have at least two darts in the corresponding $uv$-dart-separator $\gamma_H$ of $H$. In the remaining case, only possible flow values on the darts of $\gamma_{G'}$ are $(0,\pm 2)$.
+
+Observe that the number of darts with flow value $(0, 2)$ must be the same as the number of darts with flow value $(0, -2)$ due to the zero sum. This also argues that $|\gamma_{G'}|$ is an even number. One of the $(0,2)$ darts is the new $uv$ edge, and for the others, there is a corresponding dart in $\gamma_H$. Hence, if $|\gamma_{G'}|>4$, there are at least three $(0,2)$ darts in $\gamma_{G'}$, and so at least two $(0,2)$ darts in $\gamma_H$. If $|\gamma_{G'}|=2$, there is a bridge in $G$, which contradicts having any NZ flow. So we are left with $|\gamma_{G'}|=4$.
+
+From $|\gamma_{G'}|=4$ we already know that $|\gamma_{G}|=3$. Since $G$ as a snark is cyclically $4$-edge-connected, at least one of the components separated by $\gamma_{G}$ must be an acyclic $3$-pole with $k$ inner vertices. Let $k$ denote the number of its inner vertices of degree $3$. We will use the fact that this $3$-pole is a tree $T$ on $k+3$ vertices with $3$ leaves, and hence $|E(T)|=k+2$. Moreover, from the folklore handshaking lemma, we get
+\begin{equation*}
+ 3k+3 = \sum_{v\in V(T)} \deg(v) = 2|E(T)|=2k+4,
+\end{equation*}
+and so $k=1$. However, the only cases when the $uv$-dart-separator separates one vertex, are the separators around $u$ and $v$. Both of these separators contain a flow value with non-zero first coordinate, so this case is already solved.
 \end{proof}
+
+\begin{corollary}
+Each weak snark admits a $1/2$-flow-pair.
+\end{corollary}
+
+\section{Rich $7$-flow}
+
+Now we move to the relation of rich flows and flow-pairs. Up to now, the smallest upper bound proved for some infinite family of snarks is in the Proposition \ref{prop:weak_rich_flow}, which shows that if we can delete an edge, smooth the vertices of degree $2$ and obtain a colourable graph, the original graph has the rich flow number at most $9$. However, from the $1/2$-flow-pair, we are able to construct a rich NZ $7$-flow. This means, that for graphs with oddness $2$, we tightened the gap between the construction and the bound from $3$ to only $1$.
+
+\begin{theorem}
+Let $G$ be a cubic graph with $1/2$-flow-pair. Then $G$ has a rich nowhere-zero $7$-flow.
+\end{theorem}
+
+\begin{proof}
+Denote the $1/2$-flow-pair of $G$ as $\varphi=(\varphi_1, \varphi_2)$. First, we construct a circular nowhere-zero $7$-flow $\varphi'$. Then, we will adjust non-integral values of $\varphi'$ to $\varphi''$, which will be the sought rich nowhere-zero $7$-flow.
+
+Let $\varphi'\left(d\right)=9\varphi_1\left(d\right)/2 + \varphi_2\left(d\right)/2$. We see that
+\begin{align*}
+ \varphi_1\left(d\right)&=-1&&\Rightarrow\varphi'\left(d\right)\in[-6, -3],\\
+ \varphi_1\left(d\right)&=0&&\Rightarrow\varphi'\left(d\right)\in\{-3/2, -1, 1, 3/2\},\\
+ \varphi_1\left(d\right)&=1&&\Rightarrow\varphi'\left(d\right)\in[3, 6].
+\end{align*}
+This shows that $\varphi'$ is a circular nowhere-zero $7$-flow.
+
+From Proposition \ref{prop:chebyshev_normal_form}, we can construct an integral nowhere-zero $7$-flow $\varphi''$. Moreover, its flow values satisfy
+\begin{align*}
+ \varphi_1\left(d\right)&=-1&&\Rightarrow\varphi''\left(d\right)\in\{-6, -5, -4, -3\},\\
+ \varphi_1\left(d\right)&=0&&\Rightarrow\varphi''\left(d\right)\in\{-2, -1, 1, 2\},\\
+ \varphi_1\left(d\right)&=1&&\Rightarrow\varphi''\left(d\right)\in\{3, 4, 5, 6\}.
+\end{align*}
+This is the key observation to prove that $\varphi''$ is rich. For the sake of contradiction, assume a vertex $v$, in which two darts are either confluent or contrafluent. They cannot be confluent, since otherwise the third edge would have zero flow value. Hence, denote the common value on the contrafluent darts as $x$ and on the third dart, there is $-2x$, which is in absolute value greater. Hence, the two equal flow values must have the smallest absolute value. From Lemma \ref{lem:flow_pair_2_factor}, each vertex is surrounded by one dart with $\varphi_1\left(d\right)=0$ and two darts with $\varphi_1\left(d\right)=1$. But absolute values of $\varphi''\left(d\right)$ on darts with $\varphi_1\left(d\right)=0$ are strictly smaller than absolute values of $\varphi''\left(d\right)$ on darts with $\varphi_1\left(d\right)\neq 0$. Therefore, there cannot be two darts with the same smallest absolute value, a contradiction. Finally, we get that $\varphi''$ is a rich NZ $7$-flow.
+\end{proof}
+
+\begin{corollary}
+Each snark $G$ of oddness $2$ has a rich NZ $7$-flow.	
+\end{corollary}

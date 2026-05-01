@@ -1,37 +1,26 @@
 \chapter{Flows} % chapter* je necislovana kapitola
 
-In this chapter, we aim to introduce all concepts and current knowledge about flows and related graph theory terms. Mainly, we explain Chebyshev nowhere-zero flows, which
-have arisen in the recent preprint coauthored by the author \cite{preprint}. Moreover, we present a concept of two smaller flows as a sufficient condition for a graph to have
-a larger nowhere-zero flow and some Chebyshev flow, also stated in that paper.
-
-%Then we connect this idea to the theory of group connectivity of a graph established by Jaeger et al. \cite{group_connectivity} and $k$-closures and $k$-bases introduced by Seymour \cite{seymour} in the paper, where he proved the $6$-flow theorem.
+In this chapter, we aim to introduce all concepts and current knowledge about flows and related graph theory terms. Mainly, we explain \emph{Chebyshev nowhere-zero flows}, which
+have arisen in the recent preprint coauthored by the author \cite{preprint}. Moreover, we present a \emph{flow-pair} -- a sufficient condition for a graph to have
+some nowhere-zero flow and some Chebyshev flow, also stated in that paper. We also establish a notion of \emph{rich flows} not allowing same flow values on darts around a vertex.
 
 \section{Group flows}
 
-Unless stated otherwise, we consider only unoriented simple connected graphs $G=(V,E)$. Then we can replace each unoriented edge $uv$ with two oriented edges $\vv{uv}$, $\vv{vu}$, called \emph{darts}. By a \emph{dart-set} $D(S)$ of $S\subseteq V$ we mean the set of all darts with initial vertex in the set $S$. For groups, we use additive notation.
-
-Intuitively, flows represent dynamics of a fluid in some network. Consider that $x$ gallons of water from a vertex $u$ flows in a vertex $v$. When we are asking, how many gallons of water from a vertex $v$ flows in a vertex $u$, we should say $-x$. Hence, when working with flows, we naturally need inverses. Moreover, if the system is stable, the amount of water that flows in should be the same as the amount of water that drains out. This can be reformulated as ``(possibly negative) amounts of water flowing into a vertex sum up to zero''. This motivates the need of neutral element. So, we end up with a group. Therefore, the original definition of nowhere-zero flows uses group-theory setting.
+Intuitively, flows represent the dynamics of a fluid in some network. Consider that $x$ gallons of water from a vertex $u$ flow to a vertex $v$. When we ask, how many gallons of water from a vertex $v$ flow to a vertex $u$, we should say $-x$. Hence, when working with flows, we naturally need inverses. Moreover, if the system is stable, the amount of water that flows in should be the same as the amount of water that drains out. This can be reformulated as ``(possibly negative) amounts of water flowing into a vertex sum up to zero''. This motivates the need for a neutral element. So, we end up with a group. Therefore, the original definition of nowhere-zero flows uses a group-theory setting with additive notation.
 
 \begin{definition}
-    Let $G=(V, E)$ be a graph, $\mathcal A$ be an abelian group and $F\subseteq\mathcal A$ be the set of permitted flow values closed under inverse. An \emph{$(\mathcal A, F)$-flow} on $G$ is an assignment $\varphi\colon D(V)\to F$ of flow values to the darts satisfying
-    $\varphi(\vv{uv})=-\varphi(\vv{vu})$ for any dart $\vv{uv}\in D(V)$ and
-	\begin{equation}
-		\sum_{d\in D(\{v\})} \mkern-10mu\varphi\left(d\right) = 0 \label{eq:conservation}
-	\end{equation}
-    for each vertex $v$ of $G$. The equality \eqref{eq:conservation} is often referred to as the \textit{flow conservation constraint}. If $F=\mathcal A$, we use an abbreviation \emph{$\mathcal A$-flow}, and if $F=\mathcal A\setminus\{0\}$, we use the term \emph{nowhere-zero $\mathcal A$-flow} (or abbreviated NZ $\mathcal A$-flow).
-    % a \emph{nowhere-zero $k$-flow} (or NZ $k$-flow) is a $k$-flow such that no flow value is zero, i.e. $\varphi\left(\vv d\right)\neq 0$ for any $\vv d\in D(V)$.
+Let $G=(V, E)$ be a graph, $\mathcal A$ be an abelian group, and $F\subseteq\mathcal A$ be the set of permitted flow values closed under inverse. An \emph{$(\mathcal A, F)$-flow} on $G$ is an assignment $\varphi\colon D(G)\to F$ of flow values to the darts satisfying
+$\varphi(\vv{uv})=-\varphi(\vv{vu})$ for any dart $\vv{uv}\in D(V)$ and
+\begin{equation}
+\sum_{d\in D(\{v\})} \mkern-10mu\varphi\left(d\right) = 0 \label{eq:conservation}
+\end{equation}
+for each vertex $v$ of $G$. The equality \eqref{eq:conservation} is often referred to as the \emph{flow conservation constraint}. If $F=\mathcal A$, we use an abbreviation \emph{$\mathcal A$-flow}, and if $F=\mathcal A\setminus{0}$, we use the term \emph{nowhere-zero $\mathcal A$-flow} (or abbreviated \emph{NZ $\mathcal A$-flow}).
 \end{definition}
 
-Observe that the nowhere-zero condition is crucial, since otherwise, we are able to set all flow values to zero and it is a valid flow. The flow conservation constraint \eqref{eq:conservation} is generalisable to any subset of vertices. Hence, having a graph $G$ with a bridge $e$, the interpretation of the flow conservation constraint for one of the components of $G - e$ results in the following observation.
-
-\begin{claim}
-    If $e\in E$ is a bridge in $G$, then $\varphi(e)=0$ for any $(\mathcal A, F)$-flow $\varphi$. Moreover, $G$ admits no NZ flow.
-\end{claim}
-
-Therefore, nowhere-zero flows are researched only on bridgeless graphs. However, by an interesting argument, the number of NZ flows of some graph depends only on the order of the group.
+Observe that the nowhere-zero condition is crucial in avoiding trivial flows, since otherwise, we are able to set all flow values to zero, and it is a valid flow. The flow conservation constraint \eqref{eq:conservation} is generalisable to any subset of vertices. Hence, having a graph $G$ with a bridge $e$, the interpretation of the flow conservation constraint for one of the components of $G - e$ results in the fact, that $G$ admits no NZ flow. Therefore, nowhere-zero flows are researched only on bridgeless graphs. However, by an interesting argument, the number of NZ $\mathcal A$-flows of some graph depends only on the order of the group.
 
 \begin{theorem} \emph{\cite[p. 82]{tutte}}
-	Let $\mathcal A_1, \mathcal A_2$ be two abelian groups of same order and $G$ be a graph. Then $G$ admits an NZ $\mathcal A_1$-flow if and only if it admits an NZ $\mathcal A_2$-flow.
+Let $\mathcal A_1, \mathcal A_2$ be two finite abelian groups of the same order and $G$ be a graph. Then $G$ admits an NZ $\mathcal A_1$-flow if and only if it admits an NZ $\mathcal A_2$-flow.
 \end{theorem}
 
 \section{Integral flows}
@@ -39,292 +28,213 @@ Therefore, nowhere-zero flows are researched only on bridgeless graphs. However,
 Results in the previous section motivated, that the specific group is not relevant, relevant is only its order. We can use this to get out of the group setting and replace its elements by integers.
 
 \begin{definition}
-	Let $k\geq 2$ be a positive integer. A \emph{$k$-flow} is a $(\mathbb Z, \{0,\pm 1, \pm 2, \dots, \pm (k-1)\})$-flow. Moreover, a \emph{nowhere-zero $k$-flow} (or NZ $k$-flow) is a $(\mathbb Z, \{\pm 1, \pm 2, \dots, \pm (k-1)\})$-flow.
+Let $k\geq 2$ be a positive integer. A \emph{$k$-flow} is a $(\mathbb Z, \{0,\pm 1, \pm 2, \dots, \pm (k-1)\})$-flow. Moreover, a \emph{nowhere-zero $k$-flow} (or \emph{NZ $k$-flow}) is a $(\mathbb Z, \{\pm 1, \pm 2, \dots, \pm (k-1)\})$-flow.
 \end{definition}
 
-Since integers are well ordered, we also establish a notation $\varphi(e)$ for $e=uv\in E$, where $\varphi(e) = \max\{\varphi(\vv{uv}), \varphi(\vv{vu})\}$. Now, to see that this newly defined notion truly replaces the problem in group theory setting, we need the following theorem.
+Since integers are well-ordered, we also establish a notation $\varphi(e)$ for $e=uv\in E$, where $\varphi(e) = \max\{\varphi(\vv{uv}), \varphi(\vv{vu})\}$. Hence, we can also take a \emph{positive} flow -- for each edge, we take a dart with the positive flow value. Now, to see that this newly defined notion truly replaces the problem in the group theory setting, we need the following theorem.
 
 \begin{theorem} \emph{\cite[p. 207]{jaeger1979flows}}
-    There exists an NZ $k$-flow $\varphi$ on a bridgeless graph $G$ if and only if there also exists a NZ $\mathbb Z_k$-flow $\varphi'$ on $G$. Moreover, for each $\varphi'$ there exists $\varphi$ satisfying $\varphi\left(d\right)\equiv\varphi'\left(d\right)\pmod{k}$. \label{th:finite_group_flows}
+For each $\mathbb Z_k$-flow $\varphi$ there exists a $k$-flow $\varphi'$ satisfying $\varphi'\left(d\right)\equiv\varphi\left(d\right)\pmod{k}$. \label{th:finite_group_flows}
 \end{theorem}
 
-It is not hard to see that a graph with an NZ $k$-flow also admits an NZ $K$-flow for any $K>k$. Hence it makes sense to seek for the smallest $k$ such that a graph admits an NZ $k$-flow.
+\begin{remark}
+Since the preceding theorem preserves modulo, it also preserves zeroes, and hence the same holds for NZ flows.
+\end{remark}
+
+It is not hard to see that a graph with an NZ $k$-flow also admits an NZ $K$-flow for any $K>k$. Hence, it makes sense to seek the smallest $k$ such that a graph admits an NZ $k$-flow.
 
 \begin{definition}
-	Let $G$ be a bridgeless graph. A \emph{flow number of $G$} is
-	\begin{equation*}
-		\Phi(G) := \min\{k\mid\exists\text{NZ } k\text{-flow on }G\}.\label{eq:flow_number}
-	\end{equation*}
+Let $G$ be a bridgeless graph. A \emph{flow number of $G$} is
+\begin{equation*}
+\Phi(G) := \min\{k\mid\exists\text{NZ } k\text{-flow on }G\}.\label{eq:flow_number}
+\end{equation*}
 \end{definition}
 
-As for many problems in the graph theory, it is sufficient to explore the problem only on the smaller subset of graphs. There exists a folklore reduction of nowhere-zero flows to $3$-regular (or cubic) graphs.
-\begin{proposition}
-    There exists an NZ $k$-flow on any bridgeless graph if and only if there exists an NZ $k$-flow on any cubic bridgeless graph.\label{prop:reduction}
-\end{proposition}
-
-Hence, by considering only cubic graphs, we still solve the universal problem. Moreover, in terms of finding a counterexample to Tutte's $5$-flow conjecture, we can also avoid $3$-edge-colourable ones and limit research to the cubic graphs, that are not $3$-edge-colourable, as a corollary of the next proposition.
-
-\begin{proposition} \emph{\cite[pp. 160, 161]{diestel}}
-    A cubic graph has an NZ $4$-flow if and only if it is $3$-edge-colourable.
-\end{proposition}
-
-However, it turns out that this rate of complexity achieves only few values.
+However, it turns out that this rate of complexity achieves only a few values.
 
 \begin{theorem}[$6$-flow theorem] \emph{\cite[p. 133]{seymour}}
-    There exists an NZ $6$-flow on any bridgeless graph.\label{th:6_flow}
+There exists an NZ $6$-flow on any bridgeless graph.\label{th:6_flow}
 \end{theorem}
 
 Seymour constructed this NZ $6$-flow from two simpler flows from the fact, that if $a\in\{0,\pm 1\}$, $b\in\{0,\pm 1,\pm 2\}$ and not both $a, b$ are zero, then $3a+b\in\{\pm 1, \pm 2, \pm 3, \pm 4, \pm 5\}$.
 
 \begin{lemma} \emph{\cite[p. 132]{seymour}}
-    For any bridgeless graph, there exist a $(\mathbb Z\times\mathbb Z, (\{0,\pm 1\}\times\{0, \pm 1, \pm 2\})\setminus\{(0, 0)\})$-flow. \label{lem:2_flow_3_flow_seymour}
-    % $2$-flow $\varphi_2$ and a $3$-flow $\varphi_3$ such that for each edge $e$, at least one value from $\varphi_2(e), \varphi_3(e)$ is non-zero.
+For any bridgeless graph, there exist a $(\mathbb Z\times\mathbb Z, (\{0,\pm 1\}\times\{0, \pm 1, \pm 2\})\setminus\{(0, 0)\})$-flow. \label{lem:2_flow_3_flow_seymour}
 \end{lemma}
 
-On the other hand, there is no known graph with $\Phi(G)=6$, all known graphs have $\Phi(G)\leq 5$. Therefore, the conjecture about the NZ $5$-flow by Tutte still holds unresolved.
+On the other hand, there is no known graph with $\Phi(G)=6$, all known graphs have $\Phi(G)\leq 5$. Therefore, the following conjecture about the NZ $5$-flow by Tutte still holds unresolved.
 
 \begin{conjecture}[$5$-flow conjecture] \emph{\cite[p. 83]{tutte}}
-    There exists an NZ $5$-flow on any bridgeless graph.\label{conj:5_flow}
+There exists an NZ $5$-flow on any bridgeless graph.\label{conj:5_flow}
 \end{conjecture}
 
-This conjecture had been proved for various classes of snarks. Let us mention some of them. One of the first results concerns graphs, which can be easily adjusted to have an NZ $4$-flow.
+As for many problems in graph theory, it is sufficient to explore the problem only on a smaller subset of graphs. There exists a folklore reduction of nowhere-zero flows to cubic graphs.
+\begin{proposition}
+There exists an NZ $k$-flow on any bridgeless graph if and only if there exists an NZ $k$-flow on any cubic bridgeless graph.\label{prop:reduction}
+\end{proposition}
+
+So if there is a counterexample to Tutte's $5$-flow conjecture, there is also a cubic counterexample. Moreover, in terms of finding such counterexample, we can also avoid colourable ones and limit research to snarks, as a corollary of the next proposition.
+
+\begin{proposition} \emph{\cite[pp. 160, 161]{diestel}}
+A cubic graph has an NZ $4$-flow if and only if it is $3$-edge-colourable.
+\end{proposition}
+
+There are more constraints regarding the smallest counterexample of Conjecture \ref{conj:5_flow}. One of the first results concerns snarks of small oddness.
 
 \begin{theorem} \emph{\cite[p. 89]{nearly_f4}}
-	Let $G$ be a bridgeless graph. If we can add an edge $e$ such that $\Phi(G+e)=4$, then $\Phi(G-e)\leq 5$.
+Let $G$ be a snark of oddness $2$. Then, $\Phi(G)\leq 5$. \label{th:oddness_1D}
 \end{theorem}
 
-This theorem has two intersting corollaries. In nowhere-zero flows, deletion of an edge can be modeled by an addition of a parallel edge (since sending the same non-zero value through these parallel edges acts same as if there is no flow), which leads to the first of the two corollaries.
-\begin{corollary}
-	Let $G$ be a bridgeless graph and $e\in V(G)$ its edge such that $\Phi(G-e) = 4$. Then, $\Phi(G)\leq 5$.
-\end{corollary}
-
-The second one concerns snarks with small oddness.
-\begin{corollary}
-	Let $G$ be a snark of oddness $2$. Then, $\Phi(G)\leq 5$.
-\end{corollary}
-However, as for now there is a stronger result.
-
-\begin{theorem} \emph{\cite[p. 364]{oddness_4}}
-	All cyclically $6$-edge-connected snarks of oddness $4$ have an NZ $5$-flow. \label{th:nearly_f4}
-\end{theorem}
-
-Moreover, we know some properties of the potential smallest counterexample to the $5$-flow conjecture.
+As a consequence, since each weak snark has oddness $2$ (which is considered to be folklore), this also covers all weak snarks. Hence, any counterexample to $5$-flow conjecture must be a strong snark of oddness at least $4$. Moreover, we know some properties of the potential smallest counterexample to the $5$-flow conjecture.
 
 \begin{theorem} \emph{\cite[p. 142]{min_ctrex_cyc_edge_con}}
-	If the $5$-flow conjecture is false, the smallest counterexample is a cyclically $6$-edge-connected snark.
+If the $5$-flow conjecture is false, the smallest counterexample is a cyclically $6$-edge-connected snark.
 \end{theorem}
 
-\begin{theorem} \emph{\cite[p. 386]{min_ctrex_girth}}
-	If the $5$-flow conjecture is false, the smallest counterexample has girth $11$.
+\begin{theorem} \emph{\cite[p. 364]{oddness_4}}
+If the $5$-flow conjecture is false, the smallest counterexample has oddness at least $6$.
+\end{theorem}
+
+\begin{theorem} \emph{\cite[p. 15]{min_ctrex_girth}}
+If the $5$-flow conjecture is false, the smallest counterexample has girth at least $12$.
 \end{theorem}
 
 \section{Chebyshev flows}
 
-There were some attempts to generalise nowhere-zero flows to real numbers \cite{goddyn} and more dimensions. By generalising integer nowhere-zero flows to real numbers, researchers found out, that restricting only zero flow value is not sufficient, since any flow consisting of non-zero flow values can be made ``smaller'' and then, the notion of flow number disappears. Therefore, we need to determine a larger interval of real values forbidden as flow values, and hence, one-dimensional real nowhere-zero flows are allowed to use flow values from the interval $[1,r-1]$. The first attempts of generalisation real flows to more dimensions tried to pick only vectors with the Euclidean norm from the mentioned interval $[1,r-1]$. It worked, but it did not have such nice properties, as we would expect. However, changing a norm turned out to be a good idea \cite{preprint}, so we will consider only Chebyshev multidimensional nowhere-zero flows. 
+There were some attempts to generalise nowhere-zero flows to real numbers and more dimensions. By generalising integer nowhere-zero flows to real numbers, researchers found out that restricting only zero flow value is not sufficient, since any flow consisting of non-zero flow values can be made ``smaller'' and then, the notion of flow number disappears. Therefore, we need to require an interval of forbidden flow values, and hence, one-dimensional real nowhere-zero flows are allowed to use flow values from $[1-r,r-1]\setminus(-1, 1)$ \cite{goddyn_fractional_nzf}. The generalisation of real flows to more dimensions \cite{euclidean_flows} picks only vectors with the Euclidean norm from the mentioned interval $[1,r-1]$. It works, but it did not have such nice properties, as we would expect. However, changing a norm turned out to be a good idea \cite{preprint}, so we will consider only Chebyshev multidimensional nowhere-zero flows.
 
 \begin{definition}
-	A \emph{$d$-dimensional open ball of radius $r$ with respect to Chebyshev norm} is
-	\begin{equation*}
-		B_d^\infty(r) = \left\{x\in\mathbb R^d~\middle\mid~\|x\|_\infty < r\right\}
-	\end{equation*}
-	and a \emph{$d$-dimensional closed ball of radius $r$ with respect to Chebyshev norm} is
-	\begin{equation*}
-		\overline{B_d^\infty}(r) = \left\{x\in\mathbb R^d~\middle\mid~\|x\|_\infty \leq r\right\}.
-	\end{equation*}
+A \emph{$d$-dimensional open and closed balls of radii $r$ with respect to Chebyshev norm} are
+\begin{align*}
+B_d^\infty(r) &= \left\{x\in\mathbb R^d~\middle|~\|x\|_\infty < r\right\}\text{, and}\\
+\overline{B_d^\infty}(r) &= \left\{x\in\mathbb R^d~\middle|~\|x\|_\infty \leq r\right\},
+\end{align*}
+respectively.
 \end{definition}
 
 \begin{definition}
-    Let $d$ be a positive integer and $r\geq 2$ be a real constant. A \emph{$d$-dimensional Chebyshev nowhere-zero $r$-flow} (or $d$D ChNZ $r$-flow) is a $\left(\mathbb R^d, \overline{B_d^\infty}(r-1)\setminus B_d^\infty(1)\right)$-flow.
+Let $d$ be a positive integer and $r\geq 2$ be a real constant. A \emph{$d$-dimensional Chebyshev nowhere-zero $r$-flow} (or \emph{$d$D ChNZ $r$-flow}) is a $\left(\mathbb R^d, \overline{B_d^\infty}(r-1)\setminus B_d^\infty(1)\right)$-flow.
 \end{definition}
 
-Now, for $e=uv$, the notation $\varphi(e)$ denotes the lexicografically larger one from $\varphi\left(\vv{uv}\right), \varphi\left(\vv{vu}\right)$. The flow number can be defined in a similar way to integral nowhere-zero flows. The only problem is, that the set of real numbers does not need to contain a minimal element, so formally correct definition would use infimum instead of minimum. However, the infimum of the flow number candidates is always feasible \cite[p. 101]{euclidean_flows}, so we can define the flow number straightforward with minimum.
+Now, for $e=uv$, the notation $\varphi(e)$ denotes the lexicografically larger one from $\varphi\left(\vv{uv}\right), \varphi\left(\vv{vu}\right)$. The flow number can be defined in a similar way to integral nowhere-zero flows. The only problem is that if we take a set $\{r\mid\exists d\text{D ChNZ }r\text{-flow on }G\}$, it may not have a minimum, so a formally correct definition would use infimum instead of minimum. However, the infimum of the flow number candidates is always feasible \cite[p. 101]{euclidean_flows}, so we can define the flow number straightforwardly with the minimum.
 
 \begin{definition}
-	Let $G$ be a bridgeless graph and $d$ be a positive integer. A \emph{$d$-dimensional Chebyshev flow number} of $G$ is
-	\begin{equation*}
-		\Phi_d^\infty(G) := \min\{r\mid\exists d\text{D ChNZ }r\text{-flow on }G\}.
-	\end{equation*}
+Let $G$ be a bridgeless graph and $d$ be a positive integer. A \emph{$d$-dimensional Chebyshev flow number} of $G$ is
+\begin{equation*}
+\Phi_d^\infty(G) := \min\{r\mid\exists d\text{D ChNZ }r\text{-flow on }G\}.
+\end{equation*}
 \end{definition}
 
-One special case worth mentioning is a \emph{circular NZ flow} -- a $1$D ChNZ flow. In one dimension, it does not matter, which norm is used to constraint permitted flow values, so we can ommit it from the naming. Similarly, $\Phi_1^\infty$ can be replaced by $\Phi_1$.
+One special case worth mentioning is a \emph{circular NZ flow} – a $1$D ChNZ flow. In one dimension, it does not matter, which norm is used to constrain permitted flow values, so we can omit it from the naming. Similarly, $\Phi_1^\infty$ can be replaced by $\Phi_1$. As we show in the following proposition, there is a relation between circular flow number and integral flow number of a graph – namely $\Phi(G) = \lceil \Phi_1(G)\rceil$.
 
-It has been proved \cite[p. 4]{preprint} that Chebyshev flow number is always rational. Moreover, the authors found some normal form of Chebyshev flows, as stated in the following proposition. Since we need the explicit construction in the latter proofs, we will give a sketch of this proof.
+It has been proved \cite[p. 4]{preprint} that the Chebyshev flow number is always rational. Moreover, the authors found a normal form of Chebyshev flows, as stated in the following proposition.% Since we need the explicit construction in the latter proofs, we will give a sketch of this proof.
 
 \begin{proposition} \emph{\cite[p. 6]{preprint}}
-	Let $G$ be a graph with $\Phi_d^\infty(G)=p/q$ for some positive integers $p, q$. Then, there exists a $d$D ChNZ $p/q$-flow such that every coordinate of every flow value is an integral multiple of $1/q$. \label{prop:chebyshev_normal_form}
+Let $G$ be a graph with a ChNZ $p/q$-flow $\varphi$ for some positive integers $p, q$. Then, there exists a $d$D ChNZ $p/q$-flow such that every coordinate of every flow value is one of the two nearest integral multiples of $1/q$ to the corresponding coordinate in $\varphi$. \label{prop:chebyshev_normal_form}
 \end{proposition}
 
-\begin{proof}[Sketch of the proof]
-	If there is a dart with flow value, whose $i^{\text{th}}$ coordinate is not an integral multiple of $1/q$, we can find an oriented cycle $\vv{\mathcal{C}}$ containing that dart with a property that no dart of this cycle has flow value with $i^{\text{th}}$, which is an integral multiple of $1/q$. Otherwise, in some vertex, all but one dart have $i^{\text{th}}$ coordinate of flow value, which is a multiple of $1/q$, and hence the sum of values on all darts (which is zero by the flow conservation constraint) is not a multiple of $1/q$, a contradiction. Now consider for each $d\in\vv{\mathcal{C}}$ the maximal possible adjustment of $\varphi\left(d\right)_i$ such that its absolute value remains in the range $\left[1,p/q-1\right]$. Formally,
-	\begin{equation*}
-		\delta\left(d\right) = \begin{cases}
-			p/q-1-\varphi\left(d\right)_i & \text{if } \varphi\left(d\right)_i > 0,\\
-			-1-\varphi\left(d\right)_i & \text{if } \varphi\left(d\right)_i < 0.
-		\end{cases}
-	\end{equation*}
-	Clearly $\delta\left(d\right) > 0$ for any dart on cycle $\vv{\mathcal C}$, since both $p/q-1, -1$ are integral multiples of $1/q$. Thus, by sending $\delta_{\text{min}}=\min_{d\in\vv{\mathcal{C}}} \delta\left(d\right)$ along $i^{\text{th}}$ coordinate, the number of conflicting coordinates decreases. By repeating this process, we get to a desired normal form.
-\end{proof}
+%\begin{proof}[Sketch of the proof]
+% If there is a dart with flow value, whose $i^{\text{th}}$ coordinate is not an integral multiple of $1/q$, we can find an oriented cycle $\vv{\mathcal{C}}$ containing that dart with a property that no dart of this cycle has flow value with $i^{\text{th}}$, which is an integral multiple of $1/q$. Otherwise, in some vertex, all but one dart have $i^{\text{th}}$ coordinate of flow value, which is a multiple of $1/q$, and hence the sum of values on all darts (which is zero by the flow conservation constraint) is not a multiple of $1/q$, a contradiction. Now consider for each $d\in\vv{\mathcal{C}}$ the maximal possible adjustment of $\varphi\left(d\right)_i$ such that its absolute value remains in the range $\left[1,p/q-1\right]$. Formally,
+% \begin{equation*}
+%  \delta\left(d\right) = \begin{cases}
+%   p/q-1-\varphi\left(d\right)_i & \text{if } \varphi\left(d\right)_i > 0,\
+%   -1-\varphi\left(d\right)i & \text{if } \varphi\left(d\right)i < 0.
+%  \end{cases}
+% \end{equation*}
+% Clearly $\delta\left(d\right) > 0$ for any dart on cycle $\vv{\mathcal C}$, since both $p/q-1, -1$ are integral multiples of $1/q$. Thus, by sending $\delta{\text{min}}=\min{d\in\vv{\mathcal{C}}} \delta\left(d\right)$ along $i^{\text{th}}$ coordinate, the number of conflicting coordinates decreases. By repeating this process, we get to a desired normal form.
+%\end{proof}
 
-\begin{remark}
-	Note that no coordinate exceeds the nearest multiples of $1/q$ during the whole process. As a consequence, when we have a circular NZ $r$-flow, we can construct an integral NZ $\lceil r\rceil$-flow, where each flow value $x$ is adjusted to either $\lfloor x\rfloor$ or $\lceil x\rceil$.
-\end{remark}
-
-Now we recall the Seymour's flows from Lemma \ref{lem:2_flow_3_flow_seymour} -- a $2$-flow and a $3$-flow with a property, that no edge has both flow values equal to zero. By simply using the value of the $2$-flow as the first coordinate and the value of the $3$-flow as the second coordinate, we get a Chebyshev nowhere-zero flow. Moreover, this flow gives us a nice bound on the Chebyshev flow number.
+Now we recall Seymour's flows from Lemma \ref{lem:2_flow_3_flow_seymour} – a $2$-flow and a $3$-flow with a property that no edge has both flow values equal to zero. By simply using the value of the $2$-flow as the first coordinate and the value of the $3$-flow as the second coordinate, we get a Chebyshev nowhere-zero flow. Moreover, this flow gives us a nice bound on the Chebyshev flow number.
 
 \begin{proposition} \emph{\cite[p. 8]{preprint}}
-    Each bridgeless graph has a 2D ChNZ $3$-flow and hence, $\Phi_2^\infty(G)\leq 3$.\label{prop:chebyshev_upper_seymour}
+Each bridgeless graph admits a 2D ChNZ $3$-flow.\label{prop:chebyshev_upper_seymour}
 \end{proposition}
 
-Again, no graph with $\Phi_2^\infty(G)=3$ is known. Futhermore, there is no known graph with $\Phi_2^\infty(G)>5/2$. Therefore, the next conjecture is interesting to examine.
+Again, no graph with $\Phi_2^\infty(G)=3$ is known. Furthermore, there is no known graph with $\Phi_2^\infty(G)>5/2$. Therefore, the next conjecture is interesting to examine.
 
 \begin{conjecture} \emph{\cite[p. 22]{preprint}}
-    Each bridgeless graph has a 2D ChNZ $5/2$-flow and hence, $\Phi_2^\infty(G)\leq 5/2$.\label{conj:chebyshev_upper_seymour}
+Each bridgeless graph admits a 2D ChNZ $5/2$-flow.\label{conj:chebyshev_upper_seymour}
 \end{conjecture}
 
-And similarly as for integral flows, the problem can be reduced to cubic graphs and then to snarks, since $3$-edge-colourable cubic graphs have small flow number.
+Similarly to integral flows, the problem can be reduced to cubic graphs and then to snarks, since colourable cubic graphs have a small flow number.
 
 \begin{theorem} \emph{\cite[p. 14]{preprint}}
-    A cubic graph has a 2D ChNZ $2$-flow if and only if it is $3$-edge-colourable.\label{th:2_chnzf_iff_3_col}
+A cubic graph has a 2D ChNZ $2$-flow if and only if it is $3$-edge-colourable.\label{th:2_chnzf_iff_3_col}
 \end{theorem}
 
 \section{Flow-pairs}
 
-As an NZ $6$-flow and a 2D ChNZ $3$-flow can be constructed from two simpler flows, something similar can be made for smaller flow numbers \cite[p. 19]{preprint}. We start by defining this structure called \emph{flow-pair} and then we show that it satisfies desired properties.
-%However, the existence of two simpler flows is only a sufficient condition to the existence of the original flow, the condition is not necessary. Hence we will use a term \emph{$p/q$-flow-pair} instead of a former \emph{$(p,q)$-circulation decomposition}.
+As an NZ $6$-flow and a 2D ChNZ $3$-flow can be constructed from two simpler flows, something similar can be made for smaller flow numbers with two other flows \cite[p. 19]{preprint}.
 
 \begin{definition}
-        Let $p\leq q$ be the positive integers. A \emph{$p/q$-flow-pair} of a graph $G$ is a $(\mathbb Z\times\mathbb Z, F)$-flow with
-        \begin{equation*}
-        	F = \{(0, f)\mid q\leq|f|\leq p+q\}\cup\{(1,f)\mid |f|\leq p+q\}.
-        \end{equation*}
+Let $p\leq q$ be positive integers. A \emph{$p/q$-flow-pair} of a graph $G$ is a $(\mathbb Z\times\mathbb Z, F)$-flow with
+\begin{equation*}
+F = \{(0, f)\mid q\leq|f|\leq p+q\}\cup\{(1,f)\mid |f|\leq p+q\}.
+\end{equation*}
 \end{definition}
 
 \begin{remark}
-	The structure in the Lemma \ref{lem:2_flow_3_flow_seymour} is a $1/1$-flow-pair.
+The structure in Lemma \ref{lem:2_flow_3_flow_seymour} is a $1/1$-flow-pair.
 \end{remark}
 
-One possible ambiguity of this definition is, that since $p/q$ is written as a fraction, the $2/6$-flow-pair can be mixed up with the $1/3$-flow-pair. However, their existence is equivalent (by a similar argument to Proposition \ref{prop:chebyshev_normal_form}), so we can WLOG assume that $p,q$ are relatively prime.
-%However, this is not a bug, this is a feature, since we can WLOG assume $p,q$ relatively prime.
+One possible ambiguity of this definition is that since $p/q$ is written as a fraction, the $2/6$-flow-pair can be mixed up with the $1/3$-flow-pair. However, their existence is equivalent (by a similar argument to Proposition \ref{prop:chebyshev_normal_form}), so we can WLOG assume that $p,q$ are relatively prime.
 
 \begin{lemma} \emph{\cite[p. 19]{preprint}}
 A bridgeless graph $G$ with a $dp/dq$-flow-pair also has a $p/q$-flow-pair and vice versa.
 \end{lemma}
 
-We mentioned, that the $p/q$-flow-pair is a sufficient condition to the existence of some nowhere-zero flows. Those flows are somehow related with the value $p/q$ and that is the reason to write it as a fraction in the definition of the flow-pair.
+We mentioned that the $p/q$-flow-pair is a sufficient condition for the existence of some nowhere-zero flows. Those flows are somehow related to the value $p/q$, and that is the reason to write it as a fraction in the definition of the flow-pair.
 
 \begin{proposition} \emph{\cite[pp. 19, 20]{preprint}}
-    Consider a bridgeless graph $G$ with a $p/q$-flow-pair $\varphi=(\varphi_1, \varphi_2)$. Then, there are a 2D ChNZ $(2+p/q)$-flow $\varphi'=(\varphi_1, \varphi_2/q)$ and a circular NZ $(4+2p/q)$-flow $\varphi''=(2+p/q)\varphi_1+\varphi_2/q$ on $G$.\label{prop:nzf_from_flow_pair}
+Consider a bridgeless graph $G$ with a $p/q$-flow-pair $\varphi=(\varphi_1, \varphi_2)$. Then, there are a 2D ChNZ $(2+p/q)$-flow $\varphi'=(\varphi_1, \varphi_2/q)$ and a circular NZ $(4+2p/q)$-flow $\varphi''=(2+p/q)\varphi_1+\varphi_2/q$ on $G$.\label{prop:nzf_from_flow_pair}
 \end{proposition}
 
-Note that if there is a graph, which is a counterexample to Tutte's 5-flow conjecture, it should not have the $1/2$-flow-pair. Hence it would be interesting to classify graphs with $1/2$-flow-pair. By a computer, it was checked that this flow-pair exists for snarks up to $34$ vertices, so it looks like the $1/2$-flow-pair exists always.
+Note that if there is a graph, which is a counterexample to Tutte's 5-flow conjecture, it should not have the $1/2$-flow-pair. Hence, it would be interesting to classify graphs with $1/2$-flow-pair. By a computer, it was checked that this flow-pair exists for snarks up to $34$ vertices, so it looks like the $1/2$-flow-pair exists always.
 
 \begin{conjecture} \emph{\cite[p. 22]{preprint}}
-    Each bridgeless graph has a $1/2$-flow-pair.
+Each bridgeless graph has a $1/2$-flow-pair.
 \end{conjecture}
 
-In general, edges with non-zero value of the first coordinate form a set of cycles in $G$. In cubic graphs, these cycles should be clearly vertex-disjoint. Moreover, if considering other than trivial $1/1$-flow-pair, these cycles together cover all vertices.
+In general, edges with a non-zero value of the first coordinate form a set of cycles in $G$. In cubic graphs, these cycles should be clearly vertex-disjoint. Moreover, if considering other than the trivial $1/1$-flow-pair, these cycles together cover all vertices.
 
 \begin{lemma} \emph{\cite[p. 21]{preprint}}
-	Let $p<q$ be positive integers. Consider a cubic graph $G$ with a $p/q$-flow-pair $\varphi=(\varphi_1, \varphi_2)$. Then the set of edges $e$ with a property $\varphi_1(e)\neq 0$ is a $2$-factor of $G$.\label{lem:flow_pair_2_factor}
+Let $p<q$ be positive integers. Consider a cubic graph $G$ with a $p/q$-flow-pair $\varphi=(\varphi_1, \varphi_2)$. Then the set of edges $e$ with a property $\varphi_1(e)\neq 0$ is a $2$-factor of $G$.\label{lem:flow_pair_2_factor}
 \end{lemma}
 
 \section{Rich flows}
 
-Recently, in the research of flows, there was an idea to forbid two darts surrounding a vertex to have flow values with the same absolute value \cites{rich_flows, rich_flows_not_cubic}. The motivation is, that if we have two darts from the same vertex with $\varphi\left(d_1\right)+\varphi\left(d_2\right)=0$ (a so-called \emph{confluent pair}), we can split the considered vertex of degree $d$ to vertices of degrees $2$ and $d-2$ without influencing flow properties of a graph. On the other hand, a so-called \emph{contrafluent pair}, where $\varphi\left(d_1\right)=\varphi\left(d_2\right)$, requires that in the set of flow values contains some element and its double. However, we cannot find such a pair in a $p/q$-flow-pair with $p<q$.
+Recently, in the research of flows, there was an idea to forbid two darts surrounding a vertex to have flow values with the same absolute value \cite{rich_flows, rich_flows_not_cubic}. The motivation is that if we have two darts from the same vertex with $\varphi\left(d_1\right)+\varphi\left(d_2\right)=0$ (a so-called \emph{confluent pair}), we can split the considered vertex of the degree $d$ to vertices of degrees $2$ and $d-2$ without influencing flow properties of a graph. On the other hand, a so-called \emph{contrafluent pair}, where $\varphi\left(d_1\right)=\varphi\left(d_2\right)$, requires that the set of flow values contains some element and its double. However, we cannot find such a pair in a $p/q$-flow-pair with $p<q$.
 
 \begin{definition}
-	An NZ $k$-flow $\varphi$ is called \emph{rich} if for each pair of adjacent darts $d_1$, $d_2$ it holds that $\left|\varphi\left(d_1\right)\right|\neq\left|\varphi\left(d_2\right)\right|$.
+An NZ $k$-flow $\varphi$ is called \emph{rich} if for each pair of adjacent darts $d_1$, $d_2$ it holds that $\left|\varphi\left(d_1\right)\right|\neq\left|\varphi\left(d_2\right)\right|$.
 \end{definition}
 
-We already know that graph admits a nowhere-zero flow if and only if it is bridgeless. In the theory of rich flows, there is one more obstruction -- a $2$-edge-cut with the common vertex. It can be shown that these two conditions are also sufficient for a graph to have the rich nowhere-zero flow. We call such graphs \emph{rich flow admissible}. 
+We already know that a graph admits a nowhere-zero flow if and only if it is bridgeless. In the theory of rich flows, there is one more obstruction – a $2$-edge-cut with the common vertex. It can be shown that these two conditions are also sufficient for a graph to have the rich nowhere-zero flow. We call such graphs \emph{rich flow admissible}.
 
 \begin{definition}
-	Let $G$ be a rich flow admissible graph. A \emph{rich flow number of $G$} is
-	\begin{equation*}
-		R(G) := \min\{k\mid\exists\text{rich NZ } k\text{-flow on }G\}.
-	\end{equation*}
+Let $G$ be a rich flow admissible graph. A \emph{rich flow number of $G$} is
+\begin{equation*}
+R(G) := \min\{k\mid\exists\text{rich NZ } k\text{-flow on }G\}.
+\end{equation*}
 \end{definition}
 
-Unlike group, integral, circular and multidimensional flows, rich flows and bounding the rich flow number cannot be reduced to the class of cubic graphs. The simple reason is, that if the maximal degree in $G$ is $\Delta$, we clearly need at least $\Delta$ different flow values and therefore $R(G)\geq\Delta+1$. On the other hand, there is an upper bound depending only on $\Delta$ \cite{rich_flows_not_cubic}.
+Unlike group, integral, circular, and multidimensional flows, rich flows and bounding the rich flow number cannot be reduced to the class of cubic graphs. The simple reason is that we clearly need at least $\Delta(G)$ different flow values and therefore $R(G)\geq\Delta(G)+1$. On the other hand, there is a linear upper bound depending only on $\Delta(G)$ \cite{rich_flows_not_cubic}.
 
-However, if we limit our view only on the cubic graphs, we get similar results as for casual nowhere-zero flows. Again, it suffices to examine the snarks.
+However, if we limit our view only to the cubic graphs, we get similar results as for integral nowhere-zero flows. Again, it suffices to examine the snarks.
 \begin{proposition} \emph{\cite[p. 31]{rich_flows}}
-    A cubic graph has a rich NZ $5$-flow if and only if it is $3$-edge-colourable.
+A cubic graph has a rich NZ $5$-flow if and only if it is $3$-edge-colourable.
 \end{proposition}
 
-And from the computational results, the gap between the colourable and uncolourable cubic graphs is again equal to $1$.
+And from the computational results, the gap between the colourable and uncolourable cubic graphs is again equal to $1$. However, with the proven results, we are still far from the desired value $6$.
 \begin{conjecture} \emph{\cite[p. 33]{rich_flows}}
-	There exists a rich NZ $6$-flow on any bridgeless cubic graph.
+There exists a rich NZ $6$-flow on any bridgeless cubic graph.
 \end{conjecture}
 
-However, with the proved results, we are still far from the desired value $6$.
 \begin{proposition} \emph{\cite[p. 33]{rich_flows}}
-	There exists a rich NZ $11$-flow on any bridgeless cubic graph.
+There exists a rich NZ $11$-flow on any bridgeless cubic graph.
 \end{proposition}
 
-For snarks that are ``nearly colourable'', we can reduce a size of the gap from $5$ to $3$.
+For snarks that are ``nearly colourable'', we have a result similar to Corollary \ref{th:oddness_1D} –- we can reduce the size of the gap from $5$ to $3$.
 \begin{proposition} \emph{\cite[p. 40]{rich_flows}}
-	Let $G$ be a snark and $e\in V(G)$ its edge such that $R(G-e) = 5$. Then, $R(G)\leq 9$.
+Let $G$ be a weak snark. Then, $R(G)\leq 9$. \label{prop:weak_rich_flow}
 \end{proposition}
-
-\iffalse
-\section{Closures and bases}
-
-As mentioned in the previous chapter, we would like to prove the existence of a $1/2$-flow-pair for some classes of graphs. To achieve this, we need to delve deeper into the Seymour's paper. There he introduced a closure of a subgraph, which add circuits, that are almost completely in it.
-
-\begin{definition} \cite[p. 132]{seymour}
-	Let $G=(V,E)$ be a graph and $S\subseteq E$ its edge subset. A \emph{$k$-closure} $\langle S\rangle_{k}$ of $S$ is a mimimal $T$ such that $S\subseteq T\subseteq E$ and for any circuit $\mathcal C\not\subseteq T$ of $G$, the size of $\mathcal C\cap T^c$ is strictly greater than $k$.
-\end{definition}
-
-Moreover, interesting are subgraphs, which are sufficient to generate the original graph using this closure operator.
-
-\begin{definition} \cite[p. 7]{group_connectivity_enumeration}
-	Let $G=(V,E)$ be a graph. Then $B\subseteq E$ is a \emph{$k$-base} of $G$ if $\langle B\rangle_k = E$.
-\end{definition}
-
-Note that if we have a spanning forest $S$ and an edge $e=uv\not\in S$, then there is a $uv$-path $P\subseteq S$ and hence, $P\cup\{e\}$ is a circuit with only one missing edge in $S$. This shows that the classification of $1$-bases is relatively easy. 
-
-\begin{claim}
-	Any spanning forest of a graph is its inclusion-minimal $1$-base.
-\end{claim}
-
-The reason, why Seymour defined this terminology, is that outside a $k$-base, we can forbid zero flow values.
-
-\begin{theorem} \emph{\cite[p. 132]{seymour}}
-	Let $B\subseteq E$ be a $k$-base of $G=(V,E)$. Then $G$ has a $(k+1)$-flow, which is non-zero on all edges of $E\setminus B$.\label{th:non_zero_outside_base}
-\end{theorem}
-
-Considering $2$-closures, Seymour proved we can find a generalised cycle (i.e. a union of disjoint circuits), which is a $2$-base.
-
-\begin{lemma} \emph{\cite[p. 133]{seymour}}
-	For any $3$-connected graph $G$ there exists its even-factor which is also its $2$-base.\label{lem:cycle_2_base}
-\end{lemma}
-
-Now we could explain, how is this Lemma relevant in the finding a $1/1$-flow-pair. Denote by $\mathcal C$ the generalised cycle of $G$, which is its $2$-base. From Theorem \ref{th:non_zero_outside_base}, we have a $3$-flow, which is non-zero on $E\setminus\mathcal C$. On the other hand, we can easily construct a $2$-flow, that has flow values equal to $1$ exactly on the edges of $\mathcal C$. Together, these flows form a $1/1$-flow-pair.
-
-There is also another approach to construct a $1/1$-flow-pair, which is based on the next lemma. 
-
-\begin{lemma} \emph{\cite[p. 134]{seymour}}
-	For any $3$-connected cubic graph $G=(V,E)$ there exists a vertex partition $E=B_1\cupdot B_2$ such that $B_1,B_2$ are its $1$- and $2$-bases, respectively.
-\end{lemma}
-
-Now, by Theorem \label{th:non_zero_outside_base} we have a $2$-flow, which is non-zero on $E\setminus B_1 = B_2$ and a $3$-flow, which is non-zero on $E\setminus B_2=B_1$. Again, this is obviously a $1/1$-flow-pair on $G$.
-
-\section{Group connectivity}
-
-In the graph colourings theory, there is a concept called \emph{list colouring} or \emph{choosability}, where each vertex has a list of $k$ permitted colours and we ask, whether we can choose one of them for each vertex such that the colouring is proper, independently on the choice of lists. A similar idea was explored in the field of nowhere-zero flows, known as a \emph{group connectivity}. Although the original definition does not state straightforward analogue to the choosability in nowhere-zero flows, it is proved to be one of its equivalent definitions. So for comfortability, we use that one as a definition.
-
-\begin{definition} \cite[p. 167]{group_connectivity}
-	Let $G$ be a graph and $\mathcal A$ be an Abelian group. We say that $G$ is \emph{$\mathcal A$-connected}, if for any function of forbidden values $F\colon D(V)\to \mathcal A$ assigning additive inverses to inverse darts, there exists an $\mathcal A$-flow $\varphi$ satisfying $\varphi\left(\vv d\right)\neq F\left(\vv d\right)$ for any dart $\vv d\in D(V)$.
-\end{definition}
-
-As an interesting consequence, the Theorem \ref{th:non_zero_outside_base} about the $(k+1)$-flow, which is non-zero out of a $k$-base, can be generalised in the choosability manner.
-
-\begin{theorem} \emph{\cite[p. 168]{group_connectivity}}
-	Let $n$ be a positive integer, $B\subset E$ be a $k$-base of $G=(V,E)$ and $F\colon D(V)\to \mathcal P(\mathcal A)$ be a function of forbidden values assigning sets of additive inverses to inverse darts with a property that $\left|F\left(\vv d\right)\right| < n/k$ for each dart $\vv d\in D(V)$. Then there exists an $n$-flow $\varphi$ satisfying $\varphi\left(\vv d\right)\notin F\left(\vv d\right)$.
-\end{theorem}
-
-Note that if we would like to directly derive $1/2$-flow-pair from this Theorem, we can take a $2$-base of $G$, which is a cycle (guaranteed by Lemma \ref{lem:cycle_2_base}). Then, this cycle obviously forms a $2$-flow and considering a $4$-flow, we are able to forbid strictly less than $4/2 = 2$ flow values on any edge outside this cycle. Hence this approach is not straightforwardly applicable, since we would need a non-strict inequality instead of the strict one.
-
-% TODO discuss generalisation of the second Seymour's lemma
-\fi
