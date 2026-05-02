@@ -1,6 +1,8 @@
 \chapter{Chebyshev flow number of snarks} % chapter* je necislovana kapitola
+\label{ch:bounds}
 
-% TODO introducing paragraph
+In this chapter, we prove a lower bound on the Chebyshev flow number of snarks depending on its order, with $5$ examples achieving the equality. Although we do not find an infinite class of snarks proving this bound is tight,  we construct a class of graphs, where only two vertices are of degree different from $3$, where their flow number corresponds to the bound for the order of this graph. Hence, these graphs might be good starting points for constructing the infinite class attaining the bound. Moreover, we show that these graphs can be adjusted to snarks with a smaller flow number, and hence, a snark with arbitrarily small flow number exists. Finally we construct a Chebyshev flow on generalised Blanuša snarks.
+
 \section{Lower bound}
 
 In one-dimensional flows, there has been proved a lower bound on the flow number of a snark 
@@ -78,9 +80,7 @@ depending on the number $n$ of its vertices \cite[p. 14]{cycle_rank}. Moreover, 
     \renewcommand{\qedsymbol}{$\square$}
 \end{proof}
 
-% So now, not only for the Petersen graph $P$, but also for both Blanuša snarks $B_1, B_2$ this bound is tight, since there are a ChNZ $5/2$-flow on $P$ and ChNZ $9/4$-flows on $B_1, B_2$. Hence, $\Phi_2^\infty(P)=5/2$ and $\Phi_2^\infty(B_1)=\Phi_2^\infty(B_2)=9/4$.
-
-For now, we are aware of seven snarks meeting this bound – Petersen graph $P$ with the flow number $5/2$, both Blanuša snarks $B_2^{(1)}, B_2^{(2)}$ with flow numbers $9/4$ (which is a part of more general result in Proposition \ref{prop:blanusa_chnzf}) and $4$ out of $6$ snarks on $20$ vertices with flow numbers also equal to $9/4$. From computational results, we know that no other example of tightness exists on at most $26$ vertices \cite[p. 17]{preprint}. Although we do not know about any other snark meeting this bound, we think the bound is not so far from reality, since we found an infinite class of graphs that are nearly cubic and meet this bound.
+For now, we are aware of five snarks meeting this bound – Petersen graph $P$ with the flow number $5/2$, both Blanuša snarks $B_2^{(1)}, B_2^{(2)}$ with flow numbers $9/4$ (which is a part of more general result in Proposition \ref{prop:blanusa_chnzf}) and $2$ out of $6$ snarks on $20$ vertices with flow numbers also equal to $9/4$. From computational results, we know that no other example of tightness exists on at most $26$ vertices \cite[p. 17]{preprint}. Although we do not know about any other snark meeting this bound, we think the bound is not so far from reality, since we found an infinite class of graphs that are nearly cubic and meet this bound.
 
 \section{Petersen book graphs}
 

@@ -1,27 +1,30 @@
 \chapter{Cubic multipoles generator} % chapter* je necislovana kapitola
+\label{ch:polehunter}
 
-\textbf{TODO representation of a pole as graph with degree one vertices}
-
-In this chapter, we generalise the idea of \texttt{snarkhunter} generating cubic graphs to cubic multipoles, and so describe an algorithm called \texttt{polehunter}. We also reimplement the \texttt{snarkhunter} for girths $3$, $4$, and $5$, obtaining a significantly faster generator in comparision to \texttt{multigraph} and \texttt{pregraphs} \cite{pregraph}. Despite not implemented, we build a background for generation of cubic graphs of minimal girths $6$ and $7$.
+In this chapter, we generalise the idea of \texttt{snarkhunter} generating cubic graphs to cubic multipoles, and so describe an algorithm called \texttt{polehunter}. We also reimplement the \texttt{snarkhunter} for girths $3$, $4$, and $5$, obtaining a significantly faster generator in comparison to \texttt{multigraph} and \texttt{pregraphs} \cite{pregraph}. Despite not implemented, we built a background for the generation of cubic graphs of minimal girths $6$ and $7$.
 
 \section{Existing generators}
 
 Program \texttt{multigraph} generalises the idea of \texttt{minibaum} generating $r$-regular graphs of girth at least $g$. This algorithm generates all graphs having a given degree sequence with the given minimum girth $g$. Hence, the generation of cubic multipoles of a prescribed girth is a special case of this algorithm. However, there is currently no paper concerning this generator.
 
-Program \texttt{pregraphs} \cite{pregraph} is a generator based on \texttt{snarkhunter}. It generates graphs with loops, dangling edges, and multiple edges. There are also several options for filtering graphs on edge-colourability, bipartiteness, or existence of a 2-factor consisting only of $4$-cycles. This generator does not have an option to prescribe minimal girth. Therefore, it can be used only for generating all cubic multipoles.
+Program \texttt{pregraphs} \cite{pregraph} is a generator based on \texttt{snarkhunter}. It generates graphs with loops, dangling edges, and multiple edges. There are also several options for filtering graphs on edge-colourability, bipartiteness, or the existence of a 2-factor consisting only of $4$-cycles. This generator does not have an option to prescribe minimal girth. Therefore, it can be used only for generating all cubic multipoles.
 
 \section{Polehunter}
+
+We implemented an algorithm called \texttt{polehunter} (since it is a reimplementation of \texttt{snarkhunter}). In comparison to \texttt{multigraph}, since \texttt{snarkhunter} is much faster than \texttt{minibaum}, we expect that the \texttt{polehunter} will be, too. On the other hand, \texttt{pregraphs} is also based on \texttt{snarkhunter}, but it uses it as a blackbox, and then only adjusts the resulting cubic graphs by adding dangling edges. More formally, the \texttt{pregraphs} is only the reduction of the poles generation problem to the cubic graphs generation problem managed by unchanged \texttt{snarkhunter}. Our approach reimplements the core of the \texttt{snarkhunter}. Although we do not expect \texttt{polehunter} to be significantly faster than \texttt{pregraphs} (since their ancestor is the same), we see the added value in the possibility of a minimal girth prescription.
+
+The representation of a cubic pole in \texttt{polehunter} is by a graph with vertices of degrees $1$ and $3$, where the edges containing a vertex of degree one are exactly the dangling ones.
 
 First, we need to restate the definitions of reducible edges and prime graphs.
 
 \begin{definition}
-    Let $P$ be a cubic pole and $e$ its edge. We say that $e$ is \emph{reducible}, if the pole $P\sim e$ is simple and connected. Cubic pole is called \emph{prime}, if it has no reducible edge.
+    Let $P$ be a cubic pole and $e$ its edge. We say that $e$ is \emph{reducible}, if the pole $P\sim e$ is simple and connected. A cubic pole is called \emph{prime} if it has no reducible edge.
 \end{definition}
 
-The characterisation of the prime poles is then very similar to the one concerning cubic graphs.
+Then the characterisation of the prime poles is very similar to the one concerning cubic graphs.
 
 \begin{lemma}
-    Cubic pole is prime if and only if each of its edges is either a bridge, a dangling edge, or contained in a diamond.
+    A cubic pole is prime if and only if each of its edges is either a bridge, a dangling edge, or contained in a diamond.
 \end{lemma}
 
 \begin{lemma}
@@ -36,9 +39,9 @@ The characterisation of the prime poles is then very similar to the one concerni
 \begin{proof}
     It suffices to prove that for a given prime pole $P$ of order greater than $2$ different from $K_4$, we can apply a reduction (a), (b), (c), or (d), and the resulting pole $P'$ remains prime.
     
-    First assume that $P$ has a dangling edge $uv$, where $v$ has the degree one. When this dangling edge is a part of a diamond, then we can reduce that diamond with (b), since the edge created by the reduction is again a dangling edge, and the other edges of the pole remain irreducible. Otherwise, the neighbours of $u$ different from $v$ are not adjacent, so we can reduce the dangling edge with (a), since the edge created by the reduction is simple and is either a bridge or is a part of two different diamonds, and hence cannot be reduced.
+    First, assume that $P$ has a dangling edge $uv$, where $v$ has degree one. When this dangling edge is a part of a diamond, then we can reduce that diamond with (b), since the edge created by the reduction is again a dangling edge, and the other edges of the pole remain irreducible. Otherwise, the neighbours of $u$ different from $v$ are not adjacent, so we can reduce the dangling edge with (a), since the edge created by the reduction is simple and is either a bridge or is a part of two different diamonds, and hence cannot be reduced.
     
-    Now we are left with a prime pole having no dangling edges, and therefore we can apply a Lemma \ref{lem:prime_graphs_construction}, and so this pole can be constructed from a $K_4$ using (b), (c) and (d).
+    Now we are left with a prime pole having no dangling edges, and therefore we can apply Lemma \ref{lem:prime_graphs_construction}, and so this pole can be constructed from a $K_4$ using (b), (c), and (d).
 \end{proof}
 
 Therefore, the main load of the reimplementation of \texttt{snarkhunter} to \texttt{polehunter} for minimal girths $3, 4,$ and $5$ should be in the new extension operation (a).
@@ -46,7 +49,7 @@ Therefore, the main load of the reimplementation of \texttt{snarkhunter} to \tex
 Now we can move to the minimal girths $6$ and $7$. Here, the original algorithm of \texttt{snarkhunter} uses an $\mathcal H$ extension instead of three levels of edge extension. However, in a cubic pole, it is often not  possible to find an $\mathcal H$ connected to four edges of the pole. Hence, we need to relax the definition of the good edge such that some dangling edges of $\mathcal H$ can remain dangling.
 
 \begin{definition}
-    An edge $uv$ of a cubic pole $P$ is called \emph{good}, if both its endvertices are of degree $3$ and the graph $P-\{u, v\}$ contains at most one component of order greater than $1$.
+    An edge $uv$ of a cubic pole $P$ is called \emph{good} if both its endvertices are of degree $3$ and the graph $P-\{u, v\}$ contains at most one component of order greater than $1$.
 \end{definition}
 
 Now it remains to show that considering this definition of $\mathcal H$ enforces that each cubic pole has a reducible $\mathcal H$.
@@ -63,14 +66,14 @@ Now it remains to show that considering this definition of $\mathcal H$ enforces
     \end{figure}
     As already proved in a similar lemma for cubic graphs \cite[p. 263]{snarkhunter_better}, extensions (b'), (c'), (d') do not decrease the number of good edges. The same is true for extension (a'), since the good edges not affected by the extension remain good, and when the affected edge is good, the two newly introduced edges are both good.
     
-    Therefore, it suffices to prove that some small poles as base cases have a good edge. However, $K_2$ and the tripod as the smallest cubic poles do not have a good edge. Hence, we need to check larger poles.
+    Therefore, it suffices to prove that some small poles as base cases have a good edge. However, $K_2$ and the tripod, as the smallest cubic poles, do not have a good edge. Hence, we need to check larger poles.
     \begin{figure}[h!]\centering
         \input images/good_edges_poles.tex
         \caption{Base cases with good edges emphasised}
         \label{fig:good_edges_base_cases}
     \end{figure}
     
-    Three poles depicted in Figure \ref{fig:good_edges_base_cases} have at least one good edge and all edges of the $K_4$ are good. Moreover, one can easily check that all cubic poles on $6$ and $8$ vertices can be reduced to at least one of these base poles. 
+    Three poles depicted in Figure \ref{fig:good_edges_base_cases} have at least one good edge, and all edges of the $K_4$ are good. Moreover, one can easily check that all cubic poles on $6$ and $8$ vertices can be reduced to at least one of these base poles. 
 \end{proof}
 
 By using this adjusted definition of a good edge in a proof of Theorem \ref{th:reducible_H}, its variant for cubic poles is a straightforward result.
@@ -86,11 +89,11 @@ We expected that the main load of the reimplementation lies in these parts:
     \item a support for dangling edges -- defining a list of vertex degrees, changing the iteration range from $3$ to $\deg v$ where applicable, including base case of $K_2$,
     \item implementation of the dangling edge extension,
     \item reimplementation of the $\mathcal H$ operation such that some of the four affected edges may not exist.
-\end{enumerate} 
+\end{enumerate}
 
-The first two items from the previous list should be sufficient for the \texttt{polehunter} to generate all cubic poles of minimal girths $3, 4$, and $5$. However, after reimplementing the first two items, not all poles were generated by \texttt{polehunter}. The issue is in implicit assumptions about cubic graphs used in \texttt{snarkhunter}, not holding for cubic multipoles. Majority of them concern the invariants \textbf{TODO ref}.
+The first two items from the previous list should be sufficient for the \texttt{polehunter} to generate all cubic poles of minimal girths $3, 4$, and $5$. However, after reimplementing the first two items, not all poles were generated by \texttt{polehunter}. The issue is in implicit assumptions about cubic graphs used in \texttt{snarkhunter}, not holding for cubic multipoles. The majority of them concern the invariants from Figure \ref{fig:snarkhunter_invariants}.
 
-\paragraph{Example 1.} In this code snippet, there is a calculation of the invariant $x_1$ (the number of vertices in distance at most $2$ from the edge) in a look-ahead before the extension of the corresponding edge. The graph $G$ before the extension contains no triangles. The \texttt{edge\_pair[0]}, \texttt{edge\_pair[1]} are the vertex indices of the first edge involved in the extension, similarly \texttt{edge\_pair[2]}, \texttt{edge\_pair[3]} are the vertex indices of the second edge. The idea of this computation is as follows -- if the local structure surrounding the new edge is a tree, due to the regularity, there are $2$ endpoints of the edge in the distance zero, the four neighbours in a distance one are \texttt{edge\_pair[0]}, \texttt{edge\_pair[1]}, \texttt{edge\_pair[2]}, \texttt{edge\_pair[3]}, and each of them has exactly $2$ other neighbours, which are pairwise different, so we get the desired $x_1 = 2 + 2\cdot 2 + 2\cdot 2\cdot 2 = 14$. However, there might be overlays in neighbourhoods of these two edges. These are subtracted from the value $14$.
+\paragraph{Example 1.} In this code snippet, there is a calculation of the invariant $x_1$ (the number of vertices in distance at most $2$ from the edge) in a look-ahead before the extension of the corresponding edge. The graph $G$ before the extension contains no triangles. The \texttt{edge\_pair[0]}, \texttt{edge\_pair[1]} are the vertex indices of the first edge involved in the extension, similarly \texttt{edge\_pair[2]}, \texttt{edge\_pair[3]} are the vertex indices of the second edge. The idea of this computation is as follows -- if the local structure surrounding the new edge is a tree, due to the regularity, there are $2$ endpoints of the edge in the distance zero, the four neighbours in a distance one are \texttt{edge\_pair[0]}, \texttt{edge\_pair[1]}, \texttt{edge\_pair[2]}, \texttt{edge\_pair[3]}, and each of them has exactly $2$ other neighbours, which are pairwise different, so we get the desired $x_1 = 2 + 2\cdot 2 + 2\cdot 2\cdot 2 = 14$. However, there might be overlays in the neighbourhoods of these two edges. These are subtracted from the value $14$.
 
 \begin{lstlisting}[language=C]
 edge[0] = edge_pair[0]; edge[1] = edge_pair[1];
@@ -109,9 +112,9 @@ int colour_inserted = 2 + POPC(neighbours0) + POPC(neighbours1)
                         - POPC(neighbours0 & neighbours1);
 \end{lstlisting}
 
-\paragraph{Example 2.} Another place, where the implicit consequencies of the invariants play a role, is a generation of eligible edges. For an illustration, consider a setting in which we know that the current graph $G$ contains exactly two squares sharing an edge and we expect that the extended graph has a girth strictly greater than $4$ -- so we need to get rid of these two squares and also do not create another one.
+\paragraph{Example 2.} Another place, where the implicit consequencies of the invariants play a role, is a the generation of eligible edgepairs. For an illustration, consider a setting in which we know that the current graph $G$ contains exactly two squares sharing an edge, and we expect that the extended graph has a girth strictly greater than $4$ -- so we need to get rid of these two squares and also do not create another one.
 
-In general, there are two options doing this. The first one takes an edge from each square (the choice is unique since there is only one such pair not creating a square), the second one takes the mutual edge of squares and one edge from the rest of the graph.
+In general, there are two options for doing this. The first one takes an edge from each square (the choice is unique since there is only one such pair not creating a square), the second one takes the mutual edge of squares and one edge from the rest of the graph.
 
 \begin{figure}[h!]
     \centering
@@ -131,17 +134,21 @@ For cubic graphs, this is correct. Observe that in the right diagram of Figure \
     \label{fig:polehunter_neighbours}
 \end{figure}
 
-From the right diagram in Figure \ref{fig:polehunter_neighbours}, $x_1(e') \leq 12$. There is an inequality since some of the emphasised vertices might coincide. However, only possible collisions are when some dashed edge coincides with some dotted edge. Moreover, when there are more than two such coinciding pairs, we can check it results in a cycle of length $3$ or $4$. Therefore, at most two dotted edges coincide with some dashed edges. Since the figure is symmetric by an $x$-axis, we can WLOG additionally assume that at most one of the dotted edges ``above'' the edge $e'$ is coincident with a dashed edge. But then, $x_1(e) \geq 14 - 1 = 13 > 12 \geq x_1(e')$, so the extension of $e$ cannot be canonical.
+From the right diagram in Figure \ref{fig:polehunter_neighbours}, $x_1(e') \leq 12$. There is an inequality since some of the emphasised vertices might coincide. However, only possible collisions are when some dashed edge coincides with some dotted edge. Moreover, when there are more than two such coinciding pairs, we can check that it results in a cycle of length $3$ or $4$. Therefore, at most two dotted edges coincide with some dashed edges. Since the figure is symmetric by an $x$-axis, we can WLOG additionally assume that at most one of the dotted edges ``above'' the edge $e'$ is coincident with a dashed edge. But then, $x_1(e) \geq 14 - 1 = 13 > 12 \geq x_1(e')$, so the extension of $e$ cannot be canonical.
 
-However, the reasoining above fails for cubic multipoles, since some of the vertices in the diagram may have a degree one instead of three.
+However, the reasoning above fails for cubic multipoles, since some of the vertices in the diagram may have degree one instead of three.
+
+Finally, we are moving to the reimplementation of the $\mathcal H$ operation. The overview idea is that when generating 4-tuples of edges affected by the $\mathcal H$ operation (from now on, also called \emph{edge 4-tuples}), up to three of these four edges may be flagged as not available, and the corresponding ends of the $\mathcal H$ will be dangling. Although this seems not as such impossible task, remind the structure of methods for generating edgepairs depicted in Figure \ref{fig:edgepairs_methods}. There is a similar structure of methods for generating edge 4-tuples, but since it affects four edges instead of only two, the number of such methods is more than twenty. This greatly increases the complexity (time, not intellectual) of the reimplementation. Therefore, we did not implement the $\mathcal H$ operation, and the generator is working only for minimal girths $3,4,$ and $5$. 
 
 \section{Results}
 
-In the following table, we summarize counts of cubic multipoles. The data listed in the thesis text are aggregated by amount of degree-$3$ vertices. More granular data distinguishing number of dangling edges can be found in the Appendix.
+The data listed in the following tables are aggregated by the number of degree $3$ vertices. More granular data distinguishing the number of dangling edges can be found in the Appendix.
+
+In Table \ref{tab:counts}, we summarize counts of cubic multipoles.
 
 \begin{table}[h!]\centering
 \begin{tabular}{r|rrrrr}
- & All & Girth $\geq 4$ & Girth $\geq 5$ & Prime poles & Prime poles ratio [\%]\\ \hline
+& All & Girth $\geq 4$ & Girth $\geq 5$ & Prime poles & Prime poles ratio [\%]\\ \hline
 1 & 1 & 1 & 1 & 1 & 100.00\\
 2 & 1 & 1 & 1 & 1 & 100.00\\
 3 & 2 & 1 & 1 & 1 & 50.00\\
@@ -163,9 +170,11 @@ In the following table, we summarize counts of cubic multipoles. The data listed
 19 & 317558689 & 111466852 & 25485600 & 68776 & 0.02\\
 20 & 1424644848 & 497761656 & 113228666 & 156662 & 0.01
 \end{tabular}
+\caption{Counts of cubic multipoles}
+\label{tab:counts}
 \end{table}
 
-In the next table, we compare the time efficiency of \texttt{polehunter}, \texttt{multigraph}, and \texttt{pregraphs} (abbreviated as \texttt{ph}, \texttt{mg}, and \texttt{pg}, respectively).
+In Table \ref{tab:speed}, we compare the time efficiency of \texttt{polehunter}, \texttt{multigraph}, and \texttt{pregraphs} (abbreviated as \texttt{ph}, \texttt{mg}, and \texttt{pg}, respectively).
 
 \begin{table}[h!]\centering\begin{tabular}{r|rrrrr|rrr|rrr}
 \multirow{2}{*}{} & \multicolumn{5}{|c|}{All} & \multicolumn{3}{|c|}{Girth $\geq 4$} & \multicolumn{3}{|c}{Girth $\geq 5$} \\
@@ -179,4 +188,11 @@ In the next table, we compare the time efficiency of \texttt{polehunter}, \textt
 18 & 322675 & 51393 & 6.3 & 46567 & 6.9 & 129817 & 40530 & 3.2 & 77938 & 25841 & 3.0\\
 19 & 327502 & 52100 & 6.3 & 45538 & 7.2 & 129924 & 41706 & 3.1 & 82748 & 27691 & 3.0\\
 20 & 328052 & & & & & 129492 & & & 83823 & &
-\end{tabular}\end{table}
+\end{tabular}
+\caption{Running time comparision of cubic poles generators}
+\label{tab:speed}
+\end{table}
+
+We see that the speed up of the \texttt{polehunter} is significant, both to \texttt{pregraphs} and \texttt{multigraph}. However, from the data in Appendix, we see that the speed up is much smaller on graphs with a large number of dangling edges. Especially, the generation of acyclic poles is much faster in the \texttt{multigraph}. This is probably caused by the fact that all acyclic poles are, by our definition, prime. Moreover, no optimisation by invariants (as in Figure \ref{fig:snarkhunter_invariants}) or discarding the non-feasible edgepairs (as in Figure \ref{fig:edgepairs_methods}) is applied, and so the generation of prime poles is slow in contrast to edge extensions.
+
+This issue can be eventually solved in two ways -- either by the implementation of some optimisation for prime poles generation, or by restating the prime poles definition. For the latter case, not all dangling edges must be considered as irreducible. If we consider as irreducible dangling edges only those with a vertex in a triangle, no acyclic pole would be prime. However, this approach requires to change the prime poles operations, since current extensions are not able to generate all prime graphs without generating a non-prime one in between.
