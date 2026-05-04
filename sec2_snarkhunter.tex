@@ -1,15 +1,15 @@
 \chapter{Cubic graphs generation}
 
-In this chapter, we introduce methods for generating cubic graphs with a desired minimal girth. A program called \texttt{minibaum} \cite{minibaum} is based on the idea of the Moore tree, while \texttt{snarkhunter} \cite{snarkhunter, snarkhunter_better} generates the graphs from a few elementary ones by adding edges. 
+In this chapter, we introduce methods for generating cubic graphs with a desired minimal girth. A program called \texttt{minibaum} \cite{minibaum} is based on the idea of the Moore tree, while \texttt{snarkhunter} \cite{snarkhunter, snarkhunter_better, snarkhunter_snarks} generates the graphs from a few elementary ones by adding edges. 
 
 \section{Minibaum}
 The generator \texttt{minibaum} \cite{minibaum} is one of the first large-scale generators of regular graphs, invented already in the previous century. Given the number of vertices, the regularity, and the minimal girth, it generates all feasible graphs. The main idea of this algorithm is a representation of a labeled graph as its adjacency matrix, which is the lexicographically largest one out of all isomorphic options. Such a representation is called \emph{maximal}.
 
-The generation starts with a maximal Moore tree corresponding to the prescribed regularity and girth. Then, the authors prove a lemma \cite[p. 143]{minibaum} that in the maximal representation, the girth cycle is the cycle with the lexicografically smallest vertex labels. Therefore, after constructing the first girth cycle, graphs obtained from this graph are either of the prescribed girth or are not in their maximal representation.
+The generation starts with a maximal Moore tree corresponding to the prescribed regularity and girth. Then, the authors prove a lemma \cite[p. 143]{minibaum} that in the maximal representation, the girth cycle is the cycle with the lexicographically smallest vertex labels. Therefore, after constructing the first girth cycle, graphs obtained from this graph are either of the prescribed girth or are not in their maximal representation.
 
 \section{Snarkhunter}
 
-One of the most efficient generators of cubic graphs, as for now, is \texttt{snarkhunter} \cite{snarkhunter, snarkhunter_better}. Its main idea follows from the fact, that by the edge reduction $G\sim e$ the graph remains in the class of cubic graphs, but its order decreases. However, the resulting graph may be disconnected, have multiple edges, or loops.
+One of the most efficient generators of cubic graphs, as for now, is \texttt{snarkhunter} \cite{snarkhunter, snarkhunter_better, snarkhunter_snarks}. Its main idea follows from the fact, that by the edge reduction $G\sim e$ the graph remains in the class of cubic graphs, but its order decreases. However, the resulting graph may be disconnected, have multiple edges, or loops.
 
 \begin{definition}\cite[p. 70]{snarkhunter}
     Let $G$ be a cubic graph and $e$ its edge. We say that $e$ is \emph{reducible} if the graph $G\sim e$ is simple and connected.
@@ -17,16 +17,16 @@ One of the most efficient generators of cubic graphs, as for now, is \texttt{sna
 
 The natural question is, how can we easily determine an edge that is not reducible. Let us check it case by case.
 \begin{itemize}
-    \item $G\sim e$ is disconnected. Then, since $G$ is connected, the removal of edge $e$ disconnects the graph $G$, and so $e$ must be a bridge in $G$. Conversely, if $e$ is a bridge in $G$, then the graph $G\sim e$ is clearly disconnected.
+    \item $G\sim e$ is disconnected. Then, since $G$ is connected, the removal of the edge $e$ disconnects the graph $G$, and so $e$ must be a bridge in $G$. Conversely, if $e$ is a bridge in $G$, then the graph $G\sim e$ is clearly disconnected.
     \item $G\sim e$ has a loop $e'$ in a vertex $x$. Then, in $G$, at least one endvertex of $e=uv$ lies on $e'$. When exactly one endvertex of $e$ lies on $e'$ (WLOG $u$), then there are multiple edges between $u$ and $x$. Otherwise, there are multiple edges between $u$ and $v$. Hence, the original graph $G$ cannot be simple, a contradiction.
-    \item $G\sim e$ has multiple edges $e_1, e_2$ connecting $x$ and $y$. Then, in $G$, at least one endvertex of $e=uv$ lies on either $e_1$ or $e_2$.
+    \item $G\sim e$ has multiple edges $e_1, e_2$ connecting $x$ and $y$. Then, in $G$, at least one endvertex of $e=uv$ lies either on $e_1$ or on $e_2$.
     \begin{itemize}
         \item One endvertex of $e$ (WLOG $u$) lies on one of the multiple edges (WLOG $e_1$). Then, $x$, $y$, and $u$ form a triangle in $G$. Conversely, if $e$ is an edge with exactly one vertex in a triangle in $G$, the graph $G\sim e$ obviously contains multiple edges.
         \item Both endvertices of $e$ lie on the multiple edges (WLOG $u$ on $e_1$, $v$ on $e_2$). But then, $x, u, y, v$ form a square in $G$ and $e=uv$ is its diagonal. Conversely, if $e$ is a diagonal of a square in $G$, the resulting graph $G\sim e$ contains multiple edges.
     \end{itemize}
 \end{itemize}
 
-If a graph has an edge, which is not reducible, there still might be a reducible one, so the ``elementary'' graphs are those whose no edge is reducible. Following the convention from number theory, they are called \emph{prime} graphs.
+Now, we are ready to define ``elementary'' graphs. Following the convention from number theory, they are called \emph{prime} graphs.
 
 \begin{definition}\cite[p. 70]{snarkhunter}
     A cubic graph $G$ is called \emph{prime} if it has no reducible edge.
@@ -34,7 +34,7 @@ If a graph has an edge, which is not reducible, there still might be a reducible
 
 Hence, from those prime graphs, we can inductively construct any cubic graph by the reverse of the edge reduction -- we subdivide two (possibly adjacent) edges and join the new vertices by an edge. We call this an \emph{edge extension}. The only remaining issue is generating prime poles.
 
-We introduce two cubic multipoles relevant for the characterisation of prime graphs, depicted in Figure \ref{fig:diamond_lollipop}. A \emph{diamond} is a $2$-pole $D$ arising from $K_4$ by splitting its edge into two dangling edges. Since $K_4$ is vertex-transitive, the definition of diamond does not depend on the chosen edge, and therefore is uniquely determined. On the other hand, by subdividing any edge of $K_4$ with a vertex and connecting this vertex to a new vertex, we get a \emph{lollipop} $1$-pole $L$.
+We introduce two cubic multipoles relevant for the characterisation of prime graphs, depicted in Figure \ref{fig:diamond_lollipop}. A \emph{diamond} is a $2$-pole $D$ arising from $K_4$ by splitting its edge into two dangling edges. Since $K_4$ is vertex-transitive, the definition of diamond does not depend on the chosen edge, and therefore is uniquely determined. On the other hand, by subdividing any edge of $K_4$ with a vertex and connecting this vertex to a new vertex, we get a \emph{lollipop} $1$-pole $L$. Observe that the lollipop also contains a diamond.
 
 \begin{figure}[h!]\centering
     \input images/diamond_lollipop.tex
@@ -48,24 +48,24 @@ As mentioned above, now we are able to characterise prime graphs.
     A cubic graph is prime if and only if each of its edges is either a bridge or contained in a diamond.
 \end{lemma}
 
-However, the prime graphs can also be characterised in an inductive way, which allows us to generate them from base cases.
+However, the prime graphs can also be characterised in an inductive way, which allows us to generate them from several base cases.
 
 \begin{lemma}\emph{\cite[p. 70]{snarkhunter}}
     Each prime graph can be obtained from a $K_4$ by applying a finite number of extensions (a), (b), and (c) depicted in Figure \ref{fig:prime_reductions}. Moreover, the extensions can be applied in a way such that all intermediate graphs are also prime. \label{lem:prime_graphs_construction}
     \begin{figure}[h!]\centering
         \input images/prime_reductions.tex
-        \caption{Prime graph operations}
+        \caption{Prime graph extensions}
         \label{fig:prime_reductions}
     \end{figure}
 \end{lemma}
 
 The number of prime graphs is rapidly smaller than the number of all cubic graphs -- for illustration, there are $753$ prime graphs on at most $38$ vertices, although there are cca. $300$ quadrilions of cubic graphs on $38$ vertices.
 
-We describe the overall idea of the recursive algorithm for the edge extension, since the prime graph extensions work analogously. Having a graph $G$, we generate all possible pairs of edges (called \emph{edgepairs}), where we can apply the edge extension. Observe that when we apply the edge extension to edgepairs $(e_1, e_2)$ and $(e_1', e_2')$, where $e_1, e_1'$ and $e_2, e_2'$ are in the same edge orbits, the resulting graphs are isomorphic. Therefore, for each combination of edge orbits, we apply the extension only on one of the edgepairs.
+We describe the overall idea of the recursive algorithm for the edge extension, since the prime graph extensions work analogously. Having a graph $G$, we generate all possible pairs of edges (called \emph{edgepairs}), where the edge extension can be applied. Observe that when applying the edge extension to edgepairs $(e_1, e_2)$ and $(e_1', e_2')$, where $e_1, e_1'$ and $e_2, e_2'$ are in the same edge orbits, the resulting graphs are isomorphic. Therefore, for each combination of edge orbits, the extension is applied only on one of the edgepairs.
 
-The other way to get two isomorphic graphs of order $n$ during the generation is to obtain them by extensions from two non-isomorphic graphs of order $n-2$. To decide which of those extensions should be accepted, we use a canonical labeling of vertices provided by \texttt{nauty} \cite{nauty}. For each graph $G$, we accept only the reduction of an edge, which is in the same edge orbit as the reducible edge with the lexicographically largest canonical vertex labels.
+The other way to get two isomorphic graphs of order $n$ during the generation is to obtain them by extensions from two non-isomorphic graphs of order $n-2$. To decide which of those extensions should be accepted, a canonical labeling of vertices provided by \texttt{nauty} \cite{nauty} is used.
 
-However, determining a canonical labeling of vertices is a computationally hard problem (since otherwise, graph isomorphism would not be in $NP$), so we aim to avoid computing canonical labels as often as possible. This can be done by computing some local invariants for the edges, because when two edges have a different invariant, they can not be in the same edge orbit. The invariants used by the authors of \texttt{snarkhunter} with the corresponding criteria are in Figure \ref{fig:snarkhunter_invariants}.
+However, determining a canonical labeling of vertices is a computationally hard problem (since otherwise, graph isomorphism would not be in $NP$), so there is an aim to avoid computing canonical labels as often as possible. This can be done by computing some local invariants for the edges, because when two edges have a different invariant, they can not be in the same edge orbit. The invariants used by the authors of \texttt{snarkhunter} with the corresponding criteria are in Figure \ref{fig:snarkhunter_invariants}.
 \begin{figure}[h!]
 \fbox{%
 \parbox{\textwidth}{
@@ -75,29 +75,29 @@ However, determining a canonical labeling of vertices is a computationally hard 
     \item[$x_2$] the number of $4$-cycles containing the edge (largest),
     \item[$x_3$] the number of vertices in distance at most $3$ from the edge (least frequent),
     \item[$x_4$] the number of vertices in distance at most $4$ from the edge (smallest),
-    \item[$x_5$] the sum of $x_0$ and $x_1$ through edges adjacent to the edge (smallest), and
-    \item[$x_{6,7}$] the lexicografically largest vertex labels $x_6>x_7$ of the edge in the same edge orbit (largest)
+    \item[$x_5$] the sum of $x_1$ and $x_3$ through edges adjacent to the edge (smallest), and
+    \item[$x_{6,7}$] the lexicographically largest \texttt{nauty} vertex labels $x_6>x_7$ of the edge in the same edge orbit (largest)
 \end{enumerate}
 }}
 \caption{Edge extension invariants}
 \label{fig:snarkhunter_invariants}
 \end{figure}
 
-However, this idea distinguishes edgepairs considering the same reduction operation. However, besides edge reductions, the algorithm uses prime graph reductions and so-called \emph{triangle reductions}.
+This idea distinguishes edgepairs considering the same reduction operation. But, besides edge reductions, the algorithm uses also prime graph reductions and so-called \emph{triangle reductions}. We need to set priorities of these reductions.
 
-Note that the edge extension applied to a pair of adjacent edges results in a triangle. However, this operation may also be viewed as the common vertex of those edges blown up to a triangle. Moreover, it can be shown that almost all triangles can be reduced simultaneously. The irreducible ones are the triangles contained in some diamond. Moreover, there are pairs of reducible triangles, which cannot be reduced simultaneously -- those contained in a diamond with one vertex blown up to a triangle (see Figure \ref{fig:diamond_plus_triangle}).
+Note that the edge extension applied to a pair of adjacent edges results in a triangle. However, this extension is equivalent to substituting the common vertex of edges with a triangle. Moreover, it can be shown that almost all triangles can be reduced simultaneously. The irreducible ones are the triangles contained in some diamond. Then, there are pairs of reducible triangles, which cannot be reduced simultaneously -- those contained in an \emph{extended diamond} depicted in Figure \ref{fig:diamond_plus_triangle}.
 
 \begin{figure}[h!]\centering
     \input images/diamond_with_triangle.tex
-    \caption{Diamond with a vertex blown up to a triangle}
+    \caption{Extended diamond}
     \label{fig:diamond_plus_triangle}
 \end{figure}
 
-However, reducing any of the triangles in Figure \ref{fig:diamond_plus_triangle} results in a diamond, so it is not dependent on its choice. Hence, the triangle operation reduces as many triangles as possible, and then the result is deterministic, so we do not need to find the canonical reduction. Therefore, if there are reducible triangles, authors prefer the triangle reduction over the edge reduction. Moreover, for the general case, we can assume that edges in the edgepair are disjoint.
+However, reducing any of the triangles in Figure \ref{fig:diamond_plus_triangle} results in a diamond, so it is not dependent on its choice. Hence, the triangle operation reduces as many triangles as possible, and then the result is deterministic, so we do not need to find the canonical labeling. Therefore, if there are reducible triangles, authors prefer the triangle reduction over the edge reduction. Moreover, for the general case, we can assume that edges in the edgepair are disjoint.
 
-Back to the priority of reductions. The triangle reduction has the highest priority, and is followed by the edge reduction. Hence, prime graph reductions may be used only on prime graphs. Finally, the order of prime graph reductions is (c) $>$ (b) $>$ (a) -- so if a prime graph contains a lollipop, the reduction must reduce some lollipop.
+Back to the priority of reductions. The triangle reduction has the highest priority, and is followed by the edge reduction. A reduction of a prime graph is accepted only if it results in another prime graph. Finally, the order of prime graph reductions is (c) $>$ (b) $>$ (a) -- so if a prime graph contains a lollipop, the reduction must reduce some lollipop.
 
-Another time consuming part of the algorithm is generating feasible edge-pairs. Mainly, if there are many edge-pairs, that are trivially not feasible, it increases the time complexity of the algorithm. Hence, the authors divide the generation into multiple special cases, in which they can reduce the number of possible edgepairs from quadratic to either linear or constant. For each of these cases, they implement a tailored method. For an illustration, in Figure \ref{fig:edgepairs_methods}, we give a structure of $7$ methods called when generating edgepairs.
+Another time consuming part of the algorithm is generating feasible edge-pairs. The authors divide the generation into multiple special cases, in which they can reduce the number of possible edgepairs from quadratic to either linear or constant. For each of these cases, they implement a tailored method. For an illustration, in Figure \ref{fig:edgepairs_methods}, we give a structure of $7$ methods called when generating edgepairs.
 
 \begin{figure}[h!]
 \fbox{%
@@ -121,7 +121,7 @@ Depending on the number of reducible triangles in $G$, the corresponding method 
 
 \section{Extension of multiple edges at once}
 
-Note that in the backtracking tree of the algorithm, the main part of the generation is taken by the last levels, because of the rapid growth of the graphs count. However, the authors of \texttt{snarkhunter} show that having enough girth, the edge reduction of more edges can be done locally for each cubic graph. Therefore, the number of possible candidates for extensions is smaller, and the algorithm runs faster \cite{snarkhunter_better}.
+Note that in the backtracking tree of the algorithm, the main part of the generation is taken by the last levels, caused by the rapid growth of the graphs count. However, the authors of \texttt{snarkhunter} show that having enough girth, the edge reduction of more edges can be done locally for each cubic graph. Therefore, the number of possible candidates for extensions is smaller, and the algorithm runs faster \cite{snarkhunter_better}.
 
 A \emph{tripod} subgraph is a $3$-pole $K_{1, 3}$, and an $\mathcal H$ subgraph is the only acyclic cubic $4$-pole. Observe that a tripod and an $\mathcal H$ extensions (see Figure \ref{fig:multiple_extensions}) simulate consecutive extensions of two and three edges, respectively. Hence, their reductions simulate consecutive edge reductions. These subgraphs are called \emph{reducible} in a graph $G$ if the reduced graph remains simple and connected.
 
@@ -141,13 +141,13 @@ A \emph{tripod} subgraph is a $3$-pole $K_{1, 3}$, and an $\mathcal H$ subgraph 
     \label{fig:multiple_extensions}
 \end{figure}
 
-Since each graph has a vertex that is not a cutvertex, a reduction of the tripod does not disconnect the original graph. Moreover, since the girth is large enough, the reduction produces no multiple edges.
+Since each graph has a vertex that is not a cutvertex, there is a reduction of the tripod not disconnecting the original graph. Moreover, since the girth is large enough, the reduction produces no multiple edges.
 
 \begin{theorem}\emph{\cite[p. 260]{snarkhunter_better}}
     Each connected cubic graph with girth $g\geq 5$ has a reducible tripod. Moreover, the girth of the reduced graph is at least $g-1$, and the number of $(g-1)$-cycles is at most $3$.
 \end{theorem}
 
-A similar result can be proved for the $\mathcal H$ reduction. Here, the authors define an edge to be good when, after removing both of its endvertices, the graph remains connected. Observe that this is a necessary and a sufficient condition for the graph after the $\mathcal H$ reduction to remain connected.
+A similar result can be proved for the $\mathcal H$ reduction. Here, the authors define an edge to be \emph{good} when, after removing both of its endvertices, the graph remains connected. Observe that this is a necessary and a sufficient condition for the graph after the $\mathcal H$ reduction to remain connected.
 
 \begin{lemma}\emph{\cite[p. 264]{snarkhunter_better}}
     Each connected cubic graph has a good edge.
@@ -159,14 +159,14 @@ However, with an additional assumption of a minimal girth, the reduction of $\ma
     Each connected cubic graph with girth $g\geq 5$ has a reducible $\mathcal H$. Moreover, the girth of the reduced graph is at least $g-2$ for $g\leq 6$ and $g-1$ otherwise. \label{th:reducible_H}
 \end{theorem}
 
-From the computational results, the tripod reduction does not help much for girth $5$, the actual implementation of \texttt{snarkhunter} uses edge reductions for girths up to $5$ and $\mathcal H$ reductions for girths $6$ and $7$.
+From the computational results, the tripod reduction does not help much for girth $5$, so the actual implementation of \texttt{snarkhunter} uses edge reductions for girths up to $5$ and $\mathcal H$ reductions for girths $6$ and $7$.
 
-When deciding whether the reduction is canonical, the algorithm uses invariants similar to those in Figure \ref{fig:snarkhunter_invariants}. We do not describe them more, since we see no benefit in it.
+When deciding whether the reduction is canonical, the algorithm uses invariants similar to those in Figure \ref{fig:snarkhunter_invariants}. We do not describe them, since we see no benefit of it.
 
 \section{Other features of snarkhunter}
 
-The \texttt{snarkhunter} allows a computation distribution into multiple machines. When generating graphs of a large order, there is a \emph{splitlevel}. When the algorithm generates a graph having order of this splitlevel, a counter of graphs on the splitlevel is incremented. Then, the extensions are applied to this graph only if the value of this counter has a prescribed remainder modulo a given number.
+The \texttt{snarkhunter} allows a computation distribution into multiple machines. This is done by setting a \emph{splitlevel}. When the algorithm generates a graph having the order of this splitlevel, a counter of graphs on the splitlevel is incremented. Then, the extensions are applied to this graph only if the value of this counter has a prescribed remainder modulo a given number.
 
-The generation of snarks before \texttt{snarkhunter} was only possible by generating all cubic graphs of prescribed order, and then filtering them. However, the edge extension is closely related to the edge-colouring of the graph, and so many colourable graphs can be discarded by a simple look-ahead.
+The generation of snarks before \texttt{snarkhunter} was only possible by generating all cubic graphs of prescribed order, and then filtering them. However, the edge extension is closely related to the edge-colouring of the graph, and so many colourable graphs can be discarded by a simple look-ahead \cite{snarkhunter_snarks}.
 
-There is also an option to generate only graphs with a greater (cyclic) edge connectivity.
+There is also an option to generate only graphs with a greater (cyclic) edge-connectivity.

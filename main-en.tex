@@ -1,5 +1,5 @@
-\documentclass[12pt, twoside]{book}
-%\documentclass[12pt, oneside]{book}  % jednostranna tlac
+%\documentclass[12pt, twoside]{book}
+\documentclass[12pt, oneside]{book}  % jednostranna tlac
 
 %spravne nastavenie okrajov
 \usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=3.5cm,right=2cm]{geometry}
@@ -64,6 +64,7 @@
 \usepackage{MnSymbol}
 \usepackage{multirow}
 \usepackage{float}
+\usepackage{svg}
 % \usetikzlibrary{external}
 % \tikzexternalize[prefix=images/]
 
@@ -85,18 +86,19 @@
   \sc\large
   Comenius University in Bratislava\\
   Faculty of Mathematics, Physics and Informatics
-
+  \begin{figure}[h!]\centering
+  \includesvg[width=30mm]{logo_FMFI.svg}
+  \end{figure}
 \vfill
 
-{\LARGE\mfnazov}\\
+{\Large\mfnazov}\\
 \mftyp
 \end{center}
 
 \vfill
 
 {\sc\large
-\noindent \mfrok\\
-\mfautor
+\noindent\mfautor\hfill\mfrok
 }
 
 \cleardoublepage
@@ -113,10 +115,12 @@
 \large
   Comenius University in Bratislava\\
   Faculty of Mathematics, Physics and Informatics
-
+  \begin{figure}[h!]\centering
+  \includesvg[width=30mm]{logo_FMFI.svg}
+  \end{figure}
 \vfill
 
-{\LARGE\mfnazov}\\
+{\Large\mfnazov}\\
 \mftyp
 \end{center}
 
@@ -151,7 +155,7 @@ Supervisor: & \mfskolitel \\
 \newpage
 \setcounter{page}{3}
 \includepdf[trim=-10mm 0mm 5mm 0mm]{images/zadanie.pdf}
-\includepdf[trim=5mm 0mm -10mm 0mm]{images/zadanie-en.pdf}
+\includepdf[trim=-10mm 0mm 5mm 0mm]{images/zadanie-en.pdf}
 
 % --- Koniec zadania
 

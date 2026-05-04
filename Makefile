@@ -2,14 +2,14 @@
 all: main-en.pdf
 
 main.pdf: main.tex *.tex *.bib images/*
-	pdflatex main
+	pdflatex escape main
 	biber main
 	pdflatex main
 	pdflatex main
 
 
 main-en.pdf: main-en.tex *.tex *.bib images/*
-	pdflatex main-en
+	pdflatex --shell-escape main-en
 	biber main-en
-	pdflatex main-en
-	pdflatex main-en
+	pdflatex --shell-escape main-en
+	pdflatex --shell-escape main-en

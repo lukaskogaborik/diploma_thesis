@@ -3,18 +3,54 @@
 	# "\newcommand{\singleletter}[1]{#1} "
 	# "\newcommand{\switchargs}[2]{#2#1} " }
 
-@article{generation_moore,
-  title={The smallest cubic graphs of girth nine},
-  author={Brinkmann, Gunnar and McKay, Brendan Damien and Saager, Carsten},
-  journal={Combinatorics, Probability and Computing},
-  volume={4},
-  number={4},
-  pages={317--329},
-  year={1995},
+@article{benson,
+  title={Minimal regular graphs of girths eight and twelve},
+  author={Benson, Clark T},
+  journal={Canadian Journal of Mathematics},
+  volume={18},
+  pages={1091--1094},
+  year={1966},
   publisher={Cambridge University Press}
 }
 
-@article{generation_large_girth,
+@misc{multigraph,
+  author = "Goedgebeur, Jan",
+  howpublished = "Personal communication"
+}
+
+@article{minibaum,
+  title={Fast generation of cubic graphs},
+  author={Brinkmann, Gunnar},
+  journal={Journal of Graph Theory},
+  volume={23},
+  number={2},
+  pages={139--149},
+  year={1996},
+  publisher={Wiley Online Library}
+}
+
+@article{snarkhunter,
+  title={Generation of cubic graphs},
+  author={Brinkmann, Gunnar and Goedgebeur, Jan and McKay, Brendan D},
+  journal={Discrete Mathematics \& Theoretical Computer Science},
+  volume={13},
+  number={Discrete Algorithms},
+  year={2011},
+  publisher={Episciences. org}
+}
+
+@article{snarkhunter_snarks,
+  title={Generation and properties of snarks},
+  author={Brinkmann, Gunnar and Goedgebeur, Jan and H{\"a}gglund, Jonas and Markstr{\"o}m, Klas},
+  journal={Journal of Combinatorial Theory, Series B},
+  volume={103},
+  number={4},
+  pages={468--488},
+  year={2013},
+  publisher={Elsevier}
+}
+
+@article{snarkhunter_better,
   title={Generation of cubic graphs and snarks with large girth},
   author={Brinkmann, Gunnar and Goedgebeur, Jan},
   journal={Journal of Graph Theory},
@@ -25,6 +61,26 @@
   publisher={Wiley Online Library}
 }
 
+@article{pregraph,
+  title={Generation of various classes of trivalent graphs},
+  author={Brinkmann, Gunnar and Van Cleemput, Nico and Pisanski, Toma{\v{z}}},
+  journal={Theoretical Computer Science},
+  volume={502},
+  pages={16--29},
+  year={2013},
+  publisher={Elsevier}
+}
+
+@article{nauty,
+  title={Practical graph isomorphism, II},
+  author={McKay, Brendan D and Piperno, Adolfo},
+  journal={Journal of symbolic computation},
+  volume={60},
+  pages={94--112},
+  year={2014},
+  publisher={Elsevier}
+}
+
 @article{kochol_without_petersen,
   title={Cubic graphs without a Petersen minor have nowhere-zero 5-flows},
   author={Kochol, Martin},
@@ -32,13 +88,6 @@
   volume={68},
   pages={249--252},
   year={1999}
-}
-
-@article{group_connectivity_enumeration,
-  title={Many flows in the group connectivity setting},
-  author={DeVos, Matt and Langhede, Rikke and Mohar, Bojan and {\v{S}}{\'a}mal, Robert},
-  journal={arXiv preprint arXiv:2005.09767},
-  year={2020}
 }
 
 @article{group_connectivity,
@@ -197,11 +246,24 @@
   edition={Fifth}
 }
 
-@article{preprint,
+@misc{preprint,
   title={Manhattan and Chebyshev flows},
   author={G{\'a}borik, Luk{\'a}{\v{s}} and Kurz, Sascha and Mazzuoccolo, Giuseppe and Rajn{\'i}k, Jozef and Rieg, Florian},
-  journal={arXiv preprint arXiv:2510.22234},
-  year={2025}
+  year={2025},
+  eprint={2510.22234},
+  archivePrefix={arXiv},
+  primaryClass={math.CO},
+  url={https://arxiv.org/abs/2510.22234},
+}
+
+@misc{tetration_minisnark,
+      title={Algorithms for the Generation of Snarks}, 
+      author={Gunnar Brinkmann and Steven Van Overberghe},
+      year={2026},
+      eprint={2603.17789},
+      archivePrefix={arXiv},
+      primaryClass={math.CO},
+      url={https://arxiv.org/abs/2603.17789}, 
 }
 
 @article{given_flow_number_not_snarks,
@@ -227,6 +289,18 @@
 }
 
 @article{menger,
+  title={Zur allgemeinen kurventheorie},
+  author={Menger, Karl},
+  journal={Fundamenta mathematicae},
+  volume={10},
+  number={1},
+  pages={96--115},
+  year={1927},
+  publisher={Polska Akademia Nauk. Instytut Matematyczny PAN}
+}
+
+
+@article{oriented_menger,
   title={Extensions of Menger's theorem},
   author={Dirac, Gabriel Andrew},
   journal={Journal of the London Mathematical Society},
@@ -270,16 +344,14 @@
   publisher={Elsevier}
 }
 
-@article{min_ctrex_girth,
-  title={Smallest counterexample to the 5-flow conjecture has girth at least eleven},
-  author={Kochol, Martin},
-  journal={Journal of Combinatorial Theory, Series B},
-  volume={100},
-  number={4},
-  pages={381--389},
-  year={2010},
-  publisher={Elsevier}
+@mastersthesis{min_ctrex_girth,
+  title={Minimal counterexamples to flow conjectures},
+  author={Korcsok, Peter},
+  year={2015},
+  school={Univerzita Karlova, Matematicko-fyzik{\'a}ln{\'\i} fakulta},
+  type={Master's thesis}
 }
+
 
 @mastersthesis{rich_flows,
   title        = {{\v{S}}peci{\'{a}}lne nikde nulov{\'{e}} toky na grafoch},
@@ -289,10 +361,49 @@
   type         = {Master's thesis}
 }
 
-@article{rich_flows_not_cubic,
+@misc{rich_flows_not_cubic,
   title={A Linear Bound on the Rich Flow Number for Graphs with a Given Maximum Degree},
   author={Luko{\v{t}}ka, Robert},
-  journal={arXiv preprint arXiv:2601.16104},
-  year={2026}
+  year={2026},
+  eprint={2601.16104},
+  archivePrefix={arXiv},
+  primaryClass={math.CO},
+  url={https://arxiv.org/abs/2601.16104},
 }
 
+@article{vizing,
+  title={On an estimate of the chromatic class of a p-graph},
+  author={Vizing, Vadim G},
+  journal={Diskret analiz},
+  volume={3},
+  pages={25--30},
+  year={1964}
+}
+
+@article{7d_unit_flows,
+  title={Group flow, complex flow, unit vector flow, and the (2+$\varepsilon$)-flow conjecture},
+  author={Thomassen, Carsten},
+  journal={Journal of Combinatorial Theory, Series B},
+  volume={108},
+  pages={81--91},
+  year={2014},
+  publisher={Elsevier}
+}
+
+@misc{3d_unit_flows,
+  author = {Jain, Kamal},
+  title = {Unit vector flows},
+  year = {2007},
+  howpublished = {\url{http://www.openproblemgarden.org/op/unit_vector_flows}},
+  note = {Accessed: March 30, 2026},
+}
+
+@misc{p-norm_flows,
+      title={High-Dimensional $p$-Normed Flows}, 
+      author={Chenxing Li and Jiaao Li and Rong Luo and Bo Su},
+      year={2026},
+      eprint={2601.12036},
+      archivePrefix={arXiv},
+      primaryClass={math.CO},
+      url={https://arxiv.org/abs/2601.12036}, 
+}
