@@ -1,41 +1,17 @@
 /**
- * snarkhunter.c
+ * polehunter.c
  *
- * Snarkhunter: a generator for cubic graphs and snarks.
- *
- * The latest version of snarkhunter can be found here:
- * http://caagt.ugent.be/cubic/
- *
- * Author: Jan Goedgebeur (jan.goedgebeur@ugent.be)
- * In collaboration with Gunnar Brinkmann and Brendan McKay
- *
- * ----------------------------------------
- * 
- * Copyright (c) 2009-2015 Ghent University
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * Polehunter: a generator for cubic multipoles.
  */
 
 /**
  * Compile with:
  *
- * gcc -DWORDSIZE=32 -DMAXN=WORDSIZE -march=native -O3 snarkhunter.c nautyW1.a -o snarkhunter
+ * gcc -DWORDSIZE=32 -DMAXN=WORDSIZE -march=native -O3 polehunter.c nautyW1.a -o polehunter
  *
  * Or:
  *
- * gcc -DWORDSIZE=64 -DMAXN=WORDSIZE -march=native -O3 snarkhunter.c nautyL1.a -o snarkhunter-64
+ * gcc -DWORDSIZE=64 -DMAXN=WORDSIZE -march=native -O3 polehunter.c nautyL1.a -o polehunter-64
  *
  * -DWORDSIZE=32 is slightly faster, but limits the order of the graphs to 32.
  *
@@ -402,9 +378,9 @@ void generate_irreducible_graphs(int order, int min_girth, void (*userproc) (uns
         if(singleout)
             i = order;
         if(apply_tripod_optimisation) {
-            order += 6;											// TODO Polehunter TODO check
+            order += 6;
             if(search_for_graphs_with_girth7)
-                order += 6;										// TODO Polehunter TODO check
+                order += 6;
         }
         while(i <= order) {
             wegspeichern(graphlist, i);
@@ -11783,11 +11759,11 @@ void generate_edgepairs_two_triangles(EDGEPAIR edge_pairs_list[], int *edge_pair
 
     int i, j;
     EDGEPAIR edgepair;
-    for(i = 0; i < 3; i++) {										// TODO there might be a problem with change REG -> 3
+    for(i = 0; i < 3; i++) {
         edgepair[0] = reducible_triangles[0][i];
         edgepair[1] = reducible_triangles[0][(i + 1) % 3];
 
-        for(j = 0; j < 3; j++) {									// TODO here too
+        for(j = 0; j < 3; j++) {
             edgepair[2] = reducible_triangles[1][j];
             edgepair[3] = reducible_triangles[1][(j + 1) % 3];
             //If edgepair is not part of square or pentagon, there will be an edge
@@ -14166,7 +14142,7 @@ int colour_next_free_choice(int number_of_coloured_edges) {
                 break;
             }
         }
-        DEBUGASSERT(i < degrees[current_vertex]);								// TODO this change REG -> degrees[current_vertex] might not work
+        DEBUGASSERT(i < degrees[current_vertex]);
 
         EDGE available_vertices;
         int index_available_vertex0 = (i + 1) % 3;
@@ -14264,7 +14240,7 @@ int colour_next_free_choice_from_zero(int number_of_coloured_edges) {
                 break;
             }
         }
-        DEBUGASSERT(i < degrees[current_vertex]);									// TODO here too
+        DEBUGASSERT(i < degrees[current_vertex]);
 
         EDGE available_vertices;
         int index_available_vertex0 = (i + 1) % 3;
@@ -14867,7 +14843,7 @@ void init_nauty_options() {
     int i;
     for(i = 0; i < number_of_vertices; i++) {
         sg.v[i] = i * REG;
-        sg.d[i] = 3;									// TODO this is maybe something we want to initialise before run and so 3 -> degrees[i] does not work
+        sg.d[i] = 3;
     }
 
     SG_INIT(sg_canon);
@@ -14902,7 +14878,7 @@ void copy_sparse_graph() {
     for(i = 0; i < current_number_of_vertices;i++) {
         //These values were already set in init_nauty_options()
         //sg.v[i] = i * REG;
-        sg.d[i] = degrees[i];											// TODO maybe we can set it here
+        sg.d[i] = degrees[i];
         for(j = 0; j < degrees[i]; j++) {
             sg.e[sg.v[i] + j] = current_graph[i][j];
         }
