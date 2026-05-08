@@ -19,7 +19,7 @@
 /******************************Configuration***********************************/
 
 //Uncomment to turn debugmode on
-#define _DEBUG
+//#define _DEBUG
 
 
 /**
@@ -781,6 +781,8 @@ void update_edge_diamonds();
 
 void update_irreducible_triangles_bitvector();
 void fill_list_of_irreducible_triangles();
+
+void update_min_edges();
 
 
 /* Methods for the generation of graphs */
